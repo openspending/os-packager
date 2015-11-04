@@ -1,0 +1,61 @@
+{
+  "name": "fiscal-data-packager",
+  "version": "0.0.1",
+  "description": "A Fiscal Data Packager application",
+  "keywords": [],
+  "main": "fiscal/index.js",
+  "scripts": {
+    "start": "node fiscal/index.js",
+    "test": "mocha tests/*.js",
+    "review": "jscs fiscal tests",
+    "develop": "gulp && npm start",
+    "build": "gulp"
+  },
+  "engines": {
+    "node": "^4.1.0",
+    "npm": "^2.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openspending/fiscal-data-packager.git"
+  },
+  "author": {
+    "name": "Open Knowledge",
+    "email": "info@okfn.org",
+    "url": "https://okfn.org/"
+  },
+  "contributors": [
+    {
+      "name": "Levko Kravets",
+      "email": "kravets@qarea.com"
+    }
+  ],
+  "license": "MIT",
+  "bugs": "https://github.com/openspending/fiscal-data-packager/issues",
+  "homepage": "https://github.com/openspending/fiscal-data-packager#readme",
+  "dependencies": {
+    "bluebird": "^3.0.5",
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "marked": "^0.3.5",
+    "nconf": "^0.8.2",
+    "nunjucks": "^2.1.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "angular": "^1.4.7",
+    "bootstrap": "^3.3.5",
+    "browserify": "^12.0.1",
+    "chai": "^3.4.0",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
+    "jquery": "^2.1.4",
+    "jscs": "^2.5.0",
+    "mocha": "^2.3.3",
+    "zombie": "^4.2.1"
+  }
+}

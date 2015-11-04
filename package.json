@@ -52,6 +52,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-minify-css": "^1.2.1",
     "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.2",
     "jquery": "^2.1.4",
     "jscs": "^2.5.0",

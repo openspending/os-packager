@@ -1,0 +1,6 @@
+{% raw %}
+<ul class="nav nav-pills">
+  <li role="presentation" ng-repeat="step in steps"
+    ng-class="{active: step.id == currentStep.id}"><a href="javascript:void(0);">{{ step.title }}</a></li>
+</ul>
+{% endraw %}

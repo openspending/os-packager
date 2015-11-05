@@ -7,6 +7,10 @@ var minifyCss = require('gulp-minify-css');
 var prefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var resolve = require('resolve');
 
 var frontSrcDir = path.join(__dirname, '/fiscal/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
@@ -19,8 +23,14 @@ var publicFontsDir = path.join(publicDir, '/fonts');
 
 var nodeModulesDir = path.join(__dirname, '/node_modules');
 
+var modules = [
+  'jquery',
+  'underscore'
+];
+
 gulp.task('default', [
   'app.scripts',
+  'app.modules',
   'app.styles',
   'vendor.scripts',
   'vendor.styles',
@@ -44,6 +54,21 @@ gulp.task('app.scripts', function() {
     .pipe(gulp.dest(publicScriptsDir));
 });
 
+gulp.task('app.modules', function() {
+  var bundler = browserify({});
+
+  modules.forEach(function (id) {
+    bundler.require(resolve.sync(id), {expose: id});
+  });
+  bundler.add(path.join(frontScriptsDir, '/modules.js')); // Init modules
+
+  return bundler.bundle()
+    .pipe(source('modules.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(publicScriptsDir));
+});
+
 gulp.task('app.styles', function() {
   var files = [
     path.join(frontStylesDir, '/main.css')
@@ -57,7 +82,6 @@ gulp.task('app.styles', function() {
 
 gulp.task('vendor.scripts', function() {
   var files = [
-    path.join(nodeModulesDir, '/jquery/dist/jquery.min.js'),
     path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
     path.join(nodeModulesDir, '/angular/angular.min.js')
   ];

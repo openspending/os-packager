@@ -3,7 +3,7 @@ App to make Fiscal Data Packages from a CSV of Fiscal Data.
 
 # Getting started
 
-Open Data Census is a Node.js app, based on Express v4 framework.
+Fiscal Data Packager is a Node.js app, based on Express v4 framework.
 
 Get a local server setup with the following steps:
 

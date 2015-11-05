@@ -36,11 +36,21 @@
   "dependencies": {
     "bluebird": "^3.0.5",
     "body-parser": "^1.14.1",
+    "datapackage-from-remote": "git+https://github.com/okfn/datapackage-from-remote-js.git",
+    "datapackage-outfile": "^0.1.0",
+    "datapackage-registry": "git+https://github.com/okfn/datapackage-registry-js.git",
+    "datapackage-validate": "git+https://github.com/okfn/datapackage-validate.git",
     "express": "^4.13.3",
+    "font-awesome": "^4.4.0",
+    "goodtables": "git+https://github.com/okfn/goodtables-js.git",
+    "json-table-schema": "0.0.2-alpha",
     "marked": "^0.3.5",
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",
-    "underscore": "^1.8.3"
+    "papaparse": "^4.1.2",
+    "request": "^2.65.0",
+    "underscore": "^1.8.3",
+    "validator": "^4.2.1"
   },
   "devDependencies": {
     "angular": "^1.4.7",

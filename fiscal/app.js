@@ -20,6 +20,7 @@ module.exports.start = function() {
     app.use(express.static(path.join(__dirname, '/public')));
 
     app.use(routes.pages());
+    app.use(routes.proxy());
 
     var env = nunjucks.configure(app.get('views'), {
       autoescape: true,

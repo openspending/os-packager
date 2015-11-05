@@ -1,0 +1,33 @@
+.modal-backdrop {
+  z-index: 99990 !important;
+}
+
+.modal {
+  z-index: 99999 !important;
+}
+
+.modal .modal-dialog.modal-fluid {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#validation-results .nav .glyphicon {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+#validation-results .panel.panel-default {
+  border-color: #ddd;
+  border-top: 0;
+  -moz-border-top-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-top-right-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#validation-results .panel {
+  margin: 0;
+}

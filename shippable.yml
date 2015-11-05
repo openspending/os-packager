@@ -29,7 +29,7 @@ after_script:
 after_success:
   - rm app/public/.gitignore
   - git add . && git commit -a -m 'added public'
-  - git push -f git@heroku.com:opentrials-tracker.git master
+  - git push -f git@heroku.com:fiscal-data-packager.git master
 
 notifications:
   email:

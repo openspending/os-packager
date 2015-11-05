@@ -11,6 +11,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var resolve = require('resolve');
+var _ = require('underscore');
 
 var frontSrcDir = path.join(__dirname, '/fiscal/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
@@ -25,8 +26,13 @@ var nodeModulesDir = path.join(__dirname, '/node_modules');
 
 var modules = [
   'jquery',
-  'underscore'
+  'underscore',
+  'bluebird'
 ];
+
+var appModules = {
+  'app/services': './fiscal/services'
+};
 
 gulp.task('default', [
   'app.scripts',
@@ -57,8 +63,11 @@ gulp.task('app.scripts', function() {
 gulp.task('app.modules', function() {
   var bundler = browserify({});
 
-  modules.forEach(function (id) {
+  _.forEach(modules, function (id) {
     bundler.require(resolve.sync(id), {expose: id});
+  });
+  _.forEach(appModules, function (path, id) {
+    bundler.require(resolve.sync(path), {expose: id});
   });
   bundler.add(path.join(frontScriptsDir, '/modules.js')); // Init modules
 
@@ -92,6 +101,7 @@ gulp.task('vendor.scripts', function() {
 
 gulp.task('vendor.styles', function() {
   var files = [
+    path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
     path.join(nodeModulesDir, '/bootstrap/dist/css/bootstrap.min.css')
   ];
   return gulp.src(files)
@@ -101,6 +111,7 @@ gulp.task('vendor.styles', function() {
 
 gulp.task('vendor.fonts', function() {
   var files = [
+    path.join(nodeModulesDir, '/font-awesome/fonts/*'),
     path.join(nodeModulesDir, '/bootstrap/dist/fonts/*')
   ];
   return gulp.src(files)

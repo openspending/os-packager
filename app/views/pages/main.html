@@ -1,0 +1,8 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<section ng-controller="StepsController">
+  {% include "partials/steps.html" %}
+  {% include "partials/steps/upload-file.html" %}
+</section>
+{% endblock %}

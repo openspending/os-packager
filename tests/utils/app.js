@@ -1,7 +1,7 @@
 'use strict';
 
 var Browser = require('zombie');
-var start = require('../../app/app').start;
+var start = require('../../app').start;
 
 var exports = module.exports;
 

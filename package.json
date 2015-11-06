@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "A Fiscal Data Packager application",
   "keywords": [],
-  "main": "app/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app/index.js",
+    "start": "node index.js",
     "test": "mocha tests/*.js",
     "review": "jscs app tests",
     "develop": "gulp && npm start",

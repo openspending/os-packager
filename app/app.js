@@ -17,10 +17,16 @@ module.exports.start = function() {
     app.set('port', config.get('app:port'));
     app.set('views', path.join(__dirname, '/views'));
 
-    app.use(express.static(path.join(__dirname, '/public')));
+    // Middlewares
+    app.use([
+      express.static(path.join(__dirname, '/public'))
+    ]);
 
-    app.use(routes.pages());
-    app.use(routes.proxy());
+    // Controllers
+    app.use([
+      routes.pages(),
+      routes.proxy()
+    ]);
 
     var env = nunjucks.configure(app.get('views'), {
       autoescape: true,

@@ -1,4 +1,6 @@
-;(function(angular, _) {
+;(function(angular) {
+
+  var _ = require('underscore');
 
   angular.module('Application')
     .controller('UploadFileController', [
@@ -36,4 +38,4 @@
       }
     ]);
 
-})(angular, _);
+})(angular);

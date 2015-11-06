@@ -1,0 +1,41 @@
+{% raw %}
+<section ng-if="currentStep.id == 'describe-data'" ng-controller="DescribeDataController">
+  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <label class="control-label" for="step1-package-name">Name your Data Package</label>
+      <input type="text" class="form-control" id="step1-package-name">
+    </div>
+  </div>
+  <div class="row form-group">
+    <div onsubmit="return false;" class="col-md-5 col-sm-5">
+      <div class="input-group">
+        <span class="input-group-btn">
+          <label class="btn btn-primary" for="step1-upload-file">Upload a file</label>
+        </span>
+        <input ng-value="file.name" type="text" class="form-control" placeholder="No file selected" readonly="on">
+        <span class="input-group-btn" ng-if="file">
+          <button ng-click="onClearSelectedFile()" type="button" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
+        </span>
+      </div>
+      <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
+    </div>
+    <div class="col-md-1 col-sm-2 text-center">or</div>
+    <div class="col-md-6 col-sm-5">
+      <input ng-model="url" type="text" class="form-control" placeholder="http://">
+    </div>
+  </div>
+
+  <div ng-if="processingMessage" class="row form-group">
+    <div class="col-xs-12"><i class="fa fa-spinner fa-pulse"></i> {{ processingMessage }}</div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <button ng-if="!file && !url" disabled="on" type="button" class="btn btn-default btn-lg">Waiting for file or URL...</button>
+      <button ng-if="file || url" ng-click="validateSource()" type="button" class="btn btn-default btn-lg">Validate</button>
+      <button ng-if="sourceIsValid" type="button" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+{% endraw %}

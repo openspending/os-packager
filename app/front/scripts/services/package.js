@@ -1,4 +1,6 @@
-;(function(angular, _) {
+;(function(angular) {
+
+  var _ = require('underscore');
 
   angular.module('Application')
     .factory('PackageService', [
@@ -35,4 +37,4 @@
       }
     ]);
 
-})(angular, _);
+})(angular);

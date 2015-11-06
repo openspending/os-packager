@@ -1,4 +1,6 @@
-;(function(angular, _) {
+;(function(angular) {
+
+  var _ = require('underscore');
 
   angular.module('Application')
     .controller('StepsController', [
@@ -11,4 +13,4 @@
       }
     ]);
 
-})(angular, _);
+})(angular);

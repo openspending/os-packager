@@ -7,7 +7,7 @@
       title: 'Provide your data'
     },
     {
-      id: 'describe-package',
+      id: 'describe-data',
       order: 2,
       title: 'Describe your data'
     },

@@ -6,7 +6,7 @@ var request = require('request');
 module.exports.proxy = function(req, res) {
   var url = req.query.url;
 
-  if(!validator.isURL(url)) {
+  if (!validator.isURL(url)) {
     res.status(400).send('URL you passed is invalid');
     return false;
   }

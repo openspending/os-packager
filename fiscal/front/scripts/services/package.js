@@ -5,7 +5,7 @@
       '$q', 'UtilsService',
       function($q, UtilsService) {
         return {
-          validate: function(fileOrUrl) {
+          addResource: function(fileOrUrl) {
             return $q(function(resolve, reject) {
               var CsvValidate = require('app/services').csvValidate;
               var reader = null;
@@ -19,9 +19,13 @@
                   return CsvValidate.getCsvSchema(data);
                 })
                 .then(function(source) {
-                  return CsvValidate.validateData(source.data, source.schema)
+                  return CsvValidate.validateData(source.data, source.schema);
                 })
-                .then(resolve)
+                .then(function(results) {
+                  if (results.length == 0) {
+                    // TODO: Add resource
+                  }
+                })
                 .catch(reject);
             });
           }

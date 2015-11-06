@@ -28,8 +28,8 @@ module.exports.getCsvSchema = function(string) {
 
 module.exports.validateData = function(data, schema) {
   var goodTables = new Goodtables({
-    method: 'post',
-    report_type: 'grouped'
+    'method': 'post',
+    'report_type': 'grouped'
   });
   return goodTables.run(data, JSON.stringify(schema))
     .then(function(results) {
@@ -42,6 +42,6 @@ module.exports.validateData = function(data, schema) {
         return _.extend(_.values(item)[0], {
           headers: headers
         });
-      })
+      });
     });
 };

@@ -22,7 +22,7 @@
               }
             });
           }
-        }
+        };
       }
     ])
     .run([
@@ -32,10 +32,10 @@
           var $scope = this;
           return {
             show: function(modalId) {
-              $scope.$broadcast(events.MODAL_OPEN, [modalId])
+              $scope.$broadcast(events.MODAL_OPEN, [modalId]);
             },
             hide: function(modalId) {
-              $scope.$broadcast(events.MODAL_CLOSE, [modalId])
+              $scope.$broadcast(events.MODAL_CLOSE, [modalId]);
             }
           };
         };

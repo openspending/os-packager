@@ -25,6 +25,8 @@
                   if (results.length == 0) {
                     // TODO: Add resource
                   }
+                  resolve(results);
+                  return results;
                 })
                 .catch(reject);
             });

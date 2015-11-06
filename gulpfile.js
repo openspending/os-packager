@@ -13,11 +13,11 @@ var buffer = require('vinyl-buffer');
 var resolve = require('resolve');
 var _ = require('underscore');
 
-var frontSrcDir = path.join(__dirname, '/fiscal/front');
+var frontSrcDir = path.join(__dirname, '/app/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
 var frontStylesDir = path.join(frontSrcDir, '/styles');
 
-var publicDir = path.join(__dirname, '/fiscal/public');
+var publicDir = path.join(__dirname, '/app/public');
 var publicScriptsDir = path.join(publicDir, '/');
 var publicStylesDir = path.join(publicDir, '/');
 var publicFontsDir = path.join(publicDir, '/fonts');
@@ -31,7 +31,7 @@ var modules = [
 ];
 
 var appModules = {
-  'app/services': './fiscal/services'
+  'app/services': './app/services'
 };
 
 gulp.task('default', [

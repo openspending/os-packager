@@ -25,7 +25,7 @@
 
           PackageService.addResource($scope.file || $scope.url)
             .then(function(results) {
-              $scope.sourceIsValid = results.length == 0;
+              $scope.sourceIsValid = !results || results.length == 0;
               $scope.errors = results;
             })
             .finally(function() {

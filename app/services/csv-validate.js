@@ -2,7 +2,7 @@
 
 var _ = require('underscore');
 var Promise = require('bluebird');
-var Goodtables = require('goodtables');
+var GoodTables = require('goodtables');
 var csv = require('papaparse');
 var jtsInfer = require('json-table-schema').infer;
 
@@ -27,7 +27,7 @@ module.exports.getCsvSchema = function(string) {
 };
 
 module.exports.validateData = function(data, schema) {
-  var goodTables = new Goodtables({
+  var goodTables = new GoodTables({
     'method': 'post',
     'report_type': 'grouped'
   });

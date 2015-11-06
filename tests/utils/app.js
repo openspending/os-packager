@@ -15,10 +15,9 @@ exports.start = function(done) {
     start().then(function(app) {
       exports.app = app;
       var port = app.get('port');
-      Browser.localhost('localhost:' + port, port);
+      Browser.localhost('127.0.0.1', port);
       exports.browser = new Browser({
-        maxWait: 5000,
-        site: 'http://localhost:' + port + '/'
+        maxWait: 5000
       });
       done();
     });

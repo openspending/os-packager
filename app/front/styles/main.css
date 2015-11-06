@@ -31,3 +31,18 @@
 #validation-results .panel {
   margin: 0;
 }
+
+textarea {
+  resize: none;
+}
+
+textarea.resize-vertical {
+  resize: vertical;
+}
+textarea.resize-horizontal {
+  resize: horizontal;
+}
+textarea.resize-vertical.resize-horizontal,
+textarea.resize-both {
+  resize: both;
+}

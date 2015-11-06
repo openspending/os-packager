@@ -3,38 +3,70 @@
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group">
     <div class="col-xs-12">
-      <label class="control-label" for="step1-package-name">Name your Data Package</label>
-      <input type="text" class="form-control" id="step1-package-name">
-    </div>
-  </div>
-  <div class="row form-group">
-    <div onsubmit="return false;" class="col-md-5 col-sm-5">
-      <div class="input-group">
-        <span class="input-group-btn">
-          <label class="btn btn-primary" for="step1-upload-file">Upload a file</label>
-        </span>
-        <input ng-value="file.name" type="text" class="form-control" placeholder="No file selected" readonly="on">
-        <span class="input-group-btn" ng-if="file">
-          <button ng-click="onClearSelectedFile()" type="button" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></button>
-        </span>
-      </div>
-      <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
-    </div>
-    <div class="col-md-1 col-sm-2 text-center">or</div>
-    <div class="col-md-6 col-sm-5">
-      <input ng-model="url" type="text" class="form-control" placeholder="http://">
-    </div>
-  </div>
 
-  <div ng-if="processingMessage" class="row form-group">
-    <div class="col-xs-12"><i class="fa fa-spinner fa-pulse"></i> {{ processingMessage }}</div>
+      <div class="table-responsive">
+        <table class="table table-condensed" cellpadding="0" cellspacing="0" border="0">
+          <tbody ng-init="sizeOfDataSample = (data.rows.length > 3 ? 3 : data.rows.length) + 1">
+          <!-- Several rows of sample of data -->
+          <tr class="success">
+            <td colspan="{{ schema.fields.length + 1 }}">
+              <b>Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 1 ? 'row' : 'rows' }})</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="info" rowspan="{{ sizeOfDataSample }}"></td>
+            <td ng-repeat="header in data.headers track by $index"><b>{{ header }}</b></td>
+          </tr>
+          <tr ng-repeat="row in data.rows | limitTo:3 track by $index">
+            <td ng-repeat="value in row track by $index">{{ value }}</td>
+          </tr>
+
+          <!-- Editors -->
+          <tr class="success">
+            <td colspan="{{ schema.fields.length + 1 }}"><b>Description</b></td>
+          </tr>
+
+          <!-- Title of field -->
+          <tr>
+            <td class="info">Title</td>
+            <td ng-repeat="field in schema.fields track by $index">
+              <input ng-model="field.name" type="text" class="form-control">
+            </td>
+          </tr>
+          <!-- Description of field -->
+          <tr>
+            <td class="info">Description</td>
+            <td ng-repeat="field in schema.fields track by $index">
+              <textarea ng-model="field.description" class="form-control resize-vertical"></textarea>
+            </td>
+          </tr>
+          <!-- Data type -->
+          <tr>
+            <td class="info">Data type</td>
+            <td ng-repeat="field in schema.fields track by $index">
+              <select ng-model="field.type" class="form-control"
+                ng-options="item.id as item.name for item in availableDataTypes"></select>
+            </td>
+          </tr>
+          <!-- Concept (measures) -->
+          <tr>
+            <td class="info">Concept</td>
+            <td ng-repeat="field in schema.fields track by $index">
+              <select ng-model="field.concept" class="form-control"
+                ng-options="item.id as item.name for item in availableConcepts"></select>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <pre>{{ schema.fields }}</pre>
+    </div>
   </div>
 
   <div class="row form-group">
     <div class="col-xs-12">
-      <button ng-if="!file && !url" disabled="on" type="button" class="btn btn-default btn-lg">Waiting for file or URL...</button>
-      <button ng-if="file || url" ng-click="validateSource()" type="button" class="btn btn-default btn-lg">Validate</button>
-      <button ng-if="sourceIsValid" type="button" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
+      <button type="button" ng-click="goToNextStep()" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
     </div>
   </div>
 </section>

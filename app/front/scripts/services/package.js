@@ -6,10 +6,24 @@
     .factory('PackageService', [
       '$q', 'UtilsService',
       function($q, UtilsService) {
+        var data = {};
+        var schema = {};
+        var mapping = {};
+
         return {
+          getSchema: function() {
+            return schema;
+          },
+          getData: function() {
+            return data;
+          },
+          getMapping: function() {
+            return mapping;
+          },
+
           addResource: function(fileOrUrl) {
             return $q(function(resolve, reject) {
-              var CsvValidate = require('app/services').csvValidate;
+              var CsvValidateService = require('app/services').csvValidate;
               var reader = null;
               if (_.isObject(fileOrUrl)) {
                 reader = UtilsService.getContentsFromFile(fileOrUrl);
@@ -18,18 +32,25 @@
               }
               reader
                 .then(function(data) {
-                  return CsvValidate.getCsvSchema(data);
+                  return CsvValidateService.getCsvSchema(data);
                 })
-                .then(function(source) {
-                  return CsvValidate.validateData(source.data, source.schema);
+                .then(function(resource) {
+                  return CsvValidateService.validateData(resource.data,
+                    resource.schema).then(function(results) {
+                      if (results.length == 0) {
+                        data.headers = resource.headers;
+                        data.rows = resource.rows;
+                        data.bytes = resource.data;
+                        schema = resource.schema;
+                        _.each(schema.fields, function(field) {
+                          field.concept = field.concept || '';
+                          field.concept += '';
+                        })
+                      }
+                      return results;
+                    });
                 })
-                .then(function(results) {
-                  if (results.length == 0) {
-                    // TODO: Add resource
-                  }
-                  resolve(results);
-                  return results;
-                })
+                .then(resolve)
                 .catch(reject);
             });
           }

@@ -30,6 +30,9 @@
               $scope.sourceIsValid = !results || results.length == 0;
               $scope.errors = results;
             })
+            .catch(function(error) {
+              console.trace(error);
+            })
             .finally(function() {
               $scope.processingMessage = null;
               $scope.bootstrapModal().show('validation-results');

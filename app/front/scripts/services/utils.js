@@ -1,5 +1,7 @@
 ;(function(angular) {
 
+  var _ = require('underscore');
+
   angular.module('Application')
     .factory('UtilsService', [
       '$q',
@@ -27,6 +29,23 @@
                   reject(errorThrown);
                 });
             });
+          },
+          getAvailableDataTypes: function() {
+            var CsvValidateService = require('app/services').csvValidate;
+            var result = CsvValidateService.getAvailableDataTypes();
+            return _.map(result, function(type) {
+              type = _.clone(type);
+              type.id = type.name;
+              return type;
+            });
+          },
+          getAvailableConcepts: function() {
+            var CsvValidateService = require('app/services').csvValidate;
+            var result = CsvValidateService.getAvailableConcepts();
+            return _.union([{
+              name: '',
+              id: ''
+            }], result);
           }
         };
       }

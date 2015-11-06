@@ -34,7 +34,7 @@
     <div class="col-xs-12">
       <button ng-if="!file && !url" disabled="on" type="button" class="btn btn-default btn-lg">Waiting for file or URL...</button>
       <button ng-if="file || url" ng-click="validateSource()" type="button" class="btn btn-default btn-lg">Validate</button>
-      <button ng-if="sourceIsValid" type="button" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
+      <button ng-if="sourceIsValid" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
     </div>
   </div>
 

@@ -2,8 +2,18 @@
 
 {% block content %}
 <section ng-controller="StepsController">
+<div ng-if="false">
+  <div class="text-center" style="margin-bottom: 1em;">
+    <i class="fa fa-4x fa-spinner fa-pulse"></i>
+  </div>
+  <div class="text-center">
+    Loading application...
+  </div>
+</div>
+<div ng-cloak>
   {% include "partials/steps.html" %}
   {% include "partials/steps/upload-file.html" %}
   {% include "partials/steps/describe-data.html" %}
+</div>
 </section>
 {% endblock %}

@@ -5,6 +5,11 @@ var Promise = require('bluebird');
 var GoodTables = require('goodtables');
 var csv = require('papaparse');
 var jts = require('json-table-schema');
+var titleize = require('i')().titleize;
+
+module.exports.convertToTitle = function(string) {
+  return titleize(('' + string).replace(/\s+/g, ' ').toLowerCase());
+};
 
 module.exports.getCsvSchema = function(string) {
   return new Promise(function(resolve, reject) {

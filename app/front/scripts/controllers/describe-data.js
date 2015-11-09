@@ -6,9 +6,7 @@
     .controller('DescribeDataController', [
       '$scope', 'PackageService', 'UtilsService',
       function($scope, PackageService, UtilsService) {
-        $scope.schema = PackageService.getSchema();
-        $scope.data = PackageService.getData();
-        $scope.mapping = PackageService.getMapping();
+        $scope.resources = PackageService.getPackage().resources;
         $scope.availableDataTypes = UtilsService.getAvailableDataTypes();
         $scope.availableConcepts = UtilsService.getAvailableConcepts();
       }

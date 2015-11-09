@@ -8,7 +8,7 @@
       function($q) {
         return {
           getContentsFromFile: function(file) {
-            return $q(function(resolve, reject) {
+            var result = $q(function(resolve, reject) {
               var reader = new FileReader();
               reader.onload = function(event) {
                 resolve(event.target.result);
@@ -18,9 +18,11 @@
               };
               reader.readAsText(file);
             });
+            result.file = file;
+            return result;
           },
           getContentsFromUrl: function(url) {
-            return $q(function(resolve, reject) {
+            var result = $q(function(resolve, reject) {
               $.get('/proxy', {url: url})
                 .done(function(data) {
                   resolve(data);
@@ -29,10 +31,12 @@
                   reject(errorThrown);
                 });
             });
+            result.url = url;
+            return result;
           },
           getAvailableDataTypes: function() {
-            var CsvValidateService = require('app/services').csvValidate;
-            var result = CsvValidateService.getAvailableDataTypes();
+            var utils = require('app/services').utils;
+            var result = utils.getAvailableDataTypes();
             return _.map(result, function(type) {
               type = _.clone(type);
               type.id = type.name;
@@ -40,8 +44,8 @@
             });
           },
           getAvailableConcepts: function() {
-            var CsvValidateService = require('app/services').csvValidate;
-            var result = CsvValidateService.getAvailableConcepts();
+            var utils = require('app/services').utils;
+            var result = utils.getAvailableConcepts();
             return _.union([{
               name: '',
               id: ''

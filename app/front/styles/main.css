@@ -46,3 +46,11 @@ textarea.resize-vertical.resize-horizontal,
 textarea.resize-both {
   resize: both;
 }
+
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+.margin-right-4 {
+  margin-right: 4px;
+}

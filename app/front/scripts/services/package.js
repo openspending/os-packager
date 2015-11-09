@@ -13,7 +13,7 @@
           getPackage: function() {
             return dataPackage;
           },
-          addResource: function(fileOrUrl) {
+          createResource: function(fileOrUrl) {
             var reader = null;
             if (_.isObject(fileOrUrl)) {
               reader = UtilsService.getContentsFromFile(fileOrUrl);
@@ -22,7 +22,7 @@
             }
 
             return $q(function(resolve, reject) {
-              dataPackage.resources.add(reader)
+              dataPackage.resources.createFromReader(reader)
                 .then(resolve)
                 .catch(reject);
             });

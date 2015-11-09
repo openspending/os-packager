@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var utils = require('./utils');
 
 function FiscalDataPackage() {
+  this.attributes = {};
   this.resources = [];
 
   this.resources.add = function(resource) {

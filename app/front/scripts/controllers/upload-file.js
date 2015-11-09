@@ -9,6 +9,8 @@
         $scope.file = null;
         $scope.url = null;
 
+        $scope.attributes = PackageService.getPackage().attributes;
+
         $scope.validationStatus = {
           inProgress: false,
           completed: false,

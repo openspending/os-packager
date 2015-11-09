@@ -54,3 +54,11 @@ textarea.resize-both {
 .margin-right-4 {
   margin-right: 4px;
 }
+
+.x-form-control-readonly-label {
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+}

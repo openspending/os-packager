@@ -4,11 +4,11 @@
   <div class="row form-group">
     <div class="col-xs-12">
       <label class="control-label" for="step1-package-name">Name your Data Package</label>
-      <input type="text" class="form-control" id="step1-package-name">
+      <input ng-model="attributes.name" type="text" class="form-control" id="step1-package-name">
     </div>
   </div>
   <div class="row form-group">
-    <div class="col-md-5 col-sm-5">
+    <div ng-hide="url" ng-class="{'col-sm-5': !url && !file, 'col-xs-12': !!file}">
       <div class="input-group">
         <span class="input-group-btn">
           <label class="btn btn-primary" for="step1-upload-file">Upload a file</label>
@@ -20,8 +20,10 @@
       </div>
       <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
     </div>
-    <div class="col-md-1 col-sm-2 text-center">or</div>
-    <div class="col-md-6 col-sm-5">
+    <div ng-hide="!!file || url" class="col-sm-1 text-center">
+      <span class="form-control x-form-control-readonly-label">or</span>
+    </div>
+    <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
       <div ng-class="{'input-group': url}">
         <input ng-model="url" type="text" class="form-control" placeholder="http://">
         <span class="input-group-btn" ng-if="url">

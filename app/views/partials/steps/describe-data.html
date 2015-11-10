@@ -9,8 +9,10 @@
           <tbody ng-init="sizeOfDataSample = (resource.data.rows.length > 3 ? 3 : resource.data.rows.length) + 1">
           <!-- Several rows of sample of data -->
           <tr class="success">
-            <td colspan="{{ resource.schema.fields.length + 1 }}">
-              <b>Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 1 ? 'row' : 'rows' }})</b>
+            <td colspan="{{ resource.fields.length + 1 }}">
+              <b class="form-control x-form-control-readonly-label">
+                Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 1 ? 'row' : 'rows' }})
+              </b>
             </td>
           </tr>
           <tr>
@@ -23,36 +25,47 @@
 
           <!-- Editors -->
           <tr class="success">
-            <td colspan="{{ resource.schema.fields.length + 1 }}"><b>Description</b></td>
+            <td colspan="{{ resource.fields.length + 1 }}">
+              <b class="form-control x-form-control-readonly-label">Description</b>
+            </td>
           </tr>
 
           <!-- Title of field -->
           <tr>
-            <td class="info">Title</td>
-            <td ng-repeat="field in resource.schema.fields track by $index">
+            <td class="info">
+              <span class="form-control x-form-control-readonly-label">Title</span>
+            </td>
+            <td ng-repeat="field in resource.fields track by $index">
               <input ng-model="field.title" type="text" class="form-control">
             </td>
           </tr>
           <!-- Description of field -->
           <tr>
-            <td class="info">Description</td>
-            <td ng-repeat="field in resource.schema.fields track by $index">
+            <td class="info">
+              <span class="form-control x-form-control-readonly-label">Description</span>
+            </td>
+            <td ng-repeat="field in resource.fields track by $index">
               <textarea ng-model="field.description" class="form-control resize-vertical"></textarea>
             </td>
           </tr>
           <!-- Data type -->
           <tr>
-            <td class="info">Data type</td>
-            <td ng-repeat="field in resource.schema.fields track by $index">
+            <td class="info">
+              <span class="form-control x-form-control-readonly-label">Data type</span>
+            </td>
+            <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.type" class="form-control"
                 ng-options="item.id as item.name for item in availableDataTypes"></select>
             </td>
           </tr>
           <!-- Concept (measures) -->
           <tr>
-            <td class="info">Concept</td>
-            <td ng-repeat="field in resource.schema.fields track by $index">
+            <td class="info">
+              <span class="form-control x-form-control-readonly-label">Concept</span>
+            </td>
+            <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.concept" class="form-control"
+                ng-change="onConceptChanged()"
                 ng-options="item.id as item.name for item in availableConcepts"></select>
             </td>
           </tr>
@@ -62,9 +75,16 @@
     </div>
   </div>
 
-  <div class="row form-group">
+  <div ng-if="!validationStatus.concept" class="alert alert-info">
+    <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
+    You should map at least an <b>Amount</b> and a <b>Date / Time</b> to continue.
+  </div>
+
+  <div ng-if="validationStatus.concept" class="row form-group">
     <div class="col-xs-12">
-      <button type="button" ng-click="goToNextStep()" class="btn btn-primary btn-lg">Next <i class="glyphicon glyphicon-chevron-right"></i></button>
+      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+        Continue <i class="glyphicon glyphicon-chevron-right"></i>
+      </button>
     </div>
   </div>
 </section>

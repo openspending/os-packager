@@ -40,14 +40,12 @@ function FiscalDataPackage() {
               rows: data.rows,
               bytes: data.data
             },
-            schema: _.extend(_.clone(data.schema), {
-              fields: _.map(data.schema.fields, function(field) {
-                field = _.clone(field);
-                field.concept = field.concept || '';
-                field.concept += '';
-                field.title = utils.convertToTitle(field.name);
-                return field;
-              })
+            fields: _.map(data.schema.fields, function(field) {
+              field = _.clone(field);
+              field.concept = field.concept || '';
+              field.concept += '';
+              field.title = utils.convertToTitle(field.name);
+              return field;
             })
           };
 

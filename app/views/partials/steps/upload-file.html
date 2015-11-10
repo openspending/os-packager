@@ -56,11 +56,12 @@
     to view details.
   </div>
 
-  <div class="row form-group">
+  <div class="row form-group"
+    ng-if="validationStatus.completed && !validationStatus.errors">
     <div class="col-xs-12">
-      <button ng-if="validationStatus.completed && !validationStatus.errors"
-        ng-click="goToNextStep()" type="button"
-        class="btn btn-primary btn-lg">Continue <i class="glyphicon glyphicon-chevron-right"></i></button>
+      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+        Continue <i class="glyphicon glyphicon-chevron-right"></i>
+      </button>
     </div>
   </div>
 

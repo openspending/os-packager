@@ -39,7 +39,7 @@ module.exports.validateData = function(data, schema) {
     'method': 'post',
     'report_type': 'grouped'
   });
-  return goodTables.run(data, JSON.stringify(schema))
+  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined)
     .then(function(results) {
       if (!results) {
         return false;

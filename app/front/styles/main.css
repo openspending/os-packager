@@ -58,3 +58,7 @@ textarea.resize-both {
   padding-right: 0;
   color: #333;
 }
+
+#step2-describe-data-table td {
+  min-width: 150px;
+}

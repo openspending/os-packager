@@ -26,6 +26,10 @@
                 .then(resolve)
                 .catch(reject);
             });
+          },
+          createFiscalDataPackage: function() {
+            // TODO: Implement
+            return {};
           }
         };
       }

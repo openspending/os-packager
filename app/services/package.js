@@ -12,11 +12,11 @@ function FiscalDataPackage() {
     this.push(resource);
   };
 
-  this.resources.clear = function(resource) {
+  this.resources.clear = function() {
     this.splice(0, this.length);
   };
 
-  this.resources.createFromReader = function(reader) {
+  this.resources.createFromReader = function(reader, validateSchema) {
     return new Promise(function(resolve, reject) {
       reader
         .then(function(data) {
@@ -49,7 +49,8 @@ function FiscalDataPackage() {
             })
           };
 
-          return utils.validateData(data.data, data.schema)
+          var schema = !!validateSchema ? data.schema : undefined;
+          return utils.validateData(data.data, schema)
             .then(function(results) {
               resource.validationResults = results;
               resolve(resource);

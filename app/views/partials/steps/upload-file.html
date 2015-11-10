@@ -40,7 +40,7 @@
 
   <div ng-if="validationStatus.inProgress" class="alert alert-warning">
     <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
-    <span ng-if="file && !url">Processing {{ file.name }} / type: {{ file.type }}, size (in bytes): {{ file.size }}</span>
+    <span ng-if="!!file && !url">Processing {{ file.name }} / type: {{ file.type }}, size (in bytes): {{ file.size }}</span>
     <span ng-if="!file && url">Processing {{ url }}</span>
   </div>
 

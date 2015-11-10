@@ -4,31 +4,25 @@
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'PackageService', 'Configuration',
-      function($scope, PackageService, Configuration) {
+      '$scope', 'PackageService', 'ValidationService', 'Configuration',
+      function($scope, PackageService, ValidationService, Configuration) {
         $scope.file = null;
         $scope.url = null;
 
         $scope.attributes = PackageService.getPackage().attributes;
 
-        $scope.validationStatus = {
-          inProgress: false,
-          completed: false,
-          errors: null
-        };
+        $scope.validationStatus = null;
 
         $scope.resource = null;
 
         $scope.onClearSelectedFile = function() {
           $scope.file = null;
-          $scope.validationStatus.inProgress = false;
-          $scope.validationStatus.completed = false;
+          $scope.validationStatus = null;
         };
 
         $scope.onClearSelectedUrl = function() {
           $scope.url = null;
-          $scope.validationStatus.inProgress = false;
-          $scope.validationStatus.completed = false;
+          $scope.validationStatus = null;
         };
 
         $scope.onShowValidationResults = function() {
@@ -39,47 +33,20 @@
           $scope.file = _.first(this.files);
         };
 
-        var validateSource = function(value) {
+        var validateSource = function() {
           if (!$scope.file && !$scope.url) {
             return;
           }
 
-          $scope.validationStatus.completed = false;
-          $scope.validationStatus.inProgress = true;
-          $scope.validationStatus.errors = null;
+          $scope.validationStatus = {
+            inProgress: true
+          };
 
           PackageService.createResource($scope.file || $scope.url)
             .then(function(resource) {
-              // Value will be either file object or url that triggered this
-              // handler. It may change while processing validation stuff,
-              // so check it. If current file/url is not 'our' file/url -
-              // just ignore results. Same for catch() and finally()
-              if ((value != $scope.file) && (!value !== $scope.url)) {
-                return;
-              }
-
               $scope.resource = resource;
-              if (
-                resource.validationResults &&
-                resource.validationResults.length
-              ) {
-                $scope.validationStatus.errors = resource.validationResults;
-              }
-
-              return resource;
-            })
-            .catch(function(error) {
-              if ((value != $scope.file) && (!value !== $scope.url)) {
-                return;
-              }
-              Configuration.defaultErrorHandler(error);
-            })
-            .finally(function() {
-              if ((value != $scope.file) && (!value !== $scope.url)) {
-                return;
-              }
-              $scope.validationStatus.inProgress = false;
-              $scope.validationStatus.completed = true;
+              $scope.validationStatus = ValidationService
+                .validateResource(resource);
             });
         };
 

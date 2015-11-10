@@ -1,0 +1,23 @@
+{% raw %}
+<section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController">
+  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
+
+  <div class="alert alert-info">
+    <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
+    Stub
+  </div>
+
+  <div class="alert alert-success">
+    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+    Just continue.
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+        Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</section>
+{% endraw %}

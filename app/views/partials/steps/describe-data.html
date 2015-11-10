@@ -80,10 +80,15 @@
     You should map at least an <b>Amount</b> and a <b>Date / Time</b> to continue.
   </div>
 
+  <div ng-if="validationStatus.concept" class="alert alert-success">
+    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+    Now your resource seems to look well, so you can continue to the next step.
+  </div>
+
   <div ng-if="validationStatus.concept" class="row form-group">
     <div class="col-xs-12">
       <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
-        Continue <i class="glyphicon glyphicon-chevron-right"></i>
+        Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>
   </div>

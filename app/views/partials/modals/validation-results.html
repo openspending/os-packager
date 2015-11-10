@@ -14,7 +14,10 @@
         <div ng-if="errors.length > 0" ng-init="tabs.index = 0">
           <ul data-id="tabs" class="nav nav-tabs">
             <li ng-class="{active: $index == tabs.index}" ng-repeat="error in errors track by $index">
-              <a ng-click="tabs.index = $index" href="javascript:void(0)"><i class="text-danger glyphicon glyphicon-remove"></i>(Untitled)</a>
+              <a ng-click="tabs.index = $index" href="javascript:void(0)">
+                <i class="text-danger fa fa-times-circle margin-right-4 vertical-align-middle"></i>
+                (Untitled)
+              </a>
             </li>
           </ul>
           <div class="panel panel-default" ng-repeat="error in errors track by $index" ng-show="$index == tabs.index">

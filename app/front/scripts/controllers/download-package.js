@@ -8,7 +8,7 @@
         $scope.dataPackage = dataPackage;
         $scope.serializeDataPackage = function() {
           return JSON.stringify(dataPackage, null, 2);
-        }
+        };
       }
     ]);
 

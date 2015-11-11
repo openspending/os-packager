@@ -59,8 +59,8 @@ module.exports.getAvailableDataTypes = function() {
     .filter(function(item, key) {
       return (key != 'JSType') && (key.substr(-4) == 'Type');
     })
-    .map(function(item) {
-      return new item();
+    .map(function(TypeConstructor) {
+      return new TypeConstructor();
     })
     .value();
 };

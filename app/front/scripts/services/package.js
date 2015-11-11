@@ -28,8 +28,7 @@
             });
           },
           createFiscalDataPackage: function() {
-            // TODO: Implement
-            return {};
+            return dataPackage.createFiscalDataPackage();
           }
         };
       }

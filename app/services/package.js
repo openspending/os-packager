@@ -57,4 +57,9 @@ function FiscalDataPackage() {
   };
 }
 
+FiscalDataPackage.prototype.createFiscalDataPackage = function() {
+  // TODO: Implement
+  return {};
+};
+
 module.exports = FiscalDataPackage;

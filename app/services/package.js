@@ -58,8 +58,92 @@ function FiscalDataPackage() {
 }
 
 FiscalDataPackage.prototype.createFiscalDataPackage = function() {
-  // TODO: Implement
-  return {};
+  var result = {};
+
+  // Package metadata
+  _.extend(result, this.attributes);
+
+  // Resources
+  result.resources = _.map(this.resources, function(resource, index) {
+    var result = {};
+    result.name = 'resource_' + index;
+    result.format = 'csv';
+    if (resource.source.url) {
+      result.url = resource.source.url;
+    } else {
+      result.path = resource.source.fileName;
+    }
+    if (resource.data.bytes) {
+      result.data = resource.data.bytes;
+    }
+    if (resource.source.mimeType) {
+      result.mediatype = resource.source.mimeType;
+    }
+    if (resource.source.size) {
+      result.bytes = resource.source.size;
+    }
+    result.schema = {
+      fields: _.map(resource.fields, function(field) {
+        field = _.clone(field);
+        delete field.concept;
+        return field;
+      })
+    };
+    return result;
+  });
+
+  // Mappings
+  result.mapping = {
+    measures: [],
+    dimensions: []
+  };
+
+  var groups = {};
+  _.each(this.resources, function(resource, index) {
+    _.each(resource.fields, function(field) {
+      if (field.concept) {
+        groups[field.concept] = groups[field.concept] || [];
+        groups[field.concept].push(_.extend({
+          resource: 'resource_' + index
+        }, field));
+      }
+    });
+  });
+
+  _.each(groups, function(fields, concept) {
+    switch (concept) {
+      case 'mapping.measures.amount': {
+        _.each(fields, function(field) {
+          result.mapping.measures.push({
+            name: 'amount',
+            source: field.name,
+            resource: field.resource
+          });
+        });
+        break;
+      }
+      case 'mapping.date.properties.year':
+      case 'mapping.classification.properties.id':
+      case 'mapping.classification.properties.label':
+      case 'mapping.entity.properties.id':
+      case 'mapping.entity.properties.label': {
+        var matches = /^mapping\.([a-z]+)\.properties\.([a-z]+)$/g
+          .exec(concept);
+        result.mapping.dimensions.push({
+          name: matches[1],
+          fields: _.map(fields, function(field) {
+            return {
+              name: field.name,
+              source: field.name
+            };
+          })
+        });
+        break;
+      }
+    }
+  });
+
+  return result;
 };
 
 module.exports = FiscalDataPackage;

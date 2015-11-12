@@ -3,5 +3,4 @@
  */
 (function(globals, require) {
   globals.$ = globals.jQuery = require('jquery');
-  globals._ = require('underscore');
 })(window, require);

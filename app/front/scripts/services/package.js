@@ -1,38 +1,37 @@
-;(function(angular, _) {
+;(function(angular) {
+
+  var _ = require('underscore');
 
   angular.module('Application')
     .factory('PackageService', [
       '$q', 'UtilsService',
       function($q, UtilsService) {
+        var FiscalDataPackage = require('app/services').FiscalDataPackage;
+        var dataPackage = new FiscalDataPackage();
+
         return {
-          addResource: function(fileOrUrl) {
+          getPackage: function() {
+            return dataPackage;
+          },
+          createResource: function(fileOrUrl) {
+            var reader = null;
+            if (_.isObject(fileOrUrl)) {
+              reader = UtilsService.getContentsFromFile(fileOrUrl);
+            } else {
+              reader = UtilsService.getContentsFromUrl(fileOrUrl);
+            }
+
             return $q(function(resolve, reject) {
-              var CsvValidate = require('app/services').csvValidate;
-              var reader = null;
-              if (_.isObject(fileOrUrl)) {
-                reader = UtilsService.getContentsFromFile(fileOrUrl);
-              } else {
-                reader = UtilsService.getContentsFromUrl(fileOrUrl);
-              }
-              reader
-                .then(function(data) {
-                  return CsvValidate.getCsvSchema(data);
-                })
-                .then(function(source) {
-                  return CsvValidate.validateData(source.data, source.schema);
-                })
-                .then(function(results) {
-                  if (results.length == 0) {
-                    // TODO: Add resource
-                  }
-                  resolve(results);
-                  return results;
-                })
+              dataPackage.resources.createFromReader(reader)
+                .then(resolve)
                 .catch(reject);
             });
+          },
+          createFiscalDataPackage: function() {
+            return dataPackage.createFiscalDataPackage();
           }
         };
       }
     ]);
 
-})(angular, _);
+})(angular);

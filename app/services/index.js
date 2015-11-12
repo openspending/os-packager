@@ -1,3 +1,4 @@
 'use strict';
 
-module.exports.csvValidate = require('./csv-validate');
+module.exports.utils = require('./utils');
+module.exports.FiscalDataPackage = require('./package');

@@ -102,7 +102,8 @@ gulp.task('vendor.scripts', function() {
 gulp.task('vendor.styles', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
-    path.join(nodeModulesDir, '/bootstrap/dist/css/bootstrap.min.css')
+    path.join(nodeModulesDir, '/bootstrap/dist/css/bootstrap.min.css'),
+    path.join(nodeModulesDir, '/angular/angular-csp.css')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.css'))

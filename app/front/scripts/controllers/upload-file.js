@@ -1,39 +1,65 @@
-;(function(angular, _) {
+;(function(angular) {
+
+  var _ = require('underscore');
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'PackageService',
-      function($scope, PackageService) {
+      '$scope', 'PackageService', 'ValidationService', 'Configuration',
+      function($scope, PackageService, ValidationService, Configuration) {
         $scope.file = null;
         $scope.url = null;
 
-        $scope.sourceIsValid = false;
+        $scope.attributes = PackageService.getPackage().attributes;
 
-        $scope.processingMessage = null;
+        $scope.validationStatus = null;
+
+        $scope.resource = null;
 
         $scope.onClearSelectedFile = function() {
           $scope.file = null;
+          $scope.validationStatus = null;
+        };
+
+        $scope.onClearSelectedUrl = function() {
+          $scope.url = null;
+          $scope.validationStatus = null;
+        };
+
+        $scope.onShowValidationResults = function() {
+          $scope.bootstrapModal().show('validation-results');
         };
 
         $scope.onFileSelected = function() {
           $scope.file = _.first(this.files);
         };
 
-        $scope.validateSource = function() {
-          $scope.errors = null;
-          $scope.processingMessage = 'Processing file...';
+        var validateSource = function() {
+          if (!$scope.file && !$scope.url) {
+            return;
+          }
 
-          PackageService.addResource($scope.file || $scope.url)
-            .then(function(results) {
-              $scope.sourceIsValid = !results || results.length == 0;
-              $scope.errors = results;
-            })
-            .finally(function() {
-              $scope.processingMessage = null;
-              $scope.bootstrapModal().show('validation-results');
+          $scope.validationStatus = {
+            inProgress: true
+          };
+
+          PackageService.createResource($scope.file || $scope.url)
+            .then(function(resource) {
+              $scope.resource = resource;
+              $scope.validationStatus = ValidationService
+                .validateResource(resource);
             });
+        };
+
+        $scope.$watch('file', validateSource);
+        $scope.$watch('url', _.debounce(validateSource, 500));
+
+        $scope.goToNextStep = function() {
+          var dataPackage = PackageService.getPackage();
+          dataPackage.resources.clear();
+          dataPackage.resources.add($scope.resource);
+          $scope.$parent.goToNextStep();
         };
       }
     ]);
 
-})(angular, _);
+})(angular);

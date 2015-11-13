@@ -4,6 +4,7 @@ var assert = require('chai').assert;
 var utils = require('./utils');
 
 describe('Core', function() {
+  this.timeout(20000);
 
   before(utils.app.start);
   after(utils.app.shutdown);

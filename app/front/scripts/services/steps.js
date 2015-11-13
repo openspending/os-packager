@@ -1,5 +1,7 @@
 ;(function(angular) {
 
+  var _ = require('underscore');
+
   var steps = [
     {
       id: 'upload-file',
@@ -7,7 +9,7 @@
       title: 'Provide your data'
     },
     {
-      id: 'describe-package',
+      id: 'describe-data',
       order: 2,
       title: 'Describe your data'
     },
@@ -32,6 +34,18 @@
             return $q(function(resolve, reject) {
               resolve(steps);
             });
+          },
+          getNextStep: function(steps, step) {
+            if (!!steps && _.isObject(step)) {
+              var isFound = false;
+              return _.find(steps, function(item) {
+                if (item.id == step.id) {
+                  isFound = true;
+                  return false;
+                }
+                return isFound;
+              });
+            }
           }
         };
       }

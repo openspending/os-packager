@@ -12,11 +12,6 @@
   margin-right: auto;
 }
 
-#validation-results .nav .glyphicon {
-  vertical-align: middle;
-  margin-right: 4px;
-}
-
 #validation-results .panel.panel-default {
   border-color: #ddd;
   border-top: 0;
@@ -30,4 +25,40 @@
 
 #validation-results .panel {
   margin: 0;
+}
+
+textarea {
+  resize: none;
+}
+
+textarea.resize-vertical {
+  resize: vertical;
+}
+textarea.resize-horizontal {
+  resize: horizontal;
+}
+textarea.resize-vertical.resize-horizontal,
+textarea.resize-both {
+  resize: both;
+}
+
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+.margin-right-4 {
+  margin-right: 4px;
+}
+
+.x-form-control-readonly-label {
+  border-color: transparent;
+  background: none;
+  box-shadow: none;
+  padding-left: 0;
+  padding-right: 0;
+  color: #333;
+}
+
+#step2-describe-data-table td {
+  min-width: 150px;
 }

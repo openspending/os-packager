@@ -50,6 +50,14 @@ textarea.resize-both {
   margin-right: 4px;
 }
 
+.control-label.required:after {
+  content: ' *';
+  color: #f00;
+  font-size: 80%;
+  position: relative;
+  top: -0.1em;
+}
+
 #step2-describe-data-table td {
   min-width: 150px;
 }

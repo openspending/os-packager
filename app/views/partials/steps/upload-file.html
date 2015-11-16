@@ -16,7 +16,7 @@
       <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
     </div>
     <div ng-hide="!!file || url" class="col-sm-1 text-center">
-      <span class="form-control x-form-control-readonly-label">or</span>
+      <p class="form-control-static">or</p>
     </div>
     <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
       <div ng-class="{'input-group': url}">

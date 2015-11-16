@@ -5,7 +5,7 @@
   <form novalidate="novalidate" name="metadata" onsubmit="return false;">
   <div class="row form-group">
     <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
-      <label class="control-label" for="step3-package-name">Name your Data Package</label>
+      <label class="control-label required" for="step3-package-name">Name your Data Package</label>
       <input ng-model="attributes.title" required="required" name="title"
         type="text" class="form-control" id="step3-package-name">
     </div>
@@ -55,14 +55,19 @@
   </div>
   </form>
 
-  <div class="alert alert-info">
+  <div ng-if="!metadata.$dirty" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
-    Stub
+    Please, provide some additional info about your Data Package.
   </div>
 
-  <div class="alert alert-success">
+  <div ng-if="metadata.$dirty && !metadata.$valid" class="alert alert-danger">
+    <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
+    Please, provide data for all required fields.
+  </div>
+
+  <div ng-if="metadata.$dirty && metadata.$valid" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
-    Just continue.
+    Congratulations! Now you can verify your Data Package and download it.
   </div>
 
   <div class="row form-group">

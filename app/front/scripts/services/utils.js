@@ -34,6 +34,10 @@
             result.url = url;
             return result;
           },
+          slug: function(string) {
+            var utils = require('app/services').utils;
+            return utils.convertToSlug(string);
+          },
           getAvailableDataTypes: function() {
             var utils = require('app/services').utils;
             var result = utils.getAvailableDataTypes();

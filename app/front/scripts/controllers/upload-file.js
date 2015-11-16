@@ -9,8 +9,6 @@
         $scope.file = null;
         $scope.url = null;
 
-        $scope.attributes = PackageService.getPackage().attributes;
-
         $scope.validationStatus = null;
 
         $scope.resource = null;

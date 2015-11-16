@@ -2,6 +2,59 @@
 <section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
+  <form novalidate="novalidate" name="metadata" onsubmit="return false;">
+  <div class="row form-group">
+    <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
+      <label class="control-label" for="step3-package-name">Name your Data Package</label>
+      <input ng-model="attributes.title" required="required" name="title"
+        type="text" class="form-control" id="step3-package-name">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <label class="control-label" for="step3-package-description">Short description</label>
+      <textarea ng-model="attributes.description" class="form-control" id="step3-package-description"></textarea>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <label class="control-label" for="step3-location-region">Location</label>
+    </div>
+    <div class="col-sm-4">
+      <select id="step3-location-region" class="form-control"
+        multiple="multiple" size="5"
+        ng-model="attributes.location"
+        ng-options="region.code as region.name for region in regions"></select>
+    </div>
+    <div class="col-sm-4">
+      <select id="step3-location-country" class="form-control"
+        multiple="multiple" size="5"
+        ng-model="attributes.location"
+        ng-options="country.code as country.name for country in countries"></select>
+    </div>
+    <div class="col-sm-4">
+      <select id="step3-location-city" class="form-control"
+        multiple="multiple" size="5"
+        ng-model="attributes.location"
+        ng-options="city.code as city.name for city in cities"></select>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <label class="control-label" for="step3-period-from">Period</label>
+    </div>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" id="step3-period-from">
+    </div>
+    <div class="col-sm-4">
+      <input type="text" class="form-control" id="step3-period-to">
+    </div>
+  </div>
+  </form>
+
   <div class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Stub

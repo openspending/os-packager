@@ -4,6 +4,10 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var utils = require('./utils');
 
+function getResourceName(resource, index) {
+  return resource.name || '@resource_' + index;
+}
+
 function FiscalDataPackage() {
   this.attributes = {};
   this.resources = [];
@@ -66,7 +70,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
   // Resources
   result.resources = _.map(this.resources, function(resource, index) {
     var result = {};
-    result.name = 'resource_' + index;
+    result.name = getResourceName(resource, index);
     result.format = 'csv';
     if (resource.source.url) {
       result.url = resource.source.url;
@@ -74,7 +78,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       result.path = resource.source.fileName;
     }
     if (resource.data.bytes) {
-      result.data = resource.data.bytes;
+      //result.data = resource.data.bytes;
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;
@@ -104,7 +108,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       if (field.concept) {
         groups[field.concept] = groups[field.concept] || [];
         groups[field.concept].push(_.extend({
-          resource: 'resource_' + index
+          resource: getResourceName(resource, index)
         }, field));
       }
     });

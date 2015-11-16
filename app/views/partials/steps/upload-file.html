@@ -25,7 +25,7 @@
     </div>
     <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
       <div ng-class="{'input-group': url}">
-        <input ng-model="url" type="text" class="form-control" placeholder="http://">
+        <input name="step1-resource-url" ng-model="url" type="text" class="form-control" placeholder="http://">
         <span class="input-group-btn" ng-if="url">
           <button ng-click="onClearSelectedUrl()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
@@ -59,7 +59,7 @@
   <div class="row form-group"
     ng-if="validationStatus.completed && !validationStatus.errors">
     <div class="col-xs-12">
-      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>

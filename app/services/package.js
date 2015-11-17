@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 var utils = require('./utils');
 
 function getResourceName(resource, index) {
-  return resource.name || '@resource_' + index;
+  return resource.name || 'resource_' + index;
 }
 
 function FiscalDataPackage() {

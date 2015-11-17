@@ -24,20 +24,22 @@
     </div>
     <div class="col-sm-4">
       <select id="step3-location-region" class="form-control"
-        multiple="multiple" size="5"
-        ng-model="attributes.location"
+        multiple="multiple" size="5" name="region"
+        ng-model="attributes.regionCode"
+        ng-change="updateCountries()"
         ng-options="region.code as region.name for region in regions"></select>
     </div>
     <div class="col-sm-4">
       <select id="step3-location-country" class="form-control"
-        multiple="multiple" size="5"
-        ng-model="attributes.location"
+        multiple="multiple" size="5" name="country"
+        ng-model="attributes.countryCode"
+        ng-change="updateCities()"
         ng-options="country.code as country.name for country in countries"></select>
     </div>
     <div class="col-sm-4">
       <select id="step3-location-city" class="form-control"
-        multiple="multiple" size="5"
-        ng-model="attributes.location"
+        multiple="multiple" size="5" name="city"
+        ng-model="attributes.cityCode"
         ng-options="city.code as city.name for city in cities"></select>
     </div>
   </div>
@@ -55,22 +57,22 @@
   </div>
   </form>
 
-  <div ng-if="!metadata.$dirty" class="alert alert-info">
+  <div ng-if="!metadata.title.$dirty" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Please, provide some additional info about your Data Package.
   </div>
 
-  <div ng-if="metadata.$dirty && !metadata.$valid" class="alert alert-danger">
+  <div ng-if="metadata.title.$dirty && !metadata.$valid" class="alert alert-danger">
     <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
     Please, provide data for all required fields.
   </div>
 
-  <div ng-if="metadata.$dirty && metadata.$valid" class="alert alert-success">
+  <div ng-if="metadata.title.$dirty && metadata.$valid" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
     Congratulations! Now you can verify your Data Package and download it.
   </div>
 
-  <div class="row form-group">
+  <div ng-if="metadata.$valid" class="row form-group">
     <div class="col-xs-12">
       <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>

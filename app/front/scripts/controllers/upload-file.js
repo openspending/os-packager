@@ -4,12 +4,10 @@
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'PackageService', 'ValidationService', 'Configuration',
-      function($scope, PackageService, ValidationService, Configuration) {
+      '$scope', 'PackageService', 'ValidationService',
+      function($scope, PackageService, ValidationService) {
         $scope.file = null;
         $scope.url = null;
-
-        $scope.attributes = PackageService.getPackage().attributes;
 
         $scope.validationStatus = null;
 

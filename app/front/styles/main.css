@@ -50,13 +50,12 @@ textarea.resize-both {
   margin-right: 4px;
 }
 
-.x-form-control-readonly-label {
-  border-color: transparent;
-  background: none;
-  box-shadow: none;
-  padding-left: 0;
-  padding-right: 0;
-  color: #333;
+.control-label.required:after {
+  content: ' *';
+  color: #f00;
+  font-size: 80%;
+  position: relative;
+  top: -0.1em;
 }
 
 #step2-describe-data-table td {

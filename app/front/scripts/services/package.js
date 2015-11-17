@@ -29,6 +29,13 @@
           },
           createFiscalDataPackage: function() {
             return dataPackage.createFiscalDataPackage();
+          },
+          validateFiscalDataPackage: function() {
+            return $q(function(resolve, reject) {
+              dataPackage.validateFiscalDataPackage()
+                .then(resolve)
+                .catch(reject);
+            });
           }
         };
       }

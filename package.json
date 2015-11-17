@@ -43,7 +43,7 @@
     "express": "^4.13.3",
     "font-awesome": "^4.4.0",
     "goodtables": "git+https://github.com/okfn/goodtables-js.git",
-    "i": "^0.3.3",
+    "inflected": "^1.1.6",
     "json-table-schema": "0.0.2-alpha",
     "marked": "^0.3.5",
     "nconf": "^0.8.2",

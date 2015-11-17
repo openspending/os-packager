@@ -2,18 +2,93 @@
 <section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
-  <div class="alert alert-info">
-    <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
-    Stub
-  </div>
-
-  <div class="alert alert-success">
-    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
-    Just continue.
+  <form novalidate="novalidate" name="metadata" onsubmit="return false;">
+  <div class="row form-group">
+    <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
+      <label class="control-label required" for="step3-package-name">Name your Data Package</label>
+      <input ng-model="attributes.title" required="required" name="title"
+        type="text" class="form-control" id="step3-package-name">
+    </div>
   </div>
 
   <div class="row form-group">
     <div class="col-xs-12">
+      <label class="control-label" for="step3-package-description">Short description</label>
+      <textarea ng-model="attributes.description" class="form-control" id="step3-package-description"></textarea>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-sm-4">
+      <label class="control-label" for="step3-location-region">Region</label>
+      <select id="step3-location-region" class="form-control"
+        multiple="multiple" size="5" name="region"
+        ng-model="attributes.regionCode"
+        ng-change="updateCountries()"
+        ng-options="region.code as region.name for region in regions"></select>
+    </div>
+    <div class="col-sm-4">
+      <label class="control-label" for="step3-location-country">Country</label>
+      <select id="step3-location-country" class="form-control"
+        multiple="multiple" size="5" name="country"
+        ng-model="attributes.countryCode"
+        ng-change="updateCities()"
+        ng-options="country.code as country.name for country in countries"></select>
+    </div>
+    <div class="col-sm-4">
+      <label class="control-label" for="step3-location-city">City</label>
+      <select id="step3-location-city" class="form-control"
+        multiple="multiple" size="5" name="city"
+        ng-model="attributes.cityCode"
+        ng-options="city.code as city.name for city in cities"></select>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-xs-12">
+      <label class="control-label" for="step3-period-from">Period</label>
+    </div>
+    <div class="col-sm-4" ng-class="{'has-error': metadata.periodFrom.$dirty && !metadata.periodFrom.$valid}">
+      <input type="text" class="form-control" id="step3-period-from"
+        ng-model="period.from"  name="periodFrom"
+        ng-pattern="'\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[01])/\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[01])'">
+      <p class="help-block">Format: YYYY-MM-DD</p>
+    </div>
+    <div class="col-sm-4" ng-class="{'has-error': metadata.periodTo.$dirty && !metadata.periodTo.$valid}">
+      <input type="text" class="form-control" id="step3-period-to"
+        ng-model="period.to" name="periodTo"
+        ng-pattern="'\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[01])/\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[01])'">
+      <p class="help-block">Format: YYYY-MM-DD</p>
+    </div>
+  </div>
+  </form>
+
+  <div ng-if="!metadata.title.$dirty" class="alert alert-info">
+    <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
+    Please, provide some additional info about your Data Package.
+  </div>
+
+  <div ng-if="metadata.title.$dirty && !metadata.$valid" class="alert alert-danger">
+    <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
+    Please, provide data for all required fields.
+  </div>
+
+  <div ng-if="metadata.$valid" ng-init="validatePackage()" class="row form-group">
+    <div class="col-xs-12">
+      <div ng-repeat="error in validationErrors" class="alert alert-danger">
+        <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
+        <b>Validation error: </b> {{ error.message }}
+        <span ng-if="error.dataPath"><b>at</b> {{ error.dataPath }}</span>
+        <pre>{{ error | json }}</pre>
+      </div>
+
+      <div ng-if="!validationErrors" class="alert alert-success">
+        <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+        Congratulations! Now you can verify your Data Package and download it.
+      </div>
+    </div>
+
+    <div ng-if="!validationErrors" class="col-xs-12">
       <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>

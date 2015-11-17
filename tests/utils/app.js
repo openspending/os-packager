@@ -19,6 +19,7 @@ exports.start = function(done) {
       exports.browser = new Browser({
         maxWait: 5000
       });
+      exports.browser.debug();
       done();
     });
   }

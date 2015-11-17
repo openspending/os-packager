@@ -2,6 +2,7 @@
 
 var _ = require('underscore');
 var Promise = require('bluebird');
+var datapackageValidate = require('datapackage-validate').validate;
 var utils = require('./utils');
 
 function getResourceName(resource, index) {
@@ -65,7 +66,9 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
   var result = {};
 
   // Package metadata
-  _.extend(result, this.attributes);
+  _.extend(result, _.pick(this.attributes, function(value) {
+    return value !== undefined;
+  }));
 
   // Resources
   result.resources = _.map(this.resources, function(resource, index) {
@@ -98,8 +101,8 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   // Mappings
   result.mapping = {
-    measures: [],
-    dimensions: []
+    measures: {},
+    dimensions: {}
   };
 
   var groups = {};
@@ -118,11 +121,12 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     switch (concept) {
       case 'mapping.measures.amount': {
         _.each(fields, function(field) {
-          result.mapping.measures.push({
+          result.mapping.measures['amount'] = {
             name: 'amount',
             source: field.name,
-            resource: field.resource
-          });
+            resource: field.resource,
+            currency: 'USD' // TODO: Hardcode !!!
+          };
         });
         break;
       }
@@ -133,7 +137,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       case 'mapping.entity.properties.label': {
         var matches = /^mapping\.([a-z]+)\.properties\.([a-z]+)$/g
           .exec(concept);
-        result.mapping.dimensions.push({
+        result.mapping.dimensions[matches[1]] = {
           name: matches[1],
           fields: _.map(fields, function(field) {
             return {
@@ -141,13 +145,19 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
               source: field.name
             };
           })
-        });
+        };
         break;
       }
     }
   });
 
+  console.log(result);
+
   return result;
+};
+
+FiscalDataPackage.prototype.validateFiscalDataPackage = function() {
+  return datapackageValidate(this.createFiscalDataPackage(), 'fiscal');
 };
 
 module.exports = FiscalDataPackage;

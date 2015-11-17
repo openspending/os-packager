@@ -4,13 +4,28 @@
 
   angular.module('Application')
     .controller('ProvideMetadataController', [
-      '$scope', 'PackageService', 'UtilsService',
-      function($scope, PackageService, UtilsService) {
+      '$scope', 'PackageService', 'UtilsService', 'Configuration',
+      function($scope, PackageService, UtilsService, Configuration) {
         $scope.attributes = PackageService.getPackage().attributes;
 
         $scope.$watch('attributes.title', function(value) {
           $scope.attributes.name = UtilsService.slug(value);
         });
+
+        var updatePeriod = function() {
+          var period = [];
+          if ($scope.period) {
+            period = _.filter([
+              $scope.period.from || $scope.period.to,
+              $scope.period.to || $scope.period.from
+            ]);
+          }
+          $scope.attributes.fiscalPeriod = period.length == 0 ? undefined
+            : period.join('/');
+        };
+
+        $scope.$watch('period.from', updatePeriod);
+        $scope.$watch('period.to', updatePeriod);
 
         $scope.regions = UtilsService.getRegions();
         $scope.countries = UtilsService.getCountries();
@@ -57,6 +72,19 @@
               $scope.attributes.countryCode);
             $scope.updateCities($scope.attributes.countryCode);
           });
+        };
+
+        $scope.validatePackage = function() {
+          $scope.validationErrors = [];
+          PackageService.validateFiscalDataPackage()
+            .then(function(results) {
+              if (results.valid) {
+                $scope.validationErrors = null;
+              } else {
+                $scope.validationErrors = results.errors;
+              }
+            })
+            .catch(Configuration.defaultErrorHandler);
         };
       }
     ]);

@@ -26,7 +26,7 @@ describe.skip('Wizard UI', function() {
           console.log(browser.query('#step1-button-next'));
           done();
         }, 5000);
-      })
+      });
     });
   });
 

@@ -121,7 +121,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     switch (concept) {
       case 'mapping.measures.amount': {
         _.each(fields, function(field) {
-          result.mapping.measures['amount'] = {
+          result.mapping.measures.amount = {
             name: 'amount',
             source: field.name,
             resource: field.resource,
@@ -150,8 +150,6 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       }
     }
   });
-
-  console.log(result);
 
   return result;
 };

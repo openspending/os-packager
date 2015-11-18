@@ -13,3 +13,14 @@ module.exports.proxy = function(req, res) {
 
   req.pipe(request(url)).pipe(res);
 };
+
+module.exports.download = function(req, res) {
+  res.status(200);
+  if (req.body.name) {
+    res.attachment(req.body.name);
+  }
+  if (req.body.mime) {
+    res.set('Content-Type', req.body.mime);
+  }
+  res.send(req.body.data || '');
+};

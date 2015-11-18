@@ -8,6 +8,10 @@
       function($scope, PackageService, UtilsService, Configuration) {
         $scope.attributes = PackageService.getPackage().attributes;
 
+        $scope.attributes.regionCode = '';
+        $scope.attributes.countryCode = '';
+        $scope.attributes.cityCode = '';
+
         $scope.$watch('attributes.title', function(value) {
           $scope.attributes.name = UtilsService.slug(value);
         });
@@ -27,50 +31,44 @@
         $scope.$watch('period.from', updatePeriod);
         $scope.$watch('period.to', updatePeriod);
 
-        $scope.regions = UtilsService.getRegions();
-        $scope.countries = UtilsService.getCountries();
-        $scope.cities = UtilsService.getCities();
-
-        $scope.updateCities = function() {
-          var countries = $scope.attributes.countryCode;
-          countries = _.isArray(countries) ? countries : [];
-          if (countries.length == 0) {
-            countries = _.map(
-              $scope.countries,
-              function(item) {
-                return item.code;
-              }
-            );
-          }
-          UtilsService.getCities(countries).$promise.then(function(items) {
-            $scope.cities = items;
-            var codes = _.map(items, function(item) {
-              return item.code;
-            });
-            $scope.attributes.cityCode = _.intersection(codes,
-              $scope.attributes.cityCode);
-          });
+        var prependEmptyItem = function(items) {
+          return _.union([{
+            code: '',
+            name: ''
+          }], items);
         };
+
+        $scope.regions = prependEmptyItem([]);
+        $scope.countries = prependEmptyItem([]);
+
+        UtilsService.getRegions().$promise
+          .then(prependEmptyItem)
+          .then(function(items) {
+            $scope.regions = items;
+          });
+        UtilsService.getCountries().$promise
+          .then(prependEmptyItem)
+          .then(function(items) {
+            $scope.countries = items;
+          });
 
         $scope.updateCountries = function() {
           var regions = $scope.attributes.regionCode;
-          regions = _.isArray(regions) ? regions : [];
-          if (regions.length == 0) {
-            regions = _.map(
+          regions = !!regions ? [regions]
+            : _.map(
               $scope.regions,
               function(item) {
                 return item.code;
               }
             );
-          }
           UtilsService.getCountries(regions).$promise.then(function(items) {
-            $scope.countries = items;
+            $scope.countries = prependEmptyItem(items);
             var codes = _.map(items, function(item) {
               return item.code;
             });
-            $scope.attributes.countryCode = _.intersection(codes,
-              $scope.attributes.countryCode);
-            $scope.updateCities($scope.attributes.countryCode);
+            if (!_.contains(codes, $scope.attributes.countryCode)) {
+              $scope.attributes.countryCode = '';
+            }
           });
         };
 

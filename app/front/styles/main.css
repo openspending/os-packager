@@ -61,3 +61,15 @@ textarea.resize-both {
 #step2-describe-data-table td {
   min-width: 150px;
 }
+
+.step4-package-info {
+  margin-bottom: 3em;
+}
+
+.step4-package-info .row {
+  margin-bottom: 1em;
+}
+
+.step4-package-info .row p {
+  margin-bottom: 0.1em;
+}

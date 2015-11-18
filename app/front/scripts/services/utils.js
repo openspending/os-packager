@@ -8,7 +8,6 @@
       function($q) {
         var allRegions = null;
         var allCountries = null;
-        var allCities = null;
 
         return {
           getContentsFromFile: function(file) {
@@ -113,7 +112,7 @@
                   region: 'Europe'
                 });
                 result.push({
-                  code: 'UK',
+                  code: 'UA',
                   name: 'Ukraine',
                   region: 'Europe'
                 });
@@ -129,58 +128,6 @@
             if (!region) {
               // If region is not available, cache all countries
               allCountries = result;
-            }
-            return result;
-          },
-          getCities: function getCities(country) {
-            if (!country && allCities) {
-              // If country is not available, use cache (all cities)
-              return allCities;
-            }
-            var result = [];
-            result.$promise = $q(function(resolve, reject) {
-              if (!!country) {
-                // If country is available, try to load all cities, and then
-                // filter them. Resolve with filtered array
-                getCities().$promise.then(function(cities) {
-                  var filtered = [];
-                  if (_.isArray(country)) {
-                    filtered = _.filter(cities, function(city) {
-                      return _.contains(country, city.country);
-                    });
-                  } else {
-                    filtered = _.filter(cities, function(city) {
-                      return city.country == country;
-                    });
-                  }
-
-                  [].push.apply(result, filtered);
-                  resolve(result);
-                }).catch(reject);
-              } else {
-                // If country is not available, just load all cities
-                result.push({
-                  code: 'London',
-                  name: 'London',
-                  country: 'GB'
-                });
-                result.push({
-                  code: 'Lviv',
-                  name: 'Lviv',
-                  country: 'UK'
-                });
-                result.push({
-                  code: 'Shanghai',
-                  name: 'Shanghai',
-                  country: 'CN'
-                });
-                resolve(result);
-              }
-            });
-            result.$promise.then(_.identity); // It should load anyway
-            if (!country) {
-              // If country is not available, cache all cities
-              allCities = result;
             }
             return result;
           }

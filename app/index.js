@@ -5,6 +5,7 @@ var express = require('express');
 var nunjucks = require('nunjucks');
 var marked = require('marked');
 var path = require('path');
+var bodyParser = require('body-parser');
 
 var config = require('./config');
 var routes = require('./routes');
@@ -19,7 +20,10 @@ module.exports.start = function() {
 
     // Middlewares
     app.use([
-      express.static(path.join(__dirname, '/public'))
+      express.static(path.join(__dirname, '/public')),
+      bodyParser.urlencoded({
+        extended: true
+      })
     ]);
 
     // Controllers

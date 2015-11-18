@@ -1,7 +1,7 @@
 ;(function(angular) {
 
   var config = {
-    defaultErrorHandler: console.trace.bind(console)
+    defaultErrorHandler: (console.trace || console.log).bind(console)
   };
 
   angular.module('Application')

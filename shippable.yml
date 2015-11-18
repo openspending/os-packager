@@ -28,7 +28,8 @@ after_script:
 
 after_success:
   - rm app/public/.gitignore
-  - git add app/public --force && git commit -a -m 'added public'
+  - git add --force --all app/public
+  - git commit -m "added public"
   - git push -f git@heroku.com:fiscal-data-packager.git master
 
 notifications:

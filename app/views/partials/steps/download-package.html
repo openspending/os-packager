@@ -6,17 +6,17 @@
     <div class="row">
       <h3 class="col-xs-12">Basic Information</h3>
 
-      <div class="col-sm-3">
+      <div class="col-sm-3" ng-if="!!fiscalDataPackage.title">
         <p><b>Package Title</b></p>
         <p>{{ fiscalDataPackage.title }}</p>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-sm-3" ng-if="!!fiscalDataPackage.name">
         <p><b>Package Name</b></p>
         <p>{{ fiscalDataPackage.name }}</p>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-sm-3" ng-if="!!fiscalDataPackage.author">
         <p><b>Package Owner</b></p>
         <p>{{ fiscalDataPackage.author }}</p>
       </div>

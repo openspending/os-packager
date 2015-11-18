@@ -3,6 +3,8 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var datapackageValidate = require('datapackage-validate').validate;
+var request = require('request');
+var registry = require('datapackage-registry');
 var utils = require('./utils');
 
 function getResourceName(resource, index) {
@@ -155,7 +157,46 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 };
 
 FiscalDataPackage.prototype.validateFiscalDataPackage = function() {
-  return datapackageValidate(this.createFiscalDataPackage(), 'fiscal');
+  var dataPackage = this.createFiscalDataPackage();
+  return this.loadSchema().then(function(schema) {
+    return datapackageValidate(dataPackage, schema);
+  });
+};
+
+FiscalDataPackage.prototype.schema = null;
+
+FiscalDataPackage.prototype.loadSchema = function(forceReload) {
+  if (!FiscalDataPackage.prototype.schema || forceReload) {
+    var schemaID = 'fiscal';
+    return new Promise(function(resolve, reject) {
+      registry.get().then(function(result) {
+        var profile = _.findWhere(result, {id: schemaID});
+
+        if (!profile) {
+          reject('No profile found with id ' + schemaID);
+          return null;
+        }
+
+        request(profile.schema, function(error, response, data) {
+          if (error) {
+            reject('Failed loading schema from ' + profile.schema);
+            return null;
+          }
+
+          try {
+            FiscalDataPackage.prototype.schema = JSON.parse(data);
+            resolve(FiscalDataPackage.prototype.schema);
+          } catch (e) {
+            reject('Failed parsing schema json from ' + profile.schema);
+          }
+        });
+      }, function() {
+        reject('Registry request failed');
+      });
+    });
+  } else {
+    return Promise.resolve(FiscalDataPackage.prototype.schema);
+  }
 };
 
 module.exports = FiscalDataPackage;

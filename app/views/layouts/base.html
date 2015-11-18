@@ -7,7 +7,7 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="/vendor.css">
+  <link rel="stylesheet" href="/vendor.css?{{ sessionSalt }}">
 
   <!-- OK Panel CSS -->
   <link rel="stylesheet" href="https://cdn.rawgit.com/okfn/ok-panel/v1.0.0/assets/css/frontend.css">
@@ -15,7 +15,7 @@
   <!-- Theme CSS -->
   <link rel="stylesheet" href="https://cdn.rawgit.com/okfn/app-theme/924b03098a3d0fcaa5acf573f51571f519f80c94/css/main.min.css">
 
-  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/app.css?{{ sessionSalt }}">
 
   <!-- Optional Modernizr -->
   <script src="https://cdn.rawgit.com/okfn/app-theme/2114842a6bdf0c49eb94faca4b7c5dc4a29d2249/js/vendor/modernizr-2.8.3.min.js"></script>
@@ -38,9 +38,9 @@
 
   {% include "partials/footer.html" %}
 
-  <script src="/modules.js"></script>
-  <script src="/vendor.js"></script>
-  <script src="/app.js"></script>
+  <script src="/modules.js?{{ sessionSalt }}"></script>
+  <script src="/vendor.js?{{ sessionSalt }}"></script>
+  <script src="/app.js?{{ sessionSalt }}"></script>
   <script src="https://cdn.rawgit.com/okfn/app-theme/00464f102ee73ea45c1ad5c0dd6c77708d6dbdc6/js/plugins.min.js"></script>
   <script src="https://cdn.rawgit.com/okfn/ok-panel/v1.0.0/assets/js/frontend.min.js" type="text/javascript"></script>
   <script src="https://cdn.rawgit.com/okfn/app-theme/1a0030fe829abeaf25d87ed4923efed324e77259/js/main.min.js"></script>

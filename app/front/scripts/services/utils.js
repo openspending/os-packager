@@ -112,7 +112,7 @@
                   region: 'Europe'
                 });
                 result.push({
-                  code: 'UK',
+                  code: 'UA',
                   name: 'Ukraine',
                   region: 'Europe'
                 });

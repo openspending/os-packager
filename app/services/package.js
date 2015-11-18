@@ -67,7 +67,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   // Package metadata
   _.extend(result, _.pick(this.attributes, function(value) {
-    return value !== undefined;
+    return !!value;
   }));
 
   // Resources

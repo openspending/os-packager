@@ -2,23 +2,70 @@
 <section ng-if="currentStep.id == 'download'" ng-controller="DownloadPackageController">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
-  <pre>{{ serializeDataPackage() }}</pre>
+  <div class="step4-package-info">
+    <div class="row">
+      <h3 class="col-xs-12">Basic Information</h3>
 
-  <div class="alert alert-info">
-    <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
-    Stub
+      <div class="col-sm-3">
+        <p><b>Package Title</b></p>
+        <p>{{ fiscalDataPackage.title }}</p>
+      </div>
+
+      <div class="col-sm-3">
+        <p><b>Package Name</b></p>
+        <p>{{ fiscalDataPackage.name }}</p>
+      </div>
+
+      <div class="col-sm-3">
+        <p><b>Package Owner</b></p>
+        <p>{{ fiscalDataPackage.author }}</p>
+      </div>
+
+      <div class="col-sm-3" ng-if="!!fiscalDataPackage.fiscalPeriod">
+        <p><b>Fiscal Period</b></p>
+        <p>{{ fiscalDataPackage.fiscalPeriod }}</p>
+      </div>
+
+      <div class="col-sm-3" ng-if="!!fiscalDataPackage.regionCode || !!fiscalDataPackage.countryCode || !!fiscalDataPackage.cityCode">
+        <p><b>Location</b></p>
+        <p>{{ [fiscalDataPackage.regionCode, fiscalDataPackage.countryCode, fiscalDataPackage.cityCode] | join }}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <p><b>Files</b></p>
+        <p ng-repeat="resource in fiscalDataPackage.resources track by $index">
+          <span>{{ resource.title || resource.name }}</span>
+          <i ng-if="!!resource.path || !!resource.url" class="text-muted">({{ resource.path || resource.url }})</i>
+        </p>
+      </div>
+    </div>
   </div>
 
-  <div class="alert alert-success">
-    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
-    Now you can download your data package.
+  <div class="step4-package-info">
+    <div class="row">
+      <h3 class="col-xs-12">Column Mapping</h3>
+
+      <div ng-repeat="mapping in mappings track by $index" class="col-sm-3">
+        <p><b>{{ mapping.name }}</b></p>
+        <p ng-repeat="source in mapping.sources track by $index">
+          <span>{{ source.fileName }}</span>&nbsp;/&nbsp;<span>{{ source.fieldName }}</span>
+        </p>
+      </div>
+    </div>
   </div>
 
   <div class="row form-group">
     <div class="col-xs-12">
-      <a href="javascript:void(0);" class="btn btn-primary btn-lg">
-        <i class="fa fa-download"></i>&nbsp;&nbsp;Download
-      </a>
+      <form action="{{ '/download/' + fileName }}" method="post">
+        <input type="hidden" name="name" value="{{ fileName }}">
+        <input type="hidden" name="mime" value="application/octet-stream">
+        <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="fa fa-download"></i>&nbsp;&nbsp;Download
+        </button>
+      </form>
     </div>
   </div>
 </section>

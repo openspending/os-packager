@@ -40,7 +40,6 @@
 
         $scope.regions = prependEmptyItem([]);
         $scope.countries = prependEmptyItem([]);
-        $scope.cities = prependEmptyItem([]);
 
         UtilsService.getRegions().$promise
           .then(prependEmptyItem)
@@ -52,32 +51,6 @@
           .then(function(items) {
             $scope.countries = items;
           });
-        UtilsService.getCities().$promise
-          .then(prependEmptyItem)
-          .then(function(items) {
-            $scope.cities = items;
-          });
-
-        $scope.updateCities = function() {
-          var countries = $scope.attributes.countryCode;
-          countries = !!countries ? [countries]
-            : _.map(
-              $scope.countries,
-              function(item) {
-                return item.code;
-              }
-            );
-
-          UtilsService.getCities(countries).$promise.then(function(items) {
-            $scope.cities = prependEmptyItem(items);
-            var codes = _.map(items, function(item) {
-              return item.code;
-            });
-            if (!_.contains(codes, $scope.attributes.cityCode)) {
-              $scope.attributes.cityCode = '';
-            }
-          });
-        };
 
         $scope.updateCountries = function() {
           var regions = $scope.attributes.regionCode;
@@ -96,7 +69,6 @@
             if (!_.contains(codes, $scope.attributes.countryCode)) {
               $scope.attributes.countryCode = '';
             }
-            $scope.updateCities($scope.attributes.countryCode);
           });
         };
 

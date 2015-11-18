@@ -22,7 +22,7 @@
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-region">Region</label>
       <select id="step3-location-region" class="form-control"
-        size="5" name="region"
+        name="region"
         ng-model="attributes.regionCode"
         ng-change="updateCountries()"
         ng-options="region.code as region.name for region in regions"></select>
@@ -30,17 +30,15 @@
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-country">Country</label>
       <select id="step3-location-country" class="form-control"
-        size="5" name="country"
+        name="country"
         ng-model="attributes.countryCode"
         ng-change="updateCities()"
         ng-options="country.code as country.name for country in countries"></select>
     </div>
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-city">City</label>
-      <select id="step3-location-city" class="form-control"
-        size="5" name="city"
-        ng-model="attributes.cityCode"
-        ng-options="city.code as city.name for city in cities"></select>
+      <input type="text" id="step3-location-city" class="form-control"
+        name="city" ng-model="attributes.cityCode">
     </div>
   </div>
 

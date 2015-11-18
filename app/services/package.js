@@ -2,7 +2,14 @@
 
 var _ = require('underscore');
 var Promise = require('bluebird');
+var datapackageValidate = require('datapackage-validate').validate;
+var request = require('request');
+var registry = require('datapackage-registry');
 var utils = require('./utils');
+
+function getResourceName(resource, index) {
+  return resource.name || 'resource_' + index;
+}
 
 function FiscalDataPackage() {
   this.attributes = {};
@@ -61,12 +68,14 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
   var result = {};
 
   // Package metadata
-  _.extend(result, this.attributes);
+  _.extend(result, _.pick(this.attributes, function(value) {
+    return !!value;
+  }));
 
   // Resources
   result.resources = _.map(this.resources, function(resource, index) {
     var result = {};
-    result.name = 'resource_' + index;
+    result.name = getResourceName(resource, index);
     result.format = 'csv';
     if (resource.source.url) {
       result.url = resource.source.url;
@@ -74,7 +83,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       result.path = resource.source.fileName;
     }
     if (resource.data.bytes) {
-      result.data = resource.data.bytes;
+      //result.data = resource.data.bytes;
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;
@@ -94,8 +103,8 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   // Mappings
   result.mapping = {
-    measures: [],
-    dimensions: []
+    measures: {},
+    dimensions: {}
   };
 
   var groups = {};
@@ -104,7 +113,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       if (field.concept) {
         groups[field.concept] = groups[field.concept] || [];
         groups[field.concept].push(_.extend({
-          resource: 'resource_' + index
+          resource: getResourceName(resource, index)
         }, field));
       }
     });
@@ -114,11 +123,12 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     switch (concept) {
       case 'mapping.measures.amount': {
         _.each(fields, function(field) {
-          result.mapping.measures.push({
+          result.mapping.measures.amount = {
             name: 'amount',
             source: field.name,
-            resource: field.resource
-          });
+            resource: field.resource,
+            currency: 'USD' // TODO: Hardcode !!!
+          };
         });
         break;
       }
@@ -129,7 +139,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       case 'mapping.entity.properties.label': {
         var matches = /^mapping\.([a-z]+)\.properties\.([a-z]+)$/g
           .exec(concept);
-        result.mapping.dimensions.push({
+        result.mapping.dimensions[matches[1]] = {
           name: matches[1],
           fields: _.map(fields, function(field) {
             return {
@@ -137,13 +147,56 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
               source: field.name
             };
           })
-        });
+        };
         break;
       }
     }
   });
 
   return result;
+};
+
+FiscalDataPackage.prototype.validateFiscalDataPackage = function() {
+  var dataPackage = this.createFiscalDataPackage();
+  return this.loadSchema().then(function(schema) {
+    return datapackageValidate(dataPackage, schema);
+  });
+};
+
+FiscalDataPackage.prototype.schema = null;
+
+FiscalDataPackage.prototype.loadSchema = function(forceReload) {
+  if (!FiscalDataPackage.prototype.schema || forceReload) {
+    var schemaID = 'fiscal';
+    return new Promise(function(resolve, reject) {
+      registry.get().then(function(result) {
+        var profile = _.findWhere(result, {id: schemaID});
+
+        if (!profile) {
+          reject('No profile found with id ' + schemaID);
+          return null;
+        }
+
+        request(profile.schema, function(error, response, data) {
+          if (error) {
+            reject('Failed loading schema from ' + profile.schema);
+            return null;
+          }
+
+          try {
+            FiscalDataPackage.prototype.schema = JSON.parse(data);
+            resolve(FiscalDataPackage.prototype.schema);
+          } catch (e) {
+            reject('Failed parsing schema json from ' + profile.schema);
+          }
+        });
+      }, function() {
+        reject('Registry request failed');
+      });
+    });
+  } else {
+    return Promise.resolve(FiscalDataPackage.prototype.schema);
+  }
 };
 
 module.exports = FiscalDataPackage;

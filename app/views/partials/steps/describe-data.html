@@ -10,9 +10,9 @@
           <!-- Several rows of sample of data -->
           <tr class="success">
             <td colspan="{{ resource.fields.length + 1 }}">
-              <b class="form-control x-form-control-readonly-label">
+              <p class="form-control-static">
                 Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 1 ? 'row' : 'rows' }})
-              </b>
+              </p>
             </td>
           </tr>
           <tr>
@@ -26,14 +26,14 @@
           <!-- Editors -->
           <tr class="success">
             <td colspan="{{ resource.fields.length + 1 }}">
-              <b class="form-control x-form-control-readonly-label">Description</b>
+              <p class="form-control-static">Description</p>
             </td>
           </tr>
 
           <!-- Title of field -->
           <tr>
             <td class="info">
-              <span class="form-control x-form-control-readonly-label">Title</span>
+              <p class="form-control-static">Title</p>
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <input ng-model="field.title" type="text" class="form-control">
@@ -42,7 +42,7 @@
           <!-- Description of field -->
           <tr>
             <td class="info">
-              <span class="form-control x-form-control-readonly-label">Description</span>
+              <p class="form-control-static">Description</p>
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <textarea ng-model="field.description" class="form-control resize-vertical"></textarea>
@@ -51,7 +51,7 @@
           <!-- Data type -->
           <tr>
             <td class="info">
-              <span class="form-control x-form-control-readonly-label">Data type</span>
+              <p class="form-control-static">Data type</p>
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.type" class="form-control"
@@ -61,7 +61,7 @@
           <!-- Concept (measures) -->
           <tr>
             <td class="info">
-              <span class="form-control x-form-control-readonly-label">Concept</span>
+              <p class="form-control-static">Concept</p>
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.concept" class="form-control"

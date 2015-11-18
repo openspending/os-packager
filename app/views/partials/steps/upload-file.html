@@ -1,12 +1,7 @@
 {% raw %}
 <section ng-if="currentStep.id == 'upload-file'" ng-controller="UploadFileController">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-  <div class="row form-group">
-    <div class="col-xs-12">
-      <label class="control-label" for="step1-package-name">Name your Data Package</label>
-      <input ng-model="attributes.name" type="text" class="form-control" id="step1-package-name">
-    </div>
-  </div>
+
   <div class="row form-group">
     <div ng-hide="url" ng-class="{'col-sm-5': !url && !file, 'col-xs-12': !!file}">
       <div class="input-group">
@@ -21,11 +16,11 @@
       <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
     </div>
     <div ng-hide="!!file || url" class="col-sm-1 text-center">
-      <span class="form-control x-form-control-readonly-label">or</span>
+      <p class="form-control-static">or</p>
     </div>
     <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
       <div ng-class="{'input-group': url}">
-        <input ng-model="url" type="text" class="form-control" placeholder="http://">
+        <input name="step1-resource-url" ng-model="url" type="text" class="form-control" placeholder="http://">
         <span class="input-group-btn" ng-if="url">
           <button ng-click="onClearSelectedUrl()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
@@ -59,7 +54,7 @@
   <div class="row form-group"
     ng-if="validationStatus.completed && !validationStatus.errors">
     <div class="col-xs-12">
-      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>

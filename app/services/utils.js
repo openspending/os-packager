@@ -5,10 +5,52 @@ var Promise = require('bluebird');
 var GoodTables = require('goodtables');
 var csv = require('papaparse');
 var jts = require('json-table-schema');
-var titleize = require('i')().titleize;
+var inflector = require('inflected');
+
+inflector.transliterations(function(t) {
+  t.approximate('А', 'A');  t.approximate('а', 'a');
+  t.approximate('Б', 'B');  t.approximate('б', 'b');
+  t.approximate('В', 'V');  t.approximate('в', 'v');
+  t.approximate('Г', 'G');  t.approximate('г', 'g');
+  t.approximate('Ґ', 'G');  t.approximate('ґ', 'g');
+  t.approximate('Д', 'D');  t.approximate('д', 'd');
+  t.approximate('Е', 'E');  t.approximate('е', 'e');
+  t.approximate('Є', 'Je'); t.approximate('є', 'je');
+  t.approximate('Ж', 'Zh'); t.approximate('ж', 'zh');
+  t.approximate('З', 'Z');  t.approximate('з', 'z');
+  t.approximate('И', 'Y');  t.approximate('и', 'y');
+  t.approximate('І', 'I');  t.approximate('і', 'i');
+  t.approximate('Ї', 'Ji'); t.approximate('ї', 'ji');
+  t.approximate('Й', 'J');  t.approximate('й', 'j');
+  t.approximate('К', 'K');  t.approximate('к', 'k');
+  t.approximate('Л', 'L');  t.approximate('л', 'l');
+  t.approximate('М', 'M');  t.approximate('м', 'm');
+  t.approximate('Н', 'N');  t.approximate('н', 'n');
+  t.approximate('О', 'O');  t.approximate('о', 'o');
+  t.approximate('П', 'P');  t.approximate('п', 'p');
+  t.approximate('Р', 'R');  t.approximate('р', 'r');
+  t.approximate('С', 'S');  t.approximate('с', 's');
+  t.approximate('Т', 'T');  t.approximate('т', 't');
+  t.approximate('У', 'U');  t.approximate('у', 'u');
+  t.approximate('Ф', 'F');  t.approximate('ф', 'f');
+  t.approximate('Х', 'H');  t.approximate('х', 'h');
+  t.approximate('Ц', 'Ts'); t.approximate('ц', 'ts');
+  t.approximate('Ч', 'Ch'); t.approximate('ч', 'ch');
+  t.approximate('Ш', 'Sh'); t.approximate('ш', 'sh');
+  t.approximate('Щ', 'Shch'); t.approximate('щ', 'shch');
+  t.approximate('Ю', 'Ju'); t.approximate('ю', 'ju');
+  t.approximate('Я', 'Ja'); t.approximate('я', 'ja');
+  t.approximate('Ы', 'Y');  t.approximate('ы', 'y');
+  t.approximate('Э', 'E');  t.approximate('э', 'e');
+  t.approximate('Ё', 'Jo'); t.approximate('ё', 'jo');
+});
 
 module.exports.convertToTitle = function(string) {
-  return titleize(('' + string).replace(/\s+/g, ' ').toLowerCase());
+  return inflector.titleize('' + (string || ''));
+};
+
+module.exports.convertToSlug = function(string) {
+  return inflector.parameterize(inflector.transliterate('' + (string || '')));
 };
 
 module.exports.getCsvSchema = function(string) {

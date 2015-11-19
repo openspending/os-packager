@@ -4,8 +4,8 @@
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'PackageService', 'ValidationService',
-      function($scope, PackageService, ValidationService) {
+      '$scope', 'PackageService', 'ValidationService', 'Configuration',
+      function($scope, PackageService, ValidationService, Configuration) {
         $scope.file = null;
         $scope.url = null;
 
@@ -45,6 +45,10 @@
               $scope.resource = resource;
               $scope.validationStatus = ValidationService
                 .validateResource(resource);
+            })
+            .catch(function(error) {
+              $scope.validationStatus = null;
+              Configuration.defaultErrorHandler(error);
             });
         };
 

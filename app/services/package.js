@@ -23,21 +23,17 @@ function FiscalDataPackage() {
     this.splice(0, this.length);
   };
 
-  this.resources.createFromReader = function(reader) {
+  this.resources.createFromSource = function(urlOrFile) {
     return new Promise(function(resolve, reject) {
-      reader
-        .then(function(data) {
-          return utils.getCsvSchema(data);
-        })
+      utils.getCsvSchema(urlOrFile)
         .then(function(data) {
           var source = {};
-          if (reader.url) {
-            source.url = reader.url;
-          }
-          if (reader.file) {
-            source.fileName = reader.file.name;
-            source.mimeType = reader.file.type;
-            source.size = reader.file.size;
+          if (_.isObject(urlOrFile)) {
+            source.fileName = urlOrFile.name;
+            source.mimeType = urlOrFile.type;
+            source.size = urlOrFile.size;
+          } else {
+            source.url = urlOrFile;
           }
 
           var resource = {
@@ -45,7 +41,7 @@ function FiscalDataPackage() {
             data: {
               headers: data.headers,
               rows: data.rows,
-              bytes: data.data
+              raw: data.raw
             },
             fields: _.map(data.schema.fields, function(field) {
               field = _.clone(field);
@@ -81,9 +77,6 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       result.url = resource.source.url;
     } else {
       result.path = resource.source.fileName;
-    }
-    if (resource.data.bytes) {
-      //result.data = resource.data.bytes;
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;

@@ -37,19 +37,21 @@
               <div class="panel-body">
                 <strong ng-if="error.row_index == 0"><span class="text-uppercase">Headers</span></strong>
 
-                <table class="table table-bordered table-condensed">
-                  <tbody>
-                  <tr ng-if="error.row_index != 0" class="result-header-row">
-                    <th class="text-uppercase">Row</th>
-                    <th ng-repeat="header in error.headers track by $index">{{ header }}</th>
-                  </tr>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-condensed">
+                    <tbody>
+                    <tr ng-if="error.row_index != 0" class="result-header-row">
+                      <th class="text-uppercase">Row</th>
+                      <th ng-repeat="header in error.headers track by $index">{{ header }}</th>
+                    </tr>
 
-                  <tr class="result-row">
-                    <td ng-if="error.row_index != 0" class="result-row-index">{{ error.row_index }}</td>
-                    <td ng-repeat="context in error.result_context track by $index" ng-class="{'bg-danger': !context}">{{ context }}</td>
-                  </tr>
-                  </tbody>
-                </table>
+                    <tr class="result-row">
+                      <td ng-if="error.row_index != 0" class="result-row-index">{{ error.row_index }}</td>
+                      <td ng-repeat="context in error.result_context track by $index" ng-class="{'bg-danger': !context}">{{ context }}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>

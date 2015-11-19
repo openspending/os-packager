@@ -11,7 +11,11 @@ module.exports.proxy = function(req, res) {
     return false;
   }
 
-  req.pipe(request(url)).pipe(res);
+  try {
+    req.pipe(request(url)).pipe(res);
+  } catch (e) {
+    res.sendStatus(404);
+  }
 };
 
 module.exports.download = function(req, res) {

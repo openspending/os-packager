@@ -91,6 +91,7 @@ gulp.task('app.styles', function() {
 
 gulp.task('vendor.scripts', function() {
   var files = [
+    path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
     path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
     path.join(nodeModulesDir, '/angular/angular.min.js')
   ];

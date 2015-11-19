@@ -53,9 +53,10 @@ module.exports.convertToSlug = function(string) {
   return inflector.parameterize(inflector.transliterate('' + (string || '')));
 };
 
-module.exports.getCsvSchema = function(string) {
+module.exports.getCsvSchema = function(urlOrFile) {
   return new Promise(function(resolve, reject) {
     var config = {
+      download: true,
       preview: 1000,
       complete: function(results) {
         if (results.errors.length) {
@@ -65,14 +66,18 @@ module.exports.getCsvSchema = function(string) {
         var rows = _.rest(results.data);
         var schema = jts.infer(headers, rows);
         resolve({
-          data: string,
+          raw: csv.unparse(results.data, {
+            quotes: true,
+            delimiter: ',',
+            newline: '\r\n'
+          }),
           headers: headers,
           rows: rows,
           schema: schema
         });
       }
     };
-    csv.parse(string, config);
+    csv.parse(urlOrFile, config);
   });
 };
 

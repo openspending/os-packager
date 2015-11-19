@@ -1,6 +1,5 @@
 {% raw %}
 <section ng-if="currentStep.id == 'describe-data'" ng-controller="DescribeDataController">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in resources track by $index">
     <div class="col-xs-12">
 

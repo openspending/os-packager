@@ -1,21 +1,124 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<section ng-controller="StepsController">
-<div ng-if="false">
-  <div class="text-center" style="margin-bottom: 1em;">
-    <i class="fa fa-4x fa-spinner fa-pulse"></i>
+
+<div class="wrapper">
+  <div class="promo">
+    <div class="promo__wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-2">
+            <div class="promo__left" data-delay="700">
+              <img src="/images/promo0.png" alt="">
+            </div>
+          </div>
+
+          <div class="col-xs-8">
+            <div class="promo__main" data-delay="0">
+              <div class="promo__arrow" data-delay="1200">
+                <div class="promo__arrow-wrapper">
+                  <img src="/images/promo-arrow.png" alt="" width="879" height="169">
+                </div>
+              </div>
+
+              <div class="promo__title">
+                From tabulation
+                to visualisation
+              </div>
+
+              <div class="promo__subtitle">
+                (in 5 minutes!)
+              </div>
+
+              <a href="/create" class="button button--promo">
+                Get Started
+              </a>
+            </div>
+          </div>
+
+          <div class="col-xs-2">
+            <div class="promo__right" data-delay="1800">
+              <img src="/images/promo1.png" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="text-center">
-    Loading application...
+
+  <div class="steps">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="steps__title">
+            Get your data into <strong><span>Open</span>Spending</strong> in a few easy steps
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-sm-4">
+          <div class="steps__item">
+            <div class="steps__item-title">
+              Upload your files
+            </div>
+
+            <div class="steps__image">
+              <img src="/images/promo-bottom0.png" alt="" width="589" height="357">
+              <div class="steps__item-arrow"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+          <div class="steps__item">
+            <div class="steps__item-title">
+              Assign some columns
+            </div>
+
+            <div class="steps__image">
+              <img src="/images/promo-bottom1.png" alt="" width="589" height="357">
+              <div class="steps__item-arrow steps__item-arrow--reflect"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+          <div class="steps__item">
+            <div class="steps__item-title">
+              enjoy your visualisations
+            </div>
+
+            <div class="steps__image">
+              <img src="/images/promo-bottom2.png" alt="" width="589" height="357">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-<div ng-cloak>
-  {% include "partials/steps.html" %}
-  {% include "partials/steps/upload-file.html" %}
-  {% include "partials/steps/describe-data.html" %}
-  {% include "partials/steps/provide-metadata.html" %}
-  {% include "partials/steps/download-package.html" %}
-</div>
-</section>
+
+{% endblock %}
+
+{% block footerScript %}
+
+<script type="text/javascript">
+  $(function() {
+    var adjustWidth = function() {
+      $('.promo__arrow-wrapper').width($('.promo__main').width());
+    };
+
+    $('[data-delay]').each(function() {
+      var self = $(this);
+      setTimeout(function() {
+        self.addClass('is-animated');
+      }, self.attr('data-delay'));
+    });
+
+    adjustWidth();
+    $(window).on('resize', adjustWidth);
+  });
+</script>
+
 {% endblock %}

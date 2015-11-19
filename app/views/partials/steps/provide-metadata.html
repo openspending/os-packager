@@ -1,7 +1,5 @@
 {% raw %}
 <section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-
   <form novalidate="novalidate" name="metadata" onsubmit="return false;">
   <div class="row form-group">
     <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">

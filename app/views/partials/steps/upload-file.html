@@ -1,7 +1,5 @@
 {% raw %}
 <section ng-if="currentStep.id == 'upload-file'" ng-controller="UploadFileController">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-
   <div class="row form-group">
     <div ng-hide="url" ng-class="{'col-sm-5': !url && !file, 'col-xs-12': !!file}">
       <div class="input-group">

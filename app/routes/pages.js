@@ -7,6 +7,7 @@ module.exports = function() {
   var router = express.Router();
 
   router.get('/', pages.main);
+  router.get('/create', pages.wizard);
   router.get('/about', pages.about);
 
   return router;

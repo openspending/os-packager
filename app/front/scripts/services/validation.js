@@ -14,7 +14,7 @@
             var schema = !!validateSchema ? resource.schema : undefined;
             var utils = require('app/services').utils;
             validationResult.$promise = $q(function(resolve, reject) {
-              utils.validateData(resource.data.bytes, schema)
+              utils.validateData(resource.data.raw, schema)
                 .then(resolve)
                 .catch(reject);
             });

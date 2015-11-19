@@ -60,7 +60,6 @@ module.exports.getCsvSchema = function(urlOrFile) {
       preview: 1000,
       skipEmptyLines: true,
       complete: function(results) {
-        console.log(results);
         if (results.errors.length) {
           reject(results.errors);
         }

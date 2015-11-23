@@ -3,7 +3,6 @@
 var path = require('path');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var less = require('gulp-less');
 var minifyCss = require('gulp-minify-css');
 var prefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
@@ -17,14 +16,11 @@ var _ = require('underscore');
 var frontSrcDir = path.join(__dirname, '/app/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
 var frontStylesDir = path.join(frontSrcDir, '/styles');
-var frontImagesDir = path.join(frontSrcDir, '/images');
-var frontFontsDir = path.join(frontSrcDir, '/fonts');
 
 var publicDir = path.join(__dirname, '/app/public');
 var publicScriptsDir = path.join(publicDir, '/');
 var publicStylesDir = path.join(publicDir, '/');
 var publicFontsDir = path.join(publicDir, '/fonts');
-var publicImagesDir = path.join(publicDir, '/images');
 
 var nodeModulesDir = path.join(__dirname, '/node_modules');
 
@@ -42,8 +38,6 @@ gulp.task('default', [
   'app.scripts',
   'app.modules',
   'app.styles',
-  'app.fonts',
-  'app.images',
   'vendor.scripts',
   'vendor.styles',
   'vendor.fonts'
@@ -86,16 +80,12 @@ gulp.task('app.modules', function() {
 
 gulp.task('app.styles', function() {
   var files = [
-    path.join(frontStylesDir, '/main.css'),
-    path.join(frontStylesDir, '/styles.less')
+    path.join(frontStylesDir, '/main.css')
   ];
   return gulp.src(files)
-    .pipe(sourcemaps.init())
-    .pipe(less())
     .pipe(prefixer({browsers: ['last 4 versions']}))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('app.css'))
-    .pipe(sourcemaps.write())
     .pipe(gulp.dest(publicStylesDir));
 });
 
@@ -127,18 +117,5 @@ gulp.task('vendor.fonts', function() {
     path.join(nodeModulesDir, '/bootstrap/dist/fonts/*')
   ];
   return gulp.src(files)
-    .pipe(gulp.dest(publicFontsDir));
-});
-
-gulp.task('app.images', function() {
-  return gulp.src([
-    path.join(frontImagesDir, '/*'),
-    path.join(frontImagesDir, '/**/*')
-  ])
-    .pipe(gulp.dest(publicImagesDir));
-});
-
-gulp.task('app.fonts', function() {
-  return gulp.src(path.join(frontFontsDir, '/*'))
     .pipe(gulp.dest(publicFontsDir));
 });

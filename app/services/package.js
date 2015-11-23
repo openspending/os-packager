@@ -179,7 +179,7 @@ FiscalDataPackage.prototype.loadSchema = function(forceReload) {
           method: 'GET'
         };
         fetch('/proxy?url=' + encodeURIComponent(profile.schema), options)
-          .then(function (res){
+          .then(function(res) {
             if (res.status != 200) {
               reject('Failed loading schema from ' + profile.schema);
             }

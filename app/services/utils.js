@@ -1,8 +1,8 @@
 'use strict';
 
 var _ = require('underscore');
-var Promise = require('bluebird');
 var GoodTables = require('goodtables');
+var Promise = require('bluebird');
 var csv = require('papaparse');
 var jts = require('json-table-schema');
 var inflector = require('inflected');
@@ -82,11 +82,11 @@ module.exports.getCsvSchema = function(urlOrFile) {
   });
 };
 
-module.exports.validateData = function(data, schema) {
+module.exports.validateData = function(data, schema, userEndpointURL) {
   var goodTables = new GoodTables({
     'method': 'post',
     'report_type': 'grouped'
-  });
+  }, userEndpointURL);
   return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined)
     .then(function(results) {
       if (!results) {

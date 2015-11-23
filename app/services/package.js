@@ -3,9 +3,9 @@
 var _ = require('underscore');
 var Promise = require('bluebird');
 var datapackageValidate = require('datapackage-validate').validate;
-var request = require('request');
 var registry = require('datapackage-registry');
 var utils = require('./utils');
+require('isomorphic-fetch');
 
 function getResourceName(resource, index) {
   return resource.name || 'resource_' + index;
@@ -163,7 +163,11 @@ FiscalDataPackage.prototype.loadSchema = function(forceReload) {
   if (!FiscalDataPackage.prototype.schema || forceReload) {
     var schemaID = 'fiscal';
     return new Promise(function(resolve, reject) {
-      registry.get().then(function(result) {
+      var options = {
+        backend: '/proxy?url=' + encodeURIComponent('https://rawgit.com/' +
+          'dataprotocols/registry/master/registry.csv')
+      };
+      registry.get(options).then(function(result) {
         var profile = _.findWhere(result, {id: schemaID});
 
         if (!profile) {
@@ -171,19 +175,25 @@ FiscalDataPackage.prototype.loadSchema = function(forceReload) {
           return null;
         }
 
-        request(profile.schema, function(error, response, data) {
-          if (error) {
-            reject('Failed loading schema from ' + profile.schema);
-            return null;
-          }
-
-          try {
-            FiscalDataPackage.prototype.schema = JSON.parse(data);
-            resolve(FiscalDataPackage.prototype.schema);
-          } catch (e) {
-            reject('Failed parsing schema json from ' + profile.schema);
-          }
-        });
+        var options = {
+          method: 'GET'
+        };
+        fetch('/proxy?url=' + encodeURIComponent(profile.schema), options)
+          .then(function (res){
+            if (res.status != 200) {
+              reject('Failed loading schema from ' + profile.schema);
+            }
+            return res.text();
+          })
+          .then(function(data) {
+            try {
+              FiscalDataPackage.prototype.schema = JSON.parse(data);
+              resolve(FiscalDataPackage.prototype.schema);
+            } catch (e) {
+              reject('Failed parsing schema json from ' + profile.schema);
+            }
+          })
+          .catch(reject);
       }, function() {
         reject('Registry request failed');
       });

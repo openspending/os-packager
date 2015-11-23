@@ -1,5 +1,5 @@
 {% raw %}
-<section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController">
+<section ng-if="currentStep.id == 'metadata'" ng-controller="ProvideMetadataController" id="step3-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
   <form novalidate="novalidate" name="metadata" onsubmit="return false;">
@@ -87,7 +87,7 @@
     </div>
 
     <div ng-if="!validationErrors" class="col-xs-12">
-      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step3-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>

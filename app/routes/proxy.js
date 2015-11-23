@@ -6,7 +6,7 @@ var proxy = require('../controllers/proxy');
 module.exports = function() {
   var router = express.Router();
 
-  router.get('/proxy', proxy.proxy);
+  router.all('/proxy', proxy.proxy);
   router.post('/download/*', proxy.download);
 
   return router;

@@ -1,57 +1,6 @@
 {% raw %}
-
-<svg style="display: none;">
-<defs>
-  <g id="step1-icon">
-    <path fill="#93C94A" d="M22.4,18.6L11.3,30H18v14h9V30h6.8L22.4,18.6z M40.5,2h-36C2,2,0,4.1,0,6.6v27.7
-        c0,2.5,2,4.6,4.5,4.6h9V34h-9V13.5h36V34h-9v4.9h9c2.5,0,4.5-2.1,4.5-4.6V6.6C45,4.1,43,2,40.5,2z
-        M5.6,9.5c-0.9,0-1.7-0.8-1.7-1.7 c0-1,0.8-1.7,1.7-1.7s1.7,0.8,1.7,1.7C7.3,8.7,6.6,9.5,5.6,9.5z M10.1,9.5c-0.9,0-1.7-0.8-1.7-1.7c0-1,0.8-1.7,1.7-1.7 s1.7,0.8,1.7,1.7C11.8,8.7,11.1,9.5,10.1,9.5z M41,9H13.5V6H41V9L41,9z"></path>
-  </g>
-
-  <g id="step2-icon">
-    <path fill="#93C94A" d="M41.8,3.2C38.1-0.5,35.4,0,35.4,0L2.6,32.8L0,45l12.2-2.6L44.9,9.6C44.9,9.6,45.5,6.9,41.8,3.2z
-        M11.5,41l-4.1,0.9c-0.4-0.7-0.9-1.5-1.8-2.4c-0.9-0.9-1.6-1.4-2.4-1.8l0.9-4.1l1.2-1.2c0,0,2.3,0,4.8,2.6c2.5,2.5,2.6,4.8,2.6,4.8
-        L11.5,41z"></path>
-  </g>
-
-  <g id="step3-icon">
-    <path fill="#93C94A" d="M41.8,3.2C38.1-0.5,35.4,0,35.4,0L2.6,32.8L0,45l12.2-2.6L44.9,9.6C44.9,9.6,45.5,6.9,41.8,3.2z
-        M11.5,41l-4.1,0.9c-0.4-0.7-0.9-1.5-1.8-2.4c-0.9-0.9-1.6-1.4-2.4-1.8l0.9-4.1l1.2-1.2c0,0,2.3,0,4.8,2.6c2.5,2.5,2.6,4.8,2.6,4.8
-        L11.5,41z"></path>
-  </g>
-
-  <g id="step4-icon">
-    <path fill="#93C94A" d="M37,0H5.6C2.5,0,0,2.5,0,5.6v33.8C0,42.5,2.5,45,5.6,45h33.8c3.1,0,5.6-2.5,5.6-5.6V8.8L37,0z
-        M33.8,16.9c0,1.5-1.3,2.8-2.8,2.8H14.1c-1.5,0-2.8-1.3-2.8-2.8V2.8h22.5V16.9z M30.9,5.6h-5.6v11.3h5.6V5.6z"></path>
-  </g>
-</defs>
-</svg>
-
-<div class="container">
-  <div class="page-subheader__title-container">
-    <div class="page-subheader__title">Create New Data Package</div>
-    <div class="page-subheader__step-title">
-      Step {{ currentStep.order }}:
-      <div class="page-subheader__step-name">{{ currentStep.title }}</div>
-    </div>
-  </div>
-
-  <div class="subheader-steps">
-    <div ng-repeat="step in steps track by $index"
-      class="subheader-steps__item"
-      ng-class="{'is-active': step.id == currentStep.id}">
-
-      <div class="subheader-icon">
-        <svg viewBox="0 0 45 45" width="30">
-          <use ng-href="{{ '#step' + step.order + '-icon' }}" xlink:href=""></use>
-        </svg>
-      </div>
-
-      <div class="subheader-steps__content">
-        <span>Step {{ step.order }}</span>
-        <div class="subheader-steps__title">{{ step.title }}</div>
-      </div>
-    </div>
-  </div>
-</div>
+<ul class="nav nav-pills">
+  <li role="presentation" ng-repeat="step in steps"
+    ng-class="{active: step.id == currentStep.id}"><a href="javascript:void(0);">{{ step.title }}</a></li>
+</ul>
 {% endraw %}

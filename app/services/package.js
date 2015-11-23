@@ -96,8 +96,8 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   // Mappings
   result.mapping = {
-    measures: {},
-    dimensions: {}
+    measures: [],
+    dimensions: []
   };
 
   var groups = {};
@@ -116,12 +116,12 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     switch (concept) {
       case 'mapping.measures.amount': {
         _.each(fields, function(field) {
-          result.mapping.measures.amount = {
+          result.mapping.measures.push({
             name: 'amount',
             source: field.name,
             resource: field.resource,
             currency: 'USD' // TODO: Hardcode !!!
-          };
+          });
         });
         break;
       }
@@ -132,15 +132,16 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       case 'mapping.entity.properties.label': {
         var matches = /^mapping\.([a-z]+)\.properties\.([a-z]+)$/g
           .exec(concept);
-        result.mapping.dimensions[matches[1]] = {
+        result.mapping.dimensions.push({
           name: matches[1],
           fields: _.map(fields, function(field) {
             return {
               name: field.name,
-              source: field.name
+              source: field.name,
+              resource: field.resource
             };
           })
-        };
+        });
         break;
       }
     }

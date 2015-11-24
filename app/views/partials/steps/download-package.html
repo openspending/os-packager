@@ -1,5 +1,5 @@
 {% raw %}
-<section ng-if="currentStep.id == 'download'" ng-controller="DownloadPackageController">
+<section ng-if="currentStep.id == 'download'" ng-controller="DownloadPackageController" id="step4-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
   <div class="step4-package-info">
@@ -62,7 +62,7 @@
         <input type="hidden" name="name" value="{{ fileName }}">
         <input type="hidden" name="mime" value="application/octet-stream">
         <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
-        <button type="submit" class="btn btn-primary btn-lg">
+        <button id="step4-button-download" type="submit" class="btn btn-primary btn-lg">
           <i class="fa fa-download"></i>&nbsp;&nbsp;Download
         </button>
       </form>

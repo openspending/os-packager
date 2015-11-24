@@ -40,7 +40,8 @@
             inProgress: true
           };
 
-          PackageService.createResource($scope.file || $scope.url)
+          PackageService.createResource($scope.file ||
+            '/proxy?url=' + encodeURIComponent($scope.url))
             .then(function(resource) {
               $scope.resource = resource;
               $scope.validationStatus = ValidationService

@@ -1,5 +1,5 @@
 {% raw %}
-<section ng-if="currentStep.id == 'describe-data'" ng-controller="DescribeDataController">
+<section ng-if="currentStep.id == 'describe-data'" ng-controller="DescribeDataController" id="step2-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in resources track by $index">
     <div class="col-xs-12">
@@ -65,6 +65,7 @@
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.concept" class="form-control"
+                id="step2-concept-{{ $index }}"
                 ng-change="onConceptChanged()"
                 ng-options="item.id as item.name for item in availableConcepts"></select>
             </td>
@@ -87,7 +88,7 @@
 
   <div ng-if="validationStatus.concept" class="row form-group">
     <div class="col-xs-12">
-      <button ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step2-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>

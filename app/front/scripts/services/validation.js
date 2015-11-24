@@ -2,6 +2,9 @@
 
   var _ = require('underscore');
 
+  var goodTablesUrl = '/proxy?url=' +
+    encodeURIComponent('http://goodtables.okfnlabs.org/api/run');
+
   angular.module('Application')
     .factory('ValidationService', [
       '$q', 'Configuration',
@@ -14,7 +17,7 @@
             var schema = !!validateSchema ? resource.schema : undefined;
             var utils = require('app/services').utils;
             validationResult.$promise = $q(function(resolve, reject) {
-              utils.validateData(resource.data.raw, schema)
+              utils.validateData(resource.data.raw, schema, goodTablesUrl)
                 .then(resolve)
                 .catch(reject);
             });

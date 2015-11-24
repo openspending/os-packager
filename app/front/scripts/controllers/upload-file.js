@@ -4,8 +4,10 @@
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'PackageService', 'ValidationService', 'Configuration',
-      function($scope, PackageService, ValidationService, Configuration) {
+      '$scope', '$timeout', 'PackageService', 'ValidationService',
+      'Configuration',
+      function($scope, $timeout, PackageService, ValidationService,
+        Configuration) {
         $scope.file = null;
         $scope.url = null;
 
@@ -33,11 +35,12 @@
 
         var validateSource = function() {
           if (!$scope.file && !$scope.url) {
+            $scope.validationStatus = null;
             return;
           }
 
           $scope.validationStatus = {
-            inProgress: true
+            state: 'reading'
           };
 
           PackageService.createResource($scope.file ||
@@ -52,9 +55,18 @@
               Configuration.defaultErrorHandler(error);
             });
         };
+        var validateSourceDelayed = _.debounce(function() {
+          $timeout(validateSource);
+        }, 500);
 
         $scope.$watch('file', validateSource);
-        $scope.$watch('url', _.debounce(validateSource, 500));
+        $scope.$watch('url', function() {
+          if (!$scope.file && !$scope.url) {
+            $scope.validationStatus = null;
+            return;
+          }
+          validateSourceDelayed();
+        });
 
         $scope.goToNextStep = function() {
           var dataPackage = PackageService.getPackage();

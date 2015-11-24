@@ -28,19 +28,21 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step1-wrapper'), 'It should be step #1');
     browser.fill('step1-resource-url', exampleResourceUrl);
-    browser.wait(10000, function() {
-      setTimeout(function() {
-        browser.wait(10000, function() {
-          assert(browser.query('#step1-button-next'),
-            'Next button should be available');
-          browser.click('#step1-button-next');
-          browser.wait(1000, function() {
-            assert(browser.query('#step2-wrapper'), 'It should be step #2');
-            done();
+    setTimeout(function() {
+      browser.wait(10000, function() {
+        setTimeout(function() {
+          browser.wait(10000, function() {
+            assert(browser.query('#step1-button-next'),
+              'Next button should be available');
+            browser.click('#step1-button-next');
+            browser.wait(1000, function() {
+              assert(browser.query('#step2-wrapper'), 'It should be step #2');
+              done();
+            });
           });
-        });
-      }, 1000);
-    });
+        }, 1000);
+      });
+    }, 1000);
   });
 
   it('Should map required concepts', function(done) {

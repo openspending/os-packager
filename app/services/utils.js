@@ -6,6 +6,8 @@ var Promise = require('bluebird');
 var csv = require('papaparse');
 var jts = require('json-table-schema');
 var inflector = require('inflected');
+var path = require('path');
+var url = require('url');
 
 inflector.transliterations(function(t) {
   t.approximate('А', 'A');  t.approximate('а', 'a');
@@ -148,4 +150,38 @@ module.exports.getAvailableConcepts = function() {
       id: 'mapping.entity.properties.label'
     }
   ];
+};
+
+module.exports.createNameFromPath = function(fileName) {
+  var result = path.basename(fileName, path.extname(fileName));
+  return module.exports.convertToSlug(result || fileName);
+};
+
+module.exports.createNameFromUrl = function(urlOfResource) {
+  var result = url.parse(urlOfResource, true);
+  if (result && result.pathname) {
+    if ((result.pathname == '/proxy') && result.query && result.query.url) {
+      return module.exports.createNameFromUrl(result.query.url);
+    } else {
+      return module.exports.createNameFromPath(result.pathname);
+    }
+  }
+  return url;
+};
+
+module.exports.createUniqueResourceName = function(resourceName, resources) {
+  var i = 1;
+  var result = resourceName;
+  while (true) {
+    var found = _.find(resources, function(item) {
+      return item.name == result;
+    });
+    if (found) {
+      result = resourceName + '-' + i;
+      i++;
+    } else {
+      break;
+    }
+  }
+  return result;
 };

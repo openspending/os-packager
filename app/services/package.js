@@ -16,7 +16,8 @@ function FiscalDataPackage() {
   this.resources = [];
 
   this.resources.add = function(resource) {
-    resource.name = utils.createUniqueResourceName(resource.name, this);
+    resource.name = utils.createUniqueResourceName(
+      getResourceName(resource.name), this);
     this.push(resource);
   };
 

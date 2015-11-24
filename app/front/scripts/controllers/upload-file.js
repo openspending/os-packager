@@ -68,7 +68,6 @@
           validateSourceDelayed();
         });
 
-
         $scope.goToNextStep = function() {
           var dataPackage = PackageService.getPackage();
           dataPackage.resources.clear();

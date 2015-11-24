@@ -151,35 +151,36 @@ describe('Application services', function() {
           var fiscalPackage = dataPackage.createFiscalDataPackage();
 
           assert.deepEqual(fiscalPackage, {
-            name: "example",
-            title: "Example Data Package",
+            name: 'example',
+            title: 'Example Data Package',
             resources: [
               {
-                name: "valid",
-                format: "csv",
-                url: "https://raw.githubusercontent.com/okfn/goodtables/master/examples/valid.csv",
+                name: 'valid',
+                format: 'csv',
+                url: 'https://raw.githubusercontent.com/okfn/goodtables/' +
+                  'master/examples/valid.csv',
                 schema: {
                   fields: [
                     {
-                      name: "id",
-                      title: "Id",
-                      description: "",
-                      type: "string",
-                      format: "default"
+                      name: 'id',
+                      title: 'Id',
+                      description: '',
+                      type: 'string',
+                      format: 'default'
                     },
                     {
-                      name: "name",
-                      title: "Name",
-                      description: "",
-                      type: "string",
-                      format: "default"
+                      name: 'name',
+                      title: 'Name',
+                      description: '',
+                      type: 'string',
+                      format: 'default'
                     },
                     {
-                      name: "slug",
-                      title: "Slug",
-                      description: "",
-                      type: "string",
-                      format: "default"
+                      name: 'slug',
+                      title: 'Slug',
+                      description: '',
+                      type: 'string',
+                      format: 'default'
                     }
                   ]
                 }
@@ -188,20 +189,20 @@ describe('Application services', function() {
             mapping: {
               measures: [
                 {
-                  name: "amount",
-                  source: "id",
-                  resource: "valid",
-                  currency: "USD"
+                  name: 'amount',
+                  source: 'id',
+                  resource: 'valid',
+                  currency: 'USD'
                 }
               ],
-              "dimensions": [
+              'dimensions': [
                 {
-                  name: "date",
+                  name: 'date',
                   fields: [
                     {
-                      name: "name",
-                      source: "name",
-                      resource: "valid"
+                      name: 'name',
+                      source: 'name',
+                      resource: 'valid'
                     }
                   ]
                 }

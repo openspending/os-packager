@@ -12,7 +12,7 @@
         return {
           validateResource: function(resource, validateSchema) {
             var validationResult = {
-              inProgress: true
+              state: 'checking'
             };
             var schema = !!validateSchema ? resource.schema : undefined;
             var utils = require('app/services').utils;
@@ -23,15 +23,15 @@
             });
             validationResult.$promise
               .then(function(results) {
-                validationResult.completed = true;
+                validationResult.state = 'completed';
                 if (results && results.length) {
                   validationResult.errors = results;
                 }
                 return results;
               })
-              .catch(Configuration.defaultErrorHandler)
-              .finally(function() {
-                validationResult.inProgress = false;
+              .catch(function(error) {
+                validationResult.state = null;
+                Configuration.defaultErrorHandler(error);
               });
 
             return validationResult;

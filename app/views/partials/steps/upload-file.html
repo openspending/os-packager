@@ -20,7 +20,8 @@
     </div>
     <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
       <div ng-class="{'input-group': url}">
-        <input name="step1-resource-url" ng-model="url" type="text" class="form-control" placeholder="http://">
+        <input name="step1-resource-url" ng-model="url" ng-change="urlChanged"
+          type="text" class="form-control" placeholder="http://">
         <span class="input-group-btn" ng-if="url">
           <button ng-click="onClearSelectedUrl()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
@@ -33,18 +34,25 @@
     Waiting for file or URL...
   </div>
 
-  <div ng-if="validationStatus.inProgress" class="alert alert-warning">
+  <div ng-if="(validationStatus.state == 'reading') || (validationStatus.state == 'checking')" class="alert alert-warning">
     <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
-    <span ng-if="!!file && !url">Processing {{ file.name }} / type: {{ file.type }}, size (in bytes): {{ file.size }}</span>
-    <span ng-if="!file && url">Processing {{ url }}</span>
+    <span ng-if="validationStatus.state == 'reading'">
+      <span ng-if="!!file && !url">Reading {{ file.name }} / type: {{ file.type }}, size (in bytes): {{ file.size }}</span>
+      <span ng-if="!file && !!url">Loading data from {{ url }}</span>
+    </span>
+
+    <span ng-if="validationStatus.state == 'checking'">
+      Validating data...
+      <span ng-if="resource.data.headers && resource.data.rows.length">/ sample size: {{ resource.data.rows.length + 1 }} rows(s)</span>
+    </span>
   </div>
 
-  <div ng-if="validationStatus.completed && !validationStatus.errors" class="alert alert-success">
+  <div ng-if="(validationStatus.state == 'completed') && !validationStatus.errors" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
     Resource is valid. Now you can continue.
   </div>
 
-  <div ng-if="validationStatus.completed && validationStatus.errors" class="alert alert-danger">
+  <div ng-if="(validationStatus.state == 'completed') && validationStatus.errors" class="alert alert-danger">
     <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
     There are some errors.
     <a href="javascript:void(0)" ng-click="onShowValidationResults()" class="alert-link">Click here</a>
@@ -52,7 +60,7 @@
   </div>
 
   <div class="row form-group"
-    ng-if="validationStatus.completed && !validationStatus.errors">
+    ng-if="(validationStatus.state == 'completed') && !validationStatus.errors">
     <div class="col-xs-12">
       <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
@@ -60,7 +68,7 @@
     </div>
   </div>
 
-  <div ng-if="validationStatus.completed && validationStatus.errors" ng-init="errors = validationStatus.errors">
+  <div ng-if="(validationStatus.state == 'completed') && validationStatus.errors" ng-init="errors = validationStatus.errors">
   {% endraw %}
     {% include "partials/modals/validation-results.html" %}
   {% raw %}

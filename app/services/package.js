@@ -16,6 +16,7 @@ function FiscalDataPackage() {
   this.resources = [];
 
   this.resources.add = function(resource) {
+    resource.name = utils.createUniqueResourceName(resource.name, this);
     this.push(resource);
   };
 
@@ -27,16 +28,21 @@ function FiscalDataPackage() {
     return new Promise(function(resolve, reject) {
       utils.getCsvSchema(urlOrFile)
         .then(function(data) {
+          var resourceName = null;
           var source = {};
           if (_.isObject(urlOrFile)) {
             source.fileName = urlOrFile.name;
             source.mimeType = urlOrFile.type;
             source.size = urlOrFile.size;
+            resourceName = utils.createNameFromPath(urlOrFile.name);
           } else {
             source.url = urlOrFile;
+            resourceName = utils.createNameFromUrl(urlOrFile);
           }
 
           var resource = {
+            name: resourceName,
+            title: utils.convertToTitle(resourceName),
             source: source,
             data: {
               headers: data.headers,

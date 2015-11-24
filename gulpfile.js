@@ -74,7 +74,7 @@ gulp.task('app.modules', function() {
   return bundler.bundle()
     .pipe(source('modules.js'))
     .pipe(buffer())
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(publicScriptsDir));
 });
 

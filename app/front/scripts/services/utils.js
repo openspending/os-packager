@@ -32,6 +32,31 @@
             }], result);
           },
 
+          prepareFiscalPeriod: function(period) {
+            var range = [];
+            var result = undefined;
+            if (!!period) {
+              range = _.filter([
+                period.start || period.from,
+                period.end || period.to
+              ]);
+            }
+            switch (range.length) {
+              case 1:
+                result = {
+                  start: range[0]
+                };
+                break;
+              case 2:
+                result = {
+                  start: range[0],
+                  end: range[1]
+                };
+                break;
+            }
+            return result;
+          },
+
           getRegions: function() {
             if (allRegions) {
               return allRegions;

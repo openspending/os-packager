@@ -48,13 +48,13 @@
     </div>
     <div class="col-sm-4" ng-class="{'has-error': metadata.periodFrom.$dirty && !metadata.periodFrom.$valid}">
       <input type="text" class="form-control" id="step3-period-from"
-        ng-model="period.from"  name="periodFrom"
+        ng-model="period.start" name="periodFrom"
         ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
       <p class="help-block">Format: YYYY-MM-DD</p>
     </div>
     <div class="col-sm-4" ng-class="{'has-error': metadata.periodTo.$dirty && !metadata.periodTo.$valid}">
       <input type="text" class="form-control" id="step3-period-to"
-        ng-model="period.to" name="periodTo"
+        ng-model="period.end" name="periodTo"
         ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
       <p class="help-block">Format: YYYY-MM-DD</p>
     </div>

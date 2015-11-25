@@ -17,19 +17,12 @@
         });
 
         var updatePeriod = function() {
-          var period = [];
-          if ($scope.period) {
-            period = _.filter([
-              $scope.period.from || $scope.period.to,
-              $scope.period.to || $scope.period.from
-            ]);
-          }
-          $scope.attributes.fiscalPeriod = period.length == 0 ? undefined
-            : period.join('/');
+          $scope.attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(
+            $scope.period);
         };
 
-        $scope.$watch('period.from', updatePeriod);
-        $scope.$watch('period.to', updatePeriod);
+        $scope.$watch('period.start', updatePeriod);
+        $scope.$watch('period.end', updatePeriod);
 
         var prependEmptyItem = function(items) {
           return _.union([{

@@ -1,0 +1,59 @@
+{
+  "name": "example",
+  "title": "Example Data Package",
+  "resources": [
+    {
+      "name": "valid",
+      "format": "csv",
+      "url": "https://raw.githubusercontent.com/okfn/goodtables/master/examples/valid.csv",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "title": "Id",
+            "description": "",
+            "type": "string",
+            "format": "default"
+          },
+          {
+            "name": "name",
+            "title": "Name",
+            "description": "",
+            "type": "string",
+            "format": "default"
+          },
+          {
+            "name": "slug",
+            "title": "Slug",
+            "description": "",
+            "type": "string",
+            "format": "default"
+          }
+        ]
+      }
+    }
+  ],
+  "mapping": {
+    "measures": [
+      {
+        "name": "amount",
+        "source": "id",
+        "resource": "valid",
+        "currency": "USD"
+      }
+    ],
+    "dimensions": [
+      {
+        "name": "datetime",
+        "dimensionType": "datetime",
+        "fields": [
+          {
+            "name": "name",
+            "source": "name",
+            "resource": "valid"
+          }
+        ]
+      }
+    ]
+  }
+}

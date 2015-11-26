@@ -144,71 +144,14 @@ describe('Application services', function() {
           dataPackage.attributes.name = 'example';
           dataPackage.attributes.title = 'Example Data Package';
 
-          resource.fields[0].concept = 'mapping.measures.amount';
-          resource.fields[1].concept = 'mapping.date.properties.year';
+          resource.fields[0].concept = 'measures.amount';
+          resource.fields[1].concept = 'dimensions.datetime';
           dataPackage.resources.add(resource);
 
           var fiscalPackage = dataPackage.createFiscalDataPackage();
 
-          assert.deepEqual(fiscalPackage, {
-            name: 'example',
-            title: 'Example Data Package',
-            resources: [
-              {
-                name: 'valid',
-                format: 'csv',
-                url: 'https://raw.githubusercontent.com/okfn/goodtables/' +
-                  'master/examples/valid.csv',
-                schema: {
-                  fields: [
-                    {
-                      name: 'id',
-                      title: 'Id',
-                      description: '',
-                      type: 'string',
-                      format: 'default'
-                    },
-                    {
-                      name: 'name',
-                      title: 'Name',
-                      description: '',
-                      type: 'string',
-                      format: 'default'
-                    },
-                    {
-                      name: 'slug',
-                      title: 'Slug',
-                      description: '',
-                      type: 'string',
-                      format: 'default'
-                    }
-                  ]
-                }
-              }
-            ],
-            mapping: {
-              measures: [
-                {
-                  name: 'amount',
-                  source: 'id',
-                  resource: 'valid',
-                  currency: 'USD'
-                }
-              ],
-              'dimensions': [
-                {
-                  name: 'date',
-                  fields: [
-                    {
-                      name: 'name',
-                      source: 'name',
-                      resource: 'valid'
-                    }
-                  ]
-                }
-              ]
-            }
-          });
+          assert.deepEqual(fiscalPackage,
+            require('./data/example-package.json'));
 
           done();
         })

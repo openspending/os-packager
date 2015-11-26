@@ -1,10 +1,11 @@
 'use strict';
 
 var assert = require('chai').assert;
+var config = require('../app/config');
 var utils = require('./utils');
 
-var exampleResourceUrl = 'https://raw.githubusercontent.com/okfn/goodtables/' +
-  'master/examples/valid.csv';
+var exampleResourceUrl = 'http://localhost:' + config.get('app:port') +
+  '/example-resource.csv';
 var dataPackageTitle = 'Test Перевірка';
 var dataPackageSlug = 'test-perevirka';
 
@@ -50,9 +51,9 @@ describe('Wizard UI', function() {
     assert(browser.query('#step2-wrapper'), 'It should be step #2');
 
     browser.evaluate('$("#step2-concept-0")' +
-      '.val("string:mapping.measures.amount").change();');
+      '.val("string:dimensions.datetime").change();');
     browser.evaluate('$("#step2-concept-1")' +
-      '.val("string:mapping.date.properties.year").change();');
+    '.val("string:measures.amount").change();');
 
     setTimeout(function() {
       browser.wait(10000, function() {

@@ -19,6 +19,10 @@ module.exports.start = function() {
     app.set('views', path.join(__dirname, '/views'));
 
     // Middlewares
+    if (config.get('env') == 'test') {
+      app.use(express.static(path.join(__dirname, '/../tests/data')));
+    }
+
     app.use([
       express.static(path.join(__dirname, '/public')),
       bodyParser.urlencoded({

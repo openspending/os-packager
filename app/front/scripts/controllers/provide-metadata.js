@@ -4,8 +4,8 @@
 
   angular.module('Application')
     .controller('ProvideMetadataController', [
-      '$scope', 'PackageService', 'UtilsService', 'Configuration',
-      function($scope, PackageService, UtilsService, Configuration) {
+      '$scope', 'PackageService', 'UtilsService', 'ValidationService',
+      function($scope, PackageService, UtilsService, ValidationService) {
         $scope.attributes = PackageService.getPackage().attributes;
 
         $scope.attributes.regionCode = '';
@@ -66,16 +66,8 @@
         };
 
         $scope.validatePackage = function() {
-          $scope.validationErrors = [];
-          PackageService.validateFiscalDataPackage()
-            .then(function(results) {
-              if (results.valid) {
-                $scope.validationErrors = null;
-              } else {
-                $scope.validationErrors = results.errors;
-              }
-            })
-            .catch(Configuration.defaultErrorHandler);
+          $scope.validationState = ValidationService.validateFiscalDataPackage(
+            PackageService.getPackage());
         };
       }
     ]);

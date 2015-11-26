@@ -35,6 +35,26 @@
               });
 
             return validationResult;
+          },
+          validateResourcesConcepts: function(resources) {
+            var result = true;
+            _.each(resources, function(resource) {
+              // TODO: Make it based on `required` property of concept object
+              var amountFound = false;
+              var dateTimeFound = false;
+              _.each(resource.fields, function(field) {
+                if (field.concept == 'measures.amount') {
+                  amountFound = !!field.currencyCode;
+                }
+                if (field.concept == 'dimensions.datetime') {
+                  dateTimeFound = true;
+                }
+              });
+              if (!amountFound || !dateTimeFound) {
+                result = false;
+              }
+            });
+            return result;
           }
         };
       }

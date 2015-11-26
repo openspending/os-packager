@@ -3,7 +3,6 @@
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in resources track by $index">
     <div class="col-xs-12">
-
       <div class="table-responsive">
         <table class="table table-condensed" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">
           <tbody ng-init="sizeOfDataSample = (resource.data.rows.length > 3 ? 3 : resource.data.rows.length) + 1">
@@ -55,7 +54,7 @@
             </td>
             <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.type" class="form-control"
-                ng-options="item.id as item.name for item in availableDataTypes"></select>
+                ng-options="item.id as item.name for item in (field | fieldTypes)"></select>
             </td>
           </tr>
           <!-- Concept (measures) -->
@@ -66,8 +65,14 @@
             <td ng-repeat="field in resource.fields track by $index">
               <select ng-model="field.concept" class="form-control"
                 id="step2-concept-{{ $index }}"
-                ng-change="onConceptChanged()"
-                ng-options="item.id as item.name for item in availableConcepts"></select>
+                ng-change="onConceptChanged(field)"
+                ng-options="item.id as item.name for item in field.allowedConcepts"></select>
+              <!-- Currency code - for `Amount` concept -->
+              <select ng-model="field.currencyCode" class="form-control margin-top-8"
+                ng-if="field.concept == 'measures.amount'"
+                id="step2-currency-{{ $index }}"
+                ng-change="onAdditionalPropertyChanged(field)"
+                ng-options="item.code as item.nameWithCode for item in availableCurrencies"></select>
             </td>
           </tr>
           </tbody>

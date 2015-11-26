@@ -14,24 +14,36 @@
             var utils = require('app/services').utils;
             return utils.convertToSlug(string);
           },
-          getAvailableDataTypes: function() {
+          decorateProxyUrl: function(url) {
             var utils = require('app/services').utils;
-            var result = utils.getAvailableDataTypes();
-            return _.map(result, function(type) {
-              type = _.clone(type);
-              type.id = type.name;
-              return type;
+            return utils.decorateProxyUrl(url);
+          },
+          undecorateProxyUrl: function(url) {
+            var utils = require('app/services').utils;
+            return utils.undecorateProxyUrl(url);
+          },
+          findConcept: function(conceptId) {
+            var utils = require('app/services').utils;
+            return _.find(utils.availableConcepts, function(concept) {
+              return concept.id == conceptId;
             });
           },
           getAvailableConcepts: function() {
             var utils = require('app/services').utils;
-            var result = utils.getAvailableConcepts();
-            return _.union([{
-              name: '',
-              id: ''
-            }], result);
+            return utils.availableConcepts;
           },
-
+          getAvailableTypes: function() {
+            var utils = require('app/services').utils;
+            return utils.availableDataTypes;
+          },
+          getAvailableCurrencies: function() {
+            var utils = require('app/services').utils;
+            return _.map(utils.availableCurrencies, function(item) {
+              item = _.clone(item);
+              item.nameWithCode = item.code + ' ' + item.name;
+              return item;
+            });
+          },
           prepareFiscalPeriod: function(period) {
             var range = [];
             var result = undefined;

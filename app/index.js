@@ -22,7 +22,8 @@ module.exports.start = function() {
     app.use([
       express.static(path.join(__dirname, '/public')),
       bodyParser.urlencoded({
-        extended: true
+        extended: true,
+        limit: '20Mb'
       })
     ]);
 

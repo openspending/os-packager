@@ -47,6 +47,21 @@ inflector.transliterations(function(t) {
   t.approximate('Ё', 'Jo'); t.approximate('ё', 'jo');
 });
 
+module.exports.undecorateProxyUrl = function(urlToUndecorate) {
+  var result = url.parse(urlToUndecorate, true);
+  if (result && result.pathname) {
+    if ((result.pathname == '/proxy') && result.query && result.query.url) {
+      return result.query.url;
+    }
+  }
+  return urlToUndecorate;
+};
+
+module.exports.decorateProxyUrl = function(urlToDecorate) {
+  return '/proxy?url=' + encodeURIComponent(
+    module.exports.undecorateProxyUrl(urlToDecorate));
+};
+
 module.exports.convertToTitle = function(string) {
   return inflector.titleize('' + (string || ''));
 };
@@ -104,53 +119,136 @@ module.exports.validateData = function(data, schema, userEndpointURL) {
     });
 };
 
-module.exports.getAvailableDataTypes = function() {
+module.exports.availableDataTypes = (function() {
   return _.chain(jts.types)
     .filter(function(item, key) {
       return (key != 'JSType') && (key.substr(-4) == 'Type');
     })
     .map(function(TypeConstructor) {
-      return new TypeConstructor();
+      var result = new TypeConstructor();
+      result.id = result.name;
+      return result;
     })
     .value();
-};
+})();
 
-module.exports.getAvailableConcepts = function() {
+module.exports.availableConcepts = (function() {
+  var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
+  var idTypes = ['integer', 'number', 'string'];
   return [
     {
+      name: '',
+      id: '',
+      allowedTypes: allTypes,
+      group: null,
+      required: false,
+      map: {
+        name: 'other',
+        dimensionType: 'other'
+      }
+    },
+    {
       name: 'Amount',
-      id: 'mapping.measures.amount'
+      id: 'measures.amount',
+      allowedTypes: ['number', 'integer'],
+      group: 'measure',
+      required: true,
+      map: {
+        name: 'amount',
+        dimensionType: 'amount'
+      }
     },
     {
       name: 'Date / Time',
-      id: 'mapping.date.properties.year'
+      id: 'dimensions.datetime',
+      allowedTypes: ['datetime', 'date', 'time', 'integer', 'numeric'],
+      group: 'dimension',
+      required: true,
+      map: {
+        name: 'datetime',
+        dimensionType: 'datetime'
+      }
     },
     {
       name: 'Classification',
-      id: 'mapping.classification.properties.id'
+      id: 'dimensions.classification',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'classification',
+        dimensionType: 'classification'
+      }
     },
     {
       name: 'Classification > ID',
-      id: 'mapping.classification.properties.id'
+      id: 'dimensions.classification.id',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'classification-id',
+        dimensionType: 'classification'
+      }
     },
     {
       name: 'Classification > Label',
-      id: 'mapping.classification.properties.label'
+      id: 'dimensions.classification.label',
+      allowedTypes: allTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'classification-label',
+        dimensionType: 'classification'
+      }
     },
     {
       name: 'Entity',
-      id: 'mapping.entity.properties.id'
+      id: 'dimensions.entity',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'entity',
+        dimensionType: 'entity'
+      }
     },
     {
       name: 'Entity > ID',
-      id: 'mapping.entity.properties.id'
+      id: 'dimensions.entity.id',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'entity-id',
+        dimensionType: 'entity'
+      }
     },
     {
       name: 'Entity > Label',
-      id: 'mapping.entity.properties.label'
+      id: 'dimensions.entity.label',
+      allowedTypes: allTypes,
+      group: 'dimension',
+      required: false,
+      map: {
+        name: 'entity-label',
+        dimensionType: 'entity'
+      }
     }
   ];
-};
+})();
+
+module.exports.availableCurrencies = require('../data/iso4217.json');
+
+module.exports.defaultCurrency = (function(currencies) {
+  var defaultCurrencies = _.intersection(
+    ['USD', 'EUR', _.first(currencies).code],
+    _.pluck(currencies, 'code'));
+  var defaultCurrencyCode = _.first(defaultCurrencies);
+  return _.find(currencies, function(item) {
+    return item.code == defaultCurrencyCode;
+  });
+})(module.exports.availableCurrencies);
 
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
@@ -158,15 +256,32 @@ module.exports.createNameFromPath = function(fileName) {
 };
 
 module.exports.createNameFromUrl = function(urlOfResource) {
-  var result = url.parse(urlOfResource, true);
+  var result = url.parse(module.exports.undecorateProxyUrl(urlOfResource));
   if (result && result.pathname) {
-    if ((result.pathname == '/proxy') && result.query && result.query.url) {
-      return module.exports.createNameFromUrl(result.query.url);
-    } else {
-      return module.exports.createNameFromPath(result.pathname);
-    }
+    return module.exports.createNameFromPath(result.pathname);
   }
-  return url;
+  return urlOfResource;
+};
+
+module.exports.getAllowedTypesForValues = function(values) {
+  if (_.isArray(values)) {
+    var result = _.map(values, module.exports.getAllowedTypesForValues);
+    return _.intersection.apply(_, result);
+  } else {
+    return _.filter(module.exports.availableDataTypes, function(type) {
+      return type.cast(values);
+    });
+  }
+};
+
+module.exports.getAllowedConcepts = function(types) {
+  types = _.isArray(types) ? _.pluck(types, 'id') : [types.id];
+  return _.filter(module.exports.availableConcepts, function(concept) {
+    if (_.isArray(concept.allowedTypes)) {
+      return _.intersection(concept.allowedTypes, types).length > 0;
+    }
+    return false;
+  });
 };
 
 module.exports.createUniqueResourceName = function(resourceName, resources) {

@@ -5,9 +5,9 @@
   angular.module('Application')
     .controller('UploadFileController', [
       '$scope', '$timeout', 'PackageService', 'ValidationService',
-      'Configuration',
+      'Configuration', 'UtilsService',
       function($scope, $timeout, PackageService, ValidationService,
-        Configuration) {
+        Configuration, UtilsService) {
         $scope.file = null;
         $scope.url = null;
 
@@ -44,7 +44,7 @@
           };
 
           PackageService.createResource($scope.file ||
-            '/proxy?url=' + encodeURIComponent($scope.url))
+            UtilsService.decorateProxyUrl($scope.url))
             .then(function(resource) {
               $scope.resource = resource;
               $scope.validationStatus = ValidationService

@@ -37,9 +37,11 @@ function FiscalDataPackage() {
             source.size = urlOrFile.size;
             resourceName = utils.createNameFromPath(urlOrFile.name);
           } else {
-            source.url = urlOrFile;
+            source.url = utils.undecorateProxyUrl(urlOrFile);
             resourceName = utils.createNameFromUrl(urlOrFile);
           }
+
+          var dataColumns = _.unzip((data.rows || []).slice(0, 3));
 
           var resource = {
             name: resourceName,
@@ -50,11 +52,16 @@ function FiscalDataPackage() {
               rows: data.rows,
               raw: data.raw
             },
-            fields: _.map(data.schema.fields, function(field) {
+            fields: _.map(data.schema.fields, function(field, index) {
               field = _.clone(field);
-              field.concept = field.concept || '';
-              field.concept += '';
+              field.concept = (field.concept || '') + '';
+              field.inferredType = field.type;
               field.title = utils.convertToTitle(field.name);
+              field.allowedTypes = utils.getAllowedTypesForValues(
+                dataColumns[index]);
+              field.allowedConcepts = utils.getAllowedConcepts(
+                field.allowedTypes);
+              field.currencyCode = utils.defaultCurrency.code;
               return field;
             })
           };
@@ -95,6 +102,10 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       fields: _.map(resource.fields, function(field) {
         field = _.clone(field);
         delete field.concept;
+        delete field.inferredType;
+        delete field.allowedTypes;
+        delete field.allowedConcepts;
+        delete field.currencyCode;
         return field;
       })
     };
@@ -120,27 +131,28 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
   });
 
   _.each(groups, function(fields, concept) {
-    switch (concept) {
-      case 'mapping.measures.amount': {
+    concept = _.find(utils.availableConcepts, function(item) {
+      return item.id == concept;
+    });
+    if (!concept || !concept.map) {
+      return;
+    }
+    switch (concept.group) {
+      case 'measure': {
         _.each(fields, function(field) {
           result.mapping.measures.push({
-            name: 'amount',
+            name: concept.map.name,
             source: field.name,
             resource: field.resource,
-            currency: 'USD' // TODO: Hardcode !!!
+            currency: (field.currencyCode + '').toUpperCase().substr(0, 3)
           });
         });
         break;
       }
-      case 'mapping.date.properties.year':
-      case 'mapping.classification.properties.id':
-      case 'mapping.classification.properties.label':
-      case 'mapping.entity.properties.id':
-      case 'mapping.entity.properties.label': {
-        var matches = /^mapping\.([a-z]+)\.properties\.([a-z]+)$/g
-          .exec(concept);
+      case 'dimension': {
         result.mapping.dimensions.push({
-          name: matches[1],
+          name: concept.map.name,
+          dimensionType: concept.map.dimensionType,
           fields: _.map(fields, function(field) {
             return {
               name: field.name,

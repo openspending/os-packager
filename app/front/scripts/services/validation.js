@@ -35,6 +35,51 @@
               });
 
             return validationResult;
+          },
+          validateFiscalDataPackage: function(dataPackage) {
+            var validationResult = {
+              state: 'checking'
+            };
+            validationResult.$promise = $q(function(resolve, reject) {
+              dataPackage.validateFiscalDataPackage()
+                .then(resolve)
+                .catch(reject);
+            });
+
+            validationResult.$promise
+              .then(function(results) {
+                validationResult.state = 'completed';
+                if (results && !results.valid) {
+                  validationResult.errors = results.errors;
+                }
+                return results;
+              })
+              .catch(function(error) {
+                validationResult.state = null;
+                Configuration.defaultErrorHandler(error);
+              });
+
+            return validationResult;
+          },
+          validateResourcesConcepts: function(resources) {
+            var result = true;
+            _.each(resources, function(resource) {
+              // TODO: Make it based on `required` property of concept object
+              var amountFound = false;
+              var dateTimeFound = false;
+              _.each(resource.fields, function(field) {
+                if (field.concept == 'measures.amount') {
+                  amountFound = !!field.currencyCode;
+                }
+                if (field.concept == 'dimensions.datetime') {
+                  dateTimeFound = true;
+                }
+              });
+              if (!amountFound || !dateTimeFound) {
+                result = false;
+              }
+            });
+            return result;
           }
         };
       }

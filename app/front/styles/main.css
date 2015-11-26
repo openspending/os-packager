@@ -50,6 +50,10 @@ textarea.resize-both {
   margin-right: 4px;
 }
 
+.margin-top-8 {
+  margin-top: 8px;
+}
+
 .control-label.required:after {
   content: ' *';
   color: #f00;

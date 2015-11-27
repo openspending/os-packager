@@ -12,6 +12,9 @@
         result.scope = $scope;
 
         $scope.$step = StepsService.getStepById('download');
+        $scope.$step.reset = function() {
+          result.reset();
+        };
 
         var generateMappings = function(fiscalDataPackage) {
           var result = [];
@@ -57,7 +60,7 @@
 
         // Initialize scope variables
         result.reset = function() {
-          $scope.step.isPassed = false;
+          $scope.$step.isPassed = false;
           $scope.fileName = 'datapackage.json';
           $scope.dataPackage = PackageService.getPackage();
           $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();

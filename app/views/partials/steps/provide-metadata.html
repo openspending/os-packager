@@ -61,7 +61,7 @@
   </div>
   </form>
 
-  <div ng-if="!metadata.title.$dirty" class="alert alert-info">
+  <div ng-if="!metadata.title.$dirty && !scope.validationState.state" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Please, provide some additional info about your Data Package.
   </div>

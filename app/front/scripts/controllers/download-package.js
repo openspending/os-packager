@@ -4,8 +4,10 @@
 
   angular.module('Application')
     .controller('DownloadPackageController', [
-      '$scope', 'DownloadPackageService',
-      function($scope, DownloadPackageService) {
+      '$scope', 'DownloadPackageService', 'StepsService',
+      function($scope, DownloadPackageService, StepsService) {
+        DownloadPackageService.reset();
+        StepsService.updateStepsState($scope.currentStep);
         _.extend($scope, DownloadPackageService);
       }
     ]);

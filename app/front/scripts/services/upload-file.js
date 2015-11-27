@@ -14,10 +14,13 @@
         result.scope = $scope;
 
         $scope.$step = StepsService.getStepById('upload-file');
+        $scope.$step.reset = function() {
+          result.reset();
+        };
 
         // Initialize scope variables
         result.reset = function() {
-          $scope.step.isPassed = false;
+          $scope.$step.isPassed = false;
           $scope.file = null;
           $scope.url = null;
           $scope.validationStatus = null;
@@ -63,6 +66,7 @@
                   if ($scope.resource) {
                     dataPackage.resources.add($scope.resource);
                   }
+                  StepsService.resetStepsFrom($scope.$step);
                   return data;
                 }
               });
@@ -77,6 +81,8 @@
         }, 500);
 
         $scope.$watch('file', function() {
+          StepsService.resetStepsFrom($scope.$step);
+          PackageService.createPackage();
           if (!$scope.file && !$scope.url) {
             $scope.validationStatus = null;
             return;
@@ -84,6 +90,8 @@
           validateSource();
         });
         $scope.$watch('url', function() {
+          StepsService.resetStepsFrom($scope.$step);
+          PackageService.createPackage();
           if (!$scope.file && !$scope.url) {
             $scope.validationStatus = null;
             return;

@@ -14,10 +14,13 @@
         result.scope = $scope;
 
         $scope.$step = StepsService.getStepById('metadata');
+        $scope.$step.reset = function() {
+          result.reset();
+        };
 
         // Initialize scope variables
         result.reset = function() {
-          $scope.step.isPassed = false;
+          $scope.$step.isPassed = false;
           $scope.attributes = PackageService.getPackage().attributes;
         };
         result.reset();
@@ -81,8 +84,8 @@
 
         result.validatePackage = function() {
           $timeout(function() {
-            $scope.validationState = ValidationService.validateFiscalDataPackage(
-              PackageService.getPackage());
+            $scope.validationState = ValidationService
+              .validateFiscalDataPackage(PackageService.getPackage());
           });
         };
 

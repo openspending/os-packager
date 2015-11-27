@@ -28,6 +28,20 @@
               });
             }
           },
+          resetStepsFrom: function(step) {
+            if (step) {
+              var steps = this.getSteps();
+              var found = false;
+              _.each(steps, function(item) {
+                if (found && item.reset) {
+                  item.reset();
+                }
+                if (item.id == step.id) {
+                  found = true;
+                }
+              });
+            }
+          },
           updateStepsState: function(step) {
             var steps = this.getSteps();
             _.each(steps, function(item) {

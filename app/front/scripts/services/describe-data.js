@@ -14,10 +14,13 @@
         result.scope = $scope;
 
         $scope.$step = StepsService.getStepById('describe-data');
+        $scope.$step.reset = function() {
+          result.reset();
+        };
 
         // Initialize scope variables
         result.reset = function() {
-          $scope.step.isPassed = false;
+          $scope.$step.isPassed = false;
           $scope.resources = PackageService.getPackage().resources;
           $scope.validationStatus = {
             concept: false

@@ -1,7 +1,7 @@
 {% raw %}
 <section id="step2-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-  <div class="row form-group" ng-repeat="resource in resources track by $index">
+  <div class="row form-group" ng-repeat="resource in scope.resources track by $index">
     <div class="col-xs-12">
       <div class="table-responsive">
         <table class="table table-condensed" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">
@@ -72,7 +72,7 @@
                 ng-if="field.concept == 'measures.amount'"
                 id="step2-currency-{{ $index }}"
                 ng-change="onAdditionalPropertyChanged(field)"
-                ng-options="item.code as item.nameWithCode for item in availableCurrencies"></select>
+                ng-options="item.code as item.nameWithCode for item in scope.availableCurrencies"></select>
             </td>
           </tr>
           </tbody>
@@ -81,21 +81,21 @@
     </div>
   </div>
 
-  <div ng-if="!validationStatus.concept" class="alert alert-info">
+  <div ng-if="!scope.validationStatus.concept" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     You should map at least an <b>Amount</b> and a <b>Date / Time</b> to continue.
   </div>
 
-  <div ng-if="validationStatus.concept" class="alert alert-success">
+  <div ng-if="scope.validationStatus.concept" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
     Now your resource seems to look well, so you can continue to the next step.
   </div>
 
-  <div ng-if="validationStatus.concept" class="row form-group">
+  <div ng-if="scope.validationStatus.concept" class="row form-group">
     <div class="col-xs-12">
-      <a id="step2-button-next" ng-href="{{ nextStep.route }}" class="btn btn-primary btn-lg">
+      <button id="step2-button-next" ng-click="goToStep(nextStep)" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
-      </a>
+      </button>
     </div>
   </div>
 </section>

@@ -46,11 +46,7 @@ gulp.task('default', [
 gulp.task('app.scripts', function() {
   var files = [
     path.join(frontScriptsDir, '/application.js'),
-    path.join(frontScriptsDir, '/config/*.js'),
-    path.join(frontScriptsDir, '/controllers/*.js'),
-    path.join(frontScriptsDir, '/directives/*.js'),
-    path.join(frontScriptsDir, '/filters/*.js'),
-    path.join(frontScriptsDir, '/services/*.js')
+    path.join(frontScriptsDir, '/**/*.js')
   ];
   return gulp.src(files)
     .pipe(sourcemaps.init())

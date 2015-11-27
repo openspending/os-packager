@@ -6,10 +6,6 @@
     .controller('DownloadPackageController', [
       '$scope', 'PackageService',
       function($scope, PackageService) {
-        $scope.fileName = 'datapackage.json';
-        $scope.dataPackage = PackageService.getPackage();
-        $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();
-
         var generateMappings = function(fiscalDataPackage) {
           var result = [];
 
@@ -52,6 +48,9 @@
           return result;
         };
 
+        $scope.fileName = 'datapackage.json';
+        $scope.dataPackage = PackageService.getPackage();
+        $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();
         $scope.mappings = generateMappings($scope.fiscalDataPackage);
       }
     ]);

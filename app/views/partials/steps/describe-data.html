@@ -1,5 +1,5 @@
 {% raw %}
-<section ng-if="currentStep.id == 'describe-data'" ng-controller="DescribeDataController" id="step2-wrapper">
+<section id="step2-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in resources track by $index">
     <div class="col-xs-12">
@@ -93,9 +93,9 @@
 
   <div ng-if="validationStatus.concept" class="row form-group">
     <div class="col-xs-12">
-      <button id="step2-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <a id="step2-button-next" ng-href="{{ nextStep.route }}" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
-      </button>
+      </a>
     </div>
   </div>
 </section>

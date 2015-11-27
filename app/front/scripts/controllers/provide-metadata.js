@@ -8,17 +8,17 @@
       function($scope, PackageService, UtilsService, ValidationService) {
         $scope.attributes = PackageService.getPackage().attributes;
 
-        $scope.attributes.regionCode = '';
-        $scope.attributes.countryCode = '';
-        $scope.attributes.cityCode = '';
-
         $scope.$watch('attributes.title', function(value) {
-          $scope.attributes.name = UtilsService.slug(value);
+          if ($scope.attributes) {
+            $scope.attributes.name = UtilsService.slug(value);
+          }
         });
 
         var updatePeriod = function() {
-          $scope.attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(
-            $scope.period);
+          if ($scope.attributes) {
+            $scope.attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(
+              $scope.period);
+          }
         };
 
         $scope.$watch('period.start', updatePeriod);

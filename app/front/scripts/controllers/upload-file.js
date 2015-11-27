@@ -49,6 +49,17 @@
               $scope.resource = resource;
               $scope.validationStatus = ValidationService
                 .validateResource(resource);
+
+              $scope.validationStatus.$promise.then(function(data) {
+                if (!$scope.validationStatus.errors) {
+                  var dataPackage = PackageService.getPackage();
+                  dataPackage.resources.clear();
+                  if ($scope.resource) {
+                    dataPackage.resources.add($scope.resource);
+                  }
+                  return data;
+                }
+              });
             })
             .catch(function(error) {
               $scope.validationStatus = null;
@@ -59,7 +70,13 @@
           $timeout(validateSource);
         }, 500);
 
-        $scope.$watch('file', validateSource);
+        $scope.$watch('file', function() {
+          if (!$scope.file && !$scope.url) {
+            $scope.validationStatus = null;
+            return;
+          }
+          validateSource();
+        });
         $scope.$watch('url', function() {
           if (!$scope.file && !$scope.url) {
             $scope.validationStatus = null;
@@ -67,13 +84,6 @@
           }
           validateSourceDelayed();
         });
-
-        $scope.goToNextStep = function() {
-          var dataPackage = PackageService.getPackage();
-          dataPackage.resources.clear();
-          dataPackage.resources.add($scope.resource);
-          $scope.$parent.goToNextStep();
-        };
       }
     ]);
 

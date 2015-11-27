@@ -9,6 +9,10 @@
         var FiscalDataPackage = require('app/services').FiscalDataPackage;
         var dataPackage = new FiscalDataPackage();
 
+        dataPackage.attributes.regionCode = '';
+        dataPackage.attributes.countryCode = '';
+        dataPackage.attributes.cityCode = '';
+
         return {
           getPackage: function() {
             return dataPackage;

@@ -11,3 +11,8 @@ module.exports.about = function(req, res) {
     title: 'About'
   });
 };
+
+module.exports.templates = function(req, res) {
+  var path = req.params[0];
+  res.render('partials/' + path);
+};

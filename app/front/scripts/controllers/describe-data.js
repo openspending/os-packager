@@ -7,6 +7,7 @@
       '$scope', 'PackageService', 'UtilsService', 'ValidationService',
       function($scope, PackageService, UtilsService, ValidationService) {
         $scope.resources = PackageService.getPackage().resources;
+
         $scope.availableCurrencies = UtilsService.getAvailableCurrencies();
 
         $scope.validationStatus = {
@@ -14,11 +15,17 @@
         };
 
         $scope.onAdditionalPropertyChanged = function(field) {
+          if (!field) {
+            return;
+          }
           $scope.validationStatus.concept =
             ValidationService.validateResourcesConcepts($scope.resources);
         };
 
         $scope.onConceptChanged = function(field) {
+          if (!field) {
+            return;
+          }
           if (field.concept) {
             var concept = UtilsService.findConcept(field.concept);
             field.type = _.first(_.intersection(concept.allowedTypes,

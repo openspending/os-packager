@@ -11,10 +11,14 @@
           $scope.currentStep = _.first(steps);
         });
 
-        $scope.goToNextStep = function() {
-          $scope.currentStep = StepsService.getNextStep($scope.steps,
-            $scope.currentStep);
-        };
+        $scope.$on('$routeChangeSuccess', function(event, route) {
+          if (route.step) {
+            $scope.currentStep = route.step;
+            $scope.nextStep = StepsService.getNextStep($scope.steps,
+              $scope.currentStep);
+            StepsService.updateStepsState($scope.steps, $scope.currentStep);
+          }
+        });
       }
     ]);
 

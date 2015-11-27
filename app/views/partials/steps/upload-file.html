@@ -1,5 +1,5 @@
 {% raw %}
-<section ng-if="currentStep.id == 'upload-file'" ng-controller="UploadFileController" id="step1-wrapper">
+<section id="step1-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
   <div class="row form-group">
@@ -62,9 +62,9 @@
   <div class="row form-group"
     ng-if="(validationStatus.state == 'completed') && !validationStatus.errors">
     <div class="col-xs-12">
-      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <a id="step1-button-next" ng-href="{{ nextStep.route }}" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
-      </button>
+      </a>
     </div>
   </div>
 

@@ -1,5 +1,5 @@
 {% raw %}
-<ul class="nav nav-pills">
+<ul class="nav nav-pills" id="steps-nav">
   <li role="presentation" ng-repeat="step in steps"
     ng-class="{active: step.id == currentStep.id, disabled: !step.isCurrent && !step.isPassed}">
     <a ng-href="{{ step.isPassed ? step.route : 'javascript:void(0)' }}">

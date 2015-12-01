@@ -2,41 +2,22 @@
 
   var _ = require('underscore');
 
-  var steps = [
-    {
-      id: 'upload-file',
-      order: 1,
-      title: 'Provide your data'
-    },
-    {
-      id: 'describe-data',
-      order: 2,
-      title: 'Describe your data'
-    },
-    {
-      id: 'metadata',
-      order: 3,
-      title: 'Provide metadata'
-    },
-    {
-      id: 'download',
-      order: 4,
-      title: 'Confirm and download'
-    }
-  ];
-
   angular.module('Application')
     .factory('StepsService', [
-      '$q',
-      function($q) {
+      '$q', 'Configuration',
+      function($q, Configuration) {
         return {
           getSteps: function() {
-            return $q(function(resolve, reject) {
-              resolve(steps);
+            return Configuration.steps;
+          },
+          getStepById: function(stepId) {
+            return _.findWhere(this.getSteps(), {
+              id: stepId
             });
           },
-          getNextStep: function(steps, step) {
-            if (!!steps && _.isObject(step)) {
+          getNextStep: function(step) {
+            var steps = this.getSteps();
+            if (_.isObject(step)) {
               var isFound = false;
               return _.find(steps, function(item) {
                 if (item.id == step.id) {
@@ -45,6 +26,41 @@
                 }
                 return isFound;
               });
+            }
+          },
+          resetStepsFrom: function(step) {
+            if (step) {
+              var steps = this.getSteps();
+              var found = false;
+              _.each(steps, function(item) {
+                if (found && item.reset) {
+                  item.reset();
+                }
+                if (item.id == step.id) {
+                  found = true;
+                }
+              });
+            }
+          },
+          updateStepsState: function(step) {
+            var steps = this.getSteps();
+            _.each(steps, function(item) {
+              item.isCurrent = false;
+            });
+            if (_.isObject(step)) {
+              // Side effect!!!
+              _.find(steps, function(item) {
+                if (item.id == step.id) {
+                  item.isCurrent = true;
+                  return true;
+                }
+                item.isPassed = true;
+                return false;
+              });
+            }
+            var lastStep = _.last(steps);
+            if (lastStep.isCurrent) {
+              lastStep.isPassed = true;
             }
           }
         };

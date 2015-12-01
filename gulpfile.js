@@ -46,11 +46,7 @@ gulp.task('default', [
 gulp.task('app.scripts', function() {
   var files = [
     path.join(frontScriptsDir, '/application.js'),
-    path.join(frontScriptsDir, '/config/*.js'),
-    path.join(frontScriptsDir, '/controllers/*.js'),
-    path.join(frontScriptsDir, '/directives/*.js'),
-    path.join(frontScriptsDir, '/filters/*.js'),
-    path.join(frontScriptsDir, '/services/*.js')
+    path.join(frontScriptsDir, '/**/*.js')
   ];
   return gulp.src(files)
     .pipe(sourcemaps.init())
@@ -93,7 +89,8 @@ gulp.task('vendor.scripts', function() {
   var files = [
     path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
     path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
-    path.join(nodeModulesDir, '/angular/angular.min.js')
+    path.join(nodeModulesDir, '/angular/angular.min.js'),
+    path.join(nodeModulesDir, '/angular-route/angular-route.min.js')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.js'))

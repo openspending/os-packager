@@ -41,7 +41,7 @@ function FiscalDataPackage() {
             resourceName = utils.createNameFromUrl(urlOrFile);
           }
 
-          var dataColumns = _.unzip((data.rows || []).slice(0, 3));
+          var dataColumns = _.unzip(data.rows || []);
 
           var resource = {
             name: resourceName,

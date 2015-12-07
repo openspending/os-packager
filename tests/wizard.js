@@ -112,4 +112,16 @@ describe('Wizard UI', function() {
     }, 1000);
   });
 
+  it('Should go to first step', function(done) {
+    var browser = utils.app.browser;
+    assert(browser.query('#step4-wrapper'), 'It should be step #4');
+    browser.evaluate('$("#steps-nav li a:eq(0)").click();');
+    setTimeout(function() {
+      browser.wait(10000, function() {
+        assert(browser.query('#step1-wrapper'), 'It should be step #1');
+        done();
+      });
+    }, 1000);
+  });
+
 });

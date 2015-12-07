@@ -1,6 +1,11 @@
 {% raw %}
-<ul class="nav nav-pills">
+<ul class="nav nav-pills" id="steps-nav">
   <li role="presentation" ng-repeat="step in steps"
-    ng-class="{active: step.id == currentStep.id}"><a href="javascript:void(0);">{{ step.title }}</a></li>
+    ng-class="{active: step.id == currentStep.id, disabled: !step.isCurrent && !step.isPassed}">
+    <a ng-href="{{ step.isPassed ? step.route : 'javascript:void(0)' }}">
+      <i ng-if="step.isPassed" class="fa fa-1-5x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+      <span class="vertical-align-middle">{{ step.title }}</span>
+    </a>
+  </li>
 </ul>
 {% endraw %}

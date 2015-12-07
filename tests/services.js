@@ -87,6 +87,23 @@ describe('Application services', function() {
       done();
     });
 
+    it('Should create unique name', function(done) {
+      var tests = [
+        ['test', [], 'test'],
+        ['test', ['qwerty'], 'test'],
+        ['test', ['qwerty', 'test'], 'test-1'],
+        [
+          'test',
+          ['qwerty', 'test', 'test-1', 'test-5', 'test-a', 'test-6a'],
+          'test-6'
+        ]
+      ];
+      _.each(tests, function(test) {
+        assert.equal(utils.createUniqueName(test[0], test[1]), test[2]);
+      });
+      done();
+    });
+
   });
 
   describe('Package', function() {

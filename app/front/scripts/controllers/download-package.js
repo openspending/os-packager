@@ -23,10 +23,10 @@
           };
 
           // Measures
-          _.each(fiscalDataPackage.mapping.measures, function(mapping) {
+          _.each(fiscalDataPackage.mapping.measures, function(mapping, name) {
             var resource = getResource(mapping.resource);
             result.push({
-              name: mapping.name,
+              name: name,
               sources: [{
                 fileName: resource.title || resource.name,
                 fieldName: mapping.source
@@ -36,11 +36,12 @@
 
           // Dimensions
           _.each(fiscalDataPackage.mapping.dimensions,
-            function(dimension) {
-              _.each(dimension.fields, function(mapping) {
+            function(dimension, name) {
+              _.each(dimension.attributes, function(mapping) {
+                mapping = _.first(_.values(mapping));
                 var resource = getResource(mapping.resource);
                 result.push({
-                  name: dimension.name,
+                  name: name,
                   sources: [{
                     fileName: resource.title || resource.name,
                     fieldName: mapping.source

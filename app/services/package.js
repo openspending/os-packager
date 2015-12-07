@@ -16,8 +16,8 @@ function FiscalDataPackage() {
   this.resources = [];
 
   this.resources.add = function(resource) {
-    resource.name = utils.createUniqueResourceName(
-      getResourceName(resource, this.length), this);
+    resource.name = utils.createUniqueName(
+      getResourceName(resource, this.length), _.pluck(this, 'name'));
     this.push(resource);
   };
 
@@ -114,8 +114,8 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   // Mappings
   result.mapping = {
-    measures: [],
-    dimensions: []
+    measures: {},
+    dimensions: {}
   };
 
   var groups = {};
@@ -130,6 +130,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     });
   });
 
+  var mappingName = null;
   _.each(groups, function(fields, concept) {
     concept = _.find(utils.availableConcepts, function(item) {
       return item.id == concept;
@@ -140,27 +141,34 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
     switch (concept.group) {
       case 'measure': {
         _.each(fields, function(field) {
-          result.mapping.measures.push({
-            name: concept.map.name,
+          mappingName = utils.createUniqueName(
+            utils.convertToSlug(concept.map.name),
+            _.keys(result.mapping.measures));
+          result.mapping.measures[mappingName] = {
             source: field.name,
             resource: field.resource,
             currency: (field.currencyCode + '').toUpperCase().substr(0, 3)
-          });
+          };
         });
         break;
       }
       case 'dimension': {
-        result.mapping.dimensions.push({
-          name: concept.map.name,
+        mappingName = utils.createUniqueName(
+          utils.convertToSlug(concept.map.name),
+          _.keys(result.mapping.dimensions));
+        result.mapping.dimensions[mappingName] = {
           dimensionType: concept.map.dimensionType,
-          fields: _.map(fields, function(field) {
-            return {
+          attributes: _.map(fields, function(field) {
+            var result = {};
+            var name = utils.convertToSlug(field.name);
+            result[name] = {
               name: field.name,
               source: field.name,
               resource: field.resource
             };
+            return result;
           })
-        });
+        };
         break;
       }
     }

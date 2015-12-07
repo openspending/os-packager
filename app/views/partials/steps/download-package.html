@@ -1,41 +1,42 @@
 {% raw %}
-<section ng-if="currentStep.id == 'download'" ng-controller="DownloadPackageController" id="step4-wrapper">
+<section id="step4-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
   <div class="step4-package-info">
     <div class="row">
       <h3 class="col-xs-12">Basic Information</h3>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.title">
+      <div class="col-sm-3" ng-if="!!scope.fiscalDataPackage.title">
         <p><b>Package Title</b></p>
-        <p>{{ fiscalDataPackage.title }}</p>
+        <p>{{ scope.fiscalDataPackage.title }}</p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.name">
+      <div class="col-sm-3" ng-if="!!scope.fiscalDataPackage.name">
         <p><b>Package Name</b></p>
-        <p>{{ fiscalDataPackage.name }}</p>
+        <p>{{ scope.fiscalDataPackage.name }}</p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.author">
+      <div class="col-sm-3" ng-if="!!scope.fiscalDataPackage.author">
         <p><b>Package Owner</b></p>
-        <p>{{ fiscalDataPackage.author }}</p>
+        <p>{{ scope.fiscalDataPackage.author }}</p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.fiscalPeriod">
+      <div class="col-sm-3" ng-if="!!scope.fiscalDataPackage.fiscalPeriod">
         <p><b>Fiscal Period</b></p>
-        <p>{{ fiscalDataPackage.fiscalPeriod }}</p>
+        <p>{{ scope.fiscalDataPackage.fiscalPeriod }}</p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.regionCode || !!fiscalDataPackage.countryCode || !!fiscalDataPackage.cityCode">
+      <div class="col-sm-3"
+        ng-if="!!scope.fiscalDataPackage.regionCode || !!scope.fiscalDataPackage.countryCode || !!scope.fiscalDataPackage.cityCode">
         <p><b>Location</b></p>
-        <p>{{ [fiscalDataPackage.regionCode, fiscalDataPackage.countryCode, fiscalDataPackage.cityCode] | join }}</p>
+        <p>{{ [scope.fiscalDataPackage.regionCode, scope.fiscalDataPackage.countryCode, scope.fiscalDataPackage.cityCode] | join }}</p>
       </div>
     </div>
 
     <div class="row">
       <div class="col-xs-12">
         <p><b>Files</b></p>
-        <p ng-repeat="resource in fiscalDataPackage.resources track by $index">
+        <p ng-repeat="resource in scope.fiscalDataPackage.resources track by $index">
           <span>{{ resource.title || resource.name }}</span>
           <i ng-if="!!resource.path || !!resource.url" class="text-muted">({{ resource.path || resource.url }})</i>
         </p>
@@ -47,7 +48,7 @@
     <div class="row">
       <h3 class="col-xs-12">Column Mapping</h3>
 
-      <div ng-repeat="mapping in mappings track by $index" class="col-sm-3">
+      <div ng-repeat="mapping in scope.mappings track by $index" class="col-sm-3">
         <p><b>{{ mapping.name }}</b></p>
         <p ng-repeat="source in mapping.sources track by $index">
           <span>{{ source.fileName }}</span>&nbsp;/&nbsp;<span>{{ source.fieldName }}</span>
@@ -58,10 +59,10 @@
 
   <div class="row form-group">
     <div class="col-xs-12">
-      <form action="{{ '/download/' + fileName }}" method="post">
-        <input type="hidden" name="name" value="{{ fileName }}">
+      <form action="{{ '/download/' + scope.fileName }}" method="post">
+        <input type="hidden" name="name" value="{{ scope.fileName }}">
         <input type="hidden" name="mime" value="application/octet-stream">
-        <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
+        <input type="hidden" name="data" value="{{ scope.fiscalDataPackage | json }}">
         <button id="step4-button-download" type="submit" class="btn btn-primary btn-lg">
           <i class="fa fa-download"></i>&nbsp;&nbsp;Download
         </button>

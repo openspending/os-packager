@@ -42,6 +42,10 @@ textarea.resize-both {
   resize: both;
 }
 
+.fa.fa-1-5x {
+  font-size: 150%;
+}
+
 .vertical-align-middle {
   vertical-align: middle;
 }

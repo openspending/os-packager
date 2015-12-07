@@ -1,58 +1,60 @@
 {% raw %}
-<section ng-if="currentStep.id == 'upload-file'" ng-controller="UploadFileController" id="step1-wrapper">
+<section id="step1-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
 
   <div class="row form-group">
-    <div ng-hide="url" ng-class="{'col-sm-5': !url && !file, 'col-xs-12': !!file}">
+    <div ng-hide="scope.url" ng-class="{'col-sm-5': !scope.url && !scope.file, 'col-xs-12': !!scope.file}">
       <div class="input-group">
         <span class="input-group-btn">
           <label class="btn btn-primary" for="step1-upload-file">Upload a file</label>
         </span>
-        <input ng-value="file.name" type="text" class="form-control" placeholder="No file selected" readonly="on">
-        <span class="input-group-btn" ng-if="file">
+        <input ng-value="scope.file.name" type="text" class="form-control" placeholder="No file selected" readonly="on">
+        <span class="input-group-btn" ng-if="scope.file">
           <button ng-click="onClearSelectedFile()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
       </div>
       <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
     </div>
-    <div ng-hide="!!file || url" class="col-sm-1 text-center">
+    <div ng-hide="!!scope.file || !!scope.url" class="col-sm-1 text-center">
       <p class="form-control-static">or</p>
     </div>
-    <div ng-hide="!!file" ng-class="{'col-sm-6': !url && !file, 'col-xs-12': url}">
-      <div ng-class="{'input-group': url}">
-        <input name="step1-resource-url" ng-model="url" ng-change="urlChanged"
+    <div ng-hide="!!scope.file" ng-class="{'col-sm-6': !scope.url && !scope.file, 'col-xs-12': !!scope.url}">
+      <div ng-class="{'input-group': !!scope.url}">
+        <input name="step1-resource-url" ng-model="scope.url" ng-change="urlChanged"
           type="text" class="form-control" placeholder="http://">
-        <span class="input-group-btn" ng-if="url">
+        <span class="input-group-btn" ng-if="!!scope.url">
           <button ng-click="onClearSelectedUrl()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
       </div>
     </div>
   </div>
 
-  <div ng-if="!file && !url" class="alert alert-info">
+  <div ng-if="!scope.file && !scope.url" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Waiting for file or URL...
   </div>
 
-  <div ng-if="(validationStatus.state == 'reading') || (validationStatus.state == 'checking')" class="alert alert-warning">
+  <div ng-if="(scope.validationStatus.state == 'reading') || (scope.validationStatus.state == 'checking')" class="alert alert-warning">
     <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
-    <span ng-if="validationStatus.state == 'reading'">
-      <span ng-if="!!file && !url">Reading {{ file.name }} / type: {{ file.type }}, size (in bytes): {{ file.size }}</span>
-      <span ng-if="!file && !!url">Loading data from {{ url }}</span>
+    <span ng-if="scope.validationStatus.state == 'reading'">
+      <span ng-if="!!scope.file && !scope.url">Reading {{ scope.file.name }} / type: {{ scope.file.type }},
+        size (in bytes): {{ scope.file.size }}</span>
+      <span ng-if="!scope.file && !!scope.url">Loading data from {{ scope.url }}</span>
     </span>
 
-    <span ng-if="validationStatus.state == 'checking'">
+    <span ng-if="scope.validationStatus.state == 'checking'">
       Validating data...
-      <span ng-if="resource.data.headers && resource.data.rows.length">/ sample size: {{ resource.data.rows.length + 1 }} rows(s)</span>
+      <span ng-if="scope.resource.data.headers && scope.resource.data.rows.length">/ sample size:
+        {{ scope.resource.data.rows.length + 1 }} rows(s)</span>
     </span>
   </div>
 
-  <div ng-if="(validationStatus.state == 'completed') && !validationStatus.errors" class="alert alert-success">
+  <div ng-if="(scope.validationStatus.state == 'completed') && !scope.validationStatus.errors" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
     Resource is valid. Now you can continue.
   </div>
 
-  <div ng-if="(validationStatus.state == 'completed') && validationStatus.errors" class="alert alert-danger">
+  <div ng-if="(scope.validationStatus.state == 'completed') && scope.validationStatus.errors" class="alert alert-danger">
     <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
     There are some errors.
     <a href="javascript:void(0)" ng-click="onShowValidationResults()" class="alert-link">Click here</a>
@@ -60,15 +62,16 @@
   </div>
 
   <div class="row form-group"
-    ng-if="(validationStatus.state == 'completed') && !validationStatus.errors">
+    ng-if="(scope.validationStatus.state == 'completed') && !scope.validationStatus.errors">
     <div class="col-xs-12">
-      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step1-button-next" ng-click="goToStep(nextStep)" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>
   </div>
 
-  <div ng-if="(validationStatus.state == 'completed') && validationStatus.errors" ng-init="errors = validationStatus.errors">
+  <div ng-if="(scope.validationStatus.state == 'completed') && scope.validationStatus.errors"
+    ng-init="errors = scope.validationStatus.errors">
   {% endraw %}
     {% include "partials/modals/validation-results.html" %}
   {% raw %}

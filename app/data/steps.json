@@ -1,0 +1,34 @@
+[
+  {
+    "id": "upload-file",
+    "order": 1,
+    "title": "Provide your data",
+    "route": "/",
+    "controller": "UploadFileController",
+    "templateUrl": "/templates/steps/upload-file.html"
+  },
+  {
+    "id": "describe-data",
+    "order": 2,
+    "title": "Describe your data",
+    "route": "/describe-data",
+    "controller": "DescribeDataController",
+    "templateUrl": "/templates/steps/describe-data.html"
+  },
+  {
+    "id": "metadata",
+    "order": 3,
+    "title": "Provide metadata",
+    "route": "/provide-metadata",
+    "controller": "ProvideMetadataController",
+    "templateUrl": "/templates/steps/provide-metadata.html"
+  },
+  {
+    "id": "download",
+    "order": 4,
+    "title": "Confirm and download",
+    "route": "/download-package",
+    "controller": "DownloadPackageController",
+    "templateUrl": "/templates/steps/download-package.html"
+  }
+]

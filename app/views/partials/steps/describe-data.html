@@ -5,17 +5,17 @@
     <div class="col-xs-12">
       <div class="table-responsive">
         <table class="table table-condensed" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">
-          <tbody ng-init="sizeOfDataSample = (resource.data.rows.length > 3 ? 3 : resource.data.rows.length) + 1">
+          <tbody ng-init="sizeOfDataSample = (resource.data.rows.length > 3 ? 3 : resource.data.rows.length)">
           <!-- Several rows of sample of data -->
           <tr class="success">
             <td colspan="{{ resource.fields.length + 1 }}">
               <p class="form-control-static">
-                Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 1 ? 'row' : 'rows' }})
+                Sample of data ({{ sizeOfDataSample }} {{ sizeOfDataSample == 0 ? 'row' : 'rows' }})
               </p>
             </td>
           </tr>
           <tr>
-            <td class="info" rowspan="{{ sizeOfDataSample }}"></td>
+            <td class="info" rowspan="{{ sizeOfDataSample + 1 }}"></td>
             <td ng-repeat="header in resource.data.headers track by $index"><b>{{ header }}</b></td>
           </tr>
           <tr ng-repeat="row in resource.data.rows | limitTo:3 track by $index">

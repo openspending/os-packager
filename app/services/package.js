@@ -162,7 +162,6 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
             var result = {};
             var name = utils.convertToSlug(field.name);
             result[name] = {
-              name: field.name,
               source: field.name,
               resource: field.resource
             };

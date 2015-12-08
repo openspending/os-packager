@@ -284,19 +284,20 @@ module.exports.getAllowedConcepts = function(types) {
   });
 };
 
-module.exports.createUniqueResourceName = function(resourceName, resources) {
-  var i = 1;
-  var result = resourceName;
-  while (true) {
-    var found = _.find(resources, function(item) {
-      return item.name == result;
-    });
-    if (found) {
-      result = resourceName + '-' + i;
-      i++;
-    } else {
-      break;
-    }
+module.exports.createUniqueName = function(desiredName, availableNames) {
+  if (!_.contains(availableNames, desiredName)) {
+    return desiredName;
   }
-  return result;
+  desiredName += '-';
+  var mapped = _.map(availableNames, function(item) {
+    if (item.indexOf(desiredName) == 0) {
+      var rest = item.substr(desiredName.length);
+      if (rest.match(/^[0-9]$/g)) {
+        return parseInt(rest);
+      }
+    }
+    return 0;
+  });
+  mapped.push(0);
+  return desiredName + (_.max(mapped) + 1);
 };

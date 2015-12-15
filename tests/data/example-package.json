@@ -34,26 +34,25 @@
     }
   ],
   "mapping": {
-    "measures": [
-      {
-        "name": "amount",
+    "measures": {
+      "amount": {
         "source": "id",
         "resource": "valid",
         "currency": "USD"
       }
-    ],
-    "dimensions": [
-      {
-        "name": "datetime",
+    },
+    "dimensions": {
+      "datetime": {
         "dimensionType": "datetime",
-        "fields": [
+        "attributes": [
           {
-            "name": "name",
-            "source": "name",
-            "resource": "valid"
+            "name": {
+              "source": "name",
+              "resource": "valid"
+            }
           }
         ]
       }
-    ]
+    }
   }
 }

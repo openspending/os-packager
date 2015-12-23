@@ -154,10 +154,7 @@ module.exports.availableConcepts = (function() {
       allowedTypes: allTypes,
       group: null,
       required: false,
-      map: {
-        name: 'other',
-        dimensionType: 'other'
-      }
+      dimensionType: 'other'
     },
     {
       name: 'Amount',
@@ -206,10 +203,7 @@ module.exports.availableConcepts = (function() {
           ]
         }
       ],
-      map: {
-        name: 'amount',
-        dimensionType: 'amount'
-      }
+      dimensionType: 'amount'
     },
     {
       name: 'Date / Time',
@@ -217,10 +211,7 @@ module.exports.availableConcepts = (function() {
       allowedTypes: ['datetime', 'date', 'time', 'integer', 'numeric'],
       group: 'dimension',
       required: true,
-      map: {
-        name: 'datetime',
-        dimensionType: 'datetime'
-      }
+      dimensionType: 'datetime'
     },
     {
       name: 'Entity',
@@ -228,10 +219,7 @@ module.exports.availableConcepts = (function() {
       allowedTypes: idTypes,
       group: 'dimension',
       required: false,
-      map: {
-        name: 'entity',
-        dimensionType: 'entity'
-      }
+      dimensionType: 'entity'
     },
     {
       name: 'Classification',
@@ -252,10 +240,7 @@ module.exports.availableConcepts = (function() {
           ]
         }
       ],
-      map: {
-        name: 'classification',
-        dimensionType: 'classification'
-      }
+      dimensionType: 'classification'
     },
     {
       name: 'Activity',
@@ -263,10 +248,7 @@ module.exports.availableConcepts = (function() {
       allowedTypes: idTypes,
       group: 'dimension',
       required: false,
-      map: {
-        name: 'activity',
-        dimensionType: 'activity'
-      }
+      dimensionType: 'activity'
     },
     {
       name: 'Location',
@@ -274,10 +256,7 @@ module.exports.availableConcepts = (function() {
       allowedTypes: idTypes,
       group: 'dimension',
       required: false,
-      map: {
-        name: 'location',
-        dimensionType: 'location'
-      }
+      dimensionType: 'location'
     }
   ];
 })();

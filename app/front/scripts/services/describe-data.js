@@ -28,12 +28,48 @@
         };
         result.reset();
 
+        var getSelectedConcepts = function(group) {
+          var mapped = [];
+          _.each($scope.resources, function(resource) {
+            _.each(resource.fields, function(field) {
+              var concept = UtilsService.findConcept(field.concept);
+              if (concept && concept.group == group) {
+                field = _.clone(field);
+                field.concept = concept;
+                field.options = _.chain(field.options)
+                  .map(function(value, key) {
+                    var option = _.findWhere(concept.options, {name: key});
+                    if (option.values) {
+                      var temp = _.findWhere(option.values, {value: value});
+                      if (_.isObject(temp)) {
+                        value = temp.name;
+                      }
+                    }
+                    if (_.isUndefined(value) || _.isNull(value) || (value == '')) {
+                      return false;
+                    }
+                    return {
+                      name: option.title,
+                      value: value
+                    }
+                  })
+                  .filter()
+                  .value();
+                mapped.push(field);
+              }
+            });
+          });
+          return mapped;
+        };
+
         result.onAdditionalPropertyChanged = function(field) {
           if (!field) {
             return;
           }
           $scope.validationStatus.concept =
             ValidationService.validateResourcesConcepts($scope.resources);
+          $scope.selectedMeasures = getSelectedConcepts('measure');
+          $scope.selectedDimensions = getSelectedConcepts('dimension');
         };
 
         result.onConceptChanged = function(field) {
@@ -54,6 +90,8 @@
           }
           $scope.validationStatus.concept =
             ValidationService.validateResourcesConcepts($scope.resources);
+          $scope.selectedMeasures = getSelectedConcepts('measure');
+          $scope.selectedDimensions = getSelectedConcepts('dimension');
         };
 
         return result;

@@ -170,7 +170,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     concept = _.find(utils.availableConcepts, function(item) {
       return item.id == concept;
     });
-    if (!concept || !concept.map) {
+    if (!concept || !concept.dimensionType) {
       return;
     }
     switch (concept.group) {
@@ -191,7 +191,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
             }).join(' ')),
             _.keys(result.mapping.dimensions));
         result.mapping.dimensions[mappingName] = {
-          dimensionType: concept.map.dimensionType,
+          dimensionType: concept.dimensionType,
           primaryKey: _.pluck(fields, 'name'),
           attributes: _.object(_.map(fields, function(field) {
             return [

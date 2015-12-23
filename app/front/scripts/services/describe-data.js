@@ -21,14 +21,12 @@
         // Initialize scope variables
         result.reset = function() {
           $scope.$step.isPassed = false;
-          $scope.resources = PackageService.getPackage().resources;
+          $scope.resources = PackageService.getResources();
           $scope.validationStatus = {
             concept: false
           };
         };
         result.reset();
-
-        $scope.availableCurrencies = UtilsService.getAvailableCurrencies();
 
         result.onAdditionalPropertyChanged = function(field) {
           if (!field) {
@@ -44,10 +42,15 @@
           }
           if (field.concept) {
             var concept = UtilsService.findConcept(field.concept);
+            field.additionalOptions = concept.options;
+            field.options = _.object(_.map(concept.options, function(item) {
+              return [item.name, item.defaultValue];
+            }));
             field.type = _.first(_.intersection(concept.allowedTypes,
               _.pluck(field.allowedTypes, 'id')));
           } else {
             field.type = field.inferredType;
+            field.options = {};
           }
           $scope.validationStatus.concept =
             ValidationService.validateResourcesConcepts($scope.resources);

@@ -21,7 +21,7 @@
         // Initialize scope variables
         result.reset = function() {
           $scope.$step.isPassed = false;
-          $scope.attributes = PackageService.getPackage().attributes;
+          $scope.attributes = PackageService.getAttributes();
         };
         result.reset();
 
@@ -85,7 +85,7 @@
         result.validatePackage = function() {
           $timeout(function() {
             $scope.validationState = ValidationService
-              .validateFiscalDataPackage(PackageService.getPackage());
+              .validateFiscalDataPackage();
           });
         };
 

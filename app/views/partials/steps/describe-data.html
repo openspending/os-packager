@@ -67,12 +67,24 @@
                 id="step2-concept-{{ $index }}"
                 ng-change="onConceptChanged(field)"
                 ng-options="item.id as item.name for item in field.allowedConcepts"></select>
-              <!-- Currency code - for `Amount` concept -->
-              <select ng-model="field.currencyCode" class="form-control margin-top-8"
-                ng-if="field.concept == 'measures.amount'"
-                id="step2-currency-{{ $index }}"
-                ng-change="onAdditionalPropertyChanged(field)"
-                ng-options="item.code as item.nameWithCode for item in scope.availableCurrencies"></select>
+
+              <div ng-repeat="option in field.additionalOptions" class="margin-top-8">
+                <div>
+                  <label class="control-label">{{ option.title }}</label>
+                </div>
+                <div ng-if="option.values">
+                  <select ng-model="field.options[option.name]" class="form-control"
+                    id="step2-concept-{{ $index }}-{{ option.name }}"
+                    ng-change="onAdditionalPropertyChanged(field)"
+                    ng-options="item.value as item.name for item in option.values"></select>
+                </div>
+                <div ng-if="!option.values">
+                  <input type="text" ng-model="field.options[option.name]" class="form-control"
+                    id="step2-concept-{{ $index }}-{{ option.name }}"
+                    ng-pattern="option.pattern"
+                    ng-change="onAdditionalPropertyChanged(field)">
+                </div>
+              </div>
             </td>
           </tr>
           </tbody>

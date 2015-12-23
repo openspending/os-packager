@@ -132,6 +132,18 @@ module.exports.availableDataTypes = (function() {
     .value();
 })();
 
+module.exports.availableCurrencies = require('../data/iso4217.json');
+
+module.exports.defaultCurrency = (function(currencies) {
+  var defaultCurrencies = _.intersection(
+    ['USD', 'EUR', _.first(currencies).code],
+    _.pluck(currencies, 'code'));
+  var defaultCurrencyCode = _.first(defaultCurrencies);
+  return _.find(currencies, function(item) {
+    return item.code == defaultCurrencyCode;
+  });
+})(module.exports.availableCurrencies);
+
 module.exports.availableConcepts = (function() {
   var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
   var idTypes = ['integer', 'number', 'string'];
@@ -153,6 +165,47 @@ module.exports.availableConcepts = (function() {
       allowedTypes: ['number', 'integer'],
       group: 'measure',
       required: true,
+      options: [
+        {
+          name: 'currency',
+          title: 'Currency',
+          defaultValue: module.exports.defaultCurrency.code,
+          values: _.map(module.exports.availableCurrencies, function(item) {
+            return {
+              name: item.code + ' ' + item.name,
+              value: item.code
+            }
+          })
+        },
+        {
+          name: 'factor',
+          title: 'Factor',
+          defaultValue: '',
+          pattern: /^[+-]?[0-9]+(\.[0-9]+)?$/
+        },
+        {
+          name: 'direction',
+          title: 'Direction',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Expenditure', value: 'expenditure'},
+            {name: 'Revenue', value: 'revenue'}
+          ]
+        },
+        {
+          name: 'phase',
+          title: 'Phase',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Proposed', value: 'proposed'},
+            {name: 'Approved', value: 'approved'},
+            {name: 'Adjusted', value: 'adjusted'},
+            {name: 'Executed', value: 'executed'}
+          ]
+        }
+      ],
       map: {
         name: 'amount',
         dimensionType: 'amount'
@@ -170,39 +223,6 @@ module.exports.availableConcepts = (function() {
       }
     },
     {
-      name: 'Classification',
-      id: 'dimensions.classification',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification',
-        dimensionType: 'classification'
-      }
-    },
-    {
-      name: 'Classification > ID',
-      id: 'dimensions.classification.id',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification-id',
-        dimensionType: 'classification'
-      }
-    },
-    {
-      name: 'Classification > Label',
-      id: 'dimensions.classification.label',
-      allowedTypes: allTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification-label',
-        dimensionType: 'classification'
-      }
-    },
-    {
       name: 'Entity',
       id: 'dimensions.entity',
       allowedTypes: idTypes,
@@ -214,41 +234,53 @@ module.exports.availableConcepts = (function() {
       }
     },
     {
-      name: 'Entity > ID',
-      id: 'dimensions.entity.id',
+      name: 'Classification',
+      id: 'dimensions.classification',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      options: [
+        {
+          name: 'classificationType',
+          title: 'Classification type',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Functional', value: 'functional'},
+            {name: 'Administrative', value: 'administrative'},
+            {name: 'Economic', value: 'economic'}
+          ]
+        }
+      ],
+      map: {
+        name: 'classification',
+        dimensionType: 'classification'
+      }
+    },
+    {
+      name: 'Activity',
+      id: 'dimensions.activity',
       allowedTypes: idTypes,
       group: 'dimension',
       required: false,
       map: {
-        name: 'entity-id',
-        dimensionType: 'entity'
+        name: 'activity',
+        dimensionType: 'activity'
       }
     },
     {
-      name: 'Entity > Label',
-      id: 'dimensions.entity.label',
-      allowedTypes: allTypes,
+      name: 'Location',
+      id: 'dimensions.location',
+      allowedTypes: idTypes,
       group: 'dimension',
       required: false,
       map: {
-        name: 'entity-label',
-        dimensionType: 'entity'
+        name: 'location',
+        dimensionType: 'location'
       }
     }
   ];
 })();
-
-module.exports.availableCurrencies = require('../data/iso4217.json');
-
-module.exports.defaultCurrency = (function(currencies) {
-  var defaultCurrencies = _.intersection(
-    ['USD', 'EUR', _.first(currencies).code],
-    _.pluck(currencies, 'code'));
-  var defaultCurrencyCode = _.first(defaultCurrencies);
-  return _.find(currencies, function(item) {
-    return item.code == defaultCurrencyCode;
-  });
-})(module.exports.availableCurrencies);
 
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
@@ -300,4 +332,10 @@ module.exports.createUniqueName = function(desiredName, availableNames) {
   });
   mapped.push(0);
   return desiredName + (_.max(mapped) + 1);
+};
+
+module.exports.addItemWithUniqueName = function(collection, item) {
+  item.name = module.exports.createUniqueName(item.name,
+    _.pluck(collection, 'name'));
+  collection.push(item);
 };

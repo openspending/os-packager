@@ -63,7 +63,8 @@
         result.reset = function() {
           $scope.$step.isPassed = false;
           $scope.fileName = 'datapackage.json';
-          $scope.dataPackage = PackageService.getPackage();
+          $scope.attributes = PackageService.getAttributes();
+          $scope.resources = PackageService.getResources();
           $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();
           $scope.mappings = generateMappings($scope.fiscalDataPackage);
         };

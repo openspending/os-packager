@@ -7,85 +7,114 @@ var registry = require('datapackage-registry');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
-function getResourceName(resource, index) {
-  return resource.name || 'resource_' + index;
-}
+module.exports.createResourceFromSource = function(urlOrFile) {
+  return new Promise(function(resolve, reject) {
+    utils.getCsvSchema(urlOrFile)
+      .then(function(data) {
+        var resourceName = null;
+        var source = {};
+        if (_.isObject(urlOrFile)) {
+          source.fileName = urlOrFile.name;
+          source.mimeType = urlOrFile.type;
+          source.size = urlOrFile.size;
+          resourceName = utils.createNameFromPath(urlOrFile.name);
+        } else {
+          source.url = utils.undecorateProxyUrl(urlOrFile);
+          resourceName = utils.createNameFromUrl(urlOrFile);
+        }
 
-function FiscalDataPackage() {
-  this.attributes = {};
-  this.resources = [];
+        var dataColumns = _.unzip(data.rows || []);
 
-  this.resources.add = function(resource) {
-    resource.name = utils.createUniqueName(
-      getResourceName(resource, this.length), _.pluck(this, 'name'));
-    this.push(resource);
-  };
+        var resource = {
+          name: resourceName,
+          title: utils.convertToTitle(resourceName),
+          source: source,
+          data: {
+            headers: data.headers,
+            rows: data.rows,
+            raw: data.raw
+          },
+          fields: _.map(data.schema.fields, function(field, index) {
+            field = _.clone(field);
+            field.concept = (field.concept || '') + '';
+            field.inferredType = field.type;
+            field.title = utils.convertToTitle(field.name);
+            field.allowedTypes = utils.getAllowedTypesForValues(
+              dataColumns[index]);
+            field.allowedConcepts = utils.getAllowedConcepts(
+              field.allowedTypes);
+            return field;
+          })
+        };
 
-  this.resources.clear = function() {
-    this.splice(0, this.length);
-  };
+        resolve(resource);
+        return data;
+      })
+      .catch(reject);
+  });
+};
 
-  this.resources.createFromSource = function(urlOrFile) {
-    return new Promise(function(resolve, reject) {
-      utils.getCsvSchema(urlOrFile)
-        .then(function(data) {
-          var resourceName = null;
-          var source = {};
-          if (_.isObject(urlOrFile)) {
-            source.fileName = urlOrFile.name;
-            source.mimeType = urlOrFile.type;
-            source.size = urlOrFile.size;
-            resourceName = utils.createNameFromPath(urlOrFile.name);
-          } else {
-            source.url = utils.undecorateProxyUrl(urlOrFile);
-            resourceName = utils.createNameFromUrl(urlOrFile);
+module.exports.getFiscalDataPackageSchema = function() {
+  return module.exports.getDataPackageSchema('fiscal');
+};
+
+module.exports.getDataPackageSchema = function(schemaId) {
+  return new Promise(function(resolve, reject) {
+    var options = {
+      backend: '/proxy?url=' + encodeURIComponent('https://rawgit.com/' +
+        'dataprotocols/registry/master/registry.csv')
+    };
+    registry.get(options).then(function(result) {
+      var profile = _.findWhere(result, {id: schemaId});
+
+      if (!profile) {
+        reject('No profile found with id ' + schemaId);
+        return null;
+      }
+
+      var options = {
+        method: 'GET'
+      };
+      fetch('/proxy?url=' + encodeURIComponent(profile.schema), options)
+        .then(function(res) {
+          if (res.status != 200) {
+            reject('Failed loading schema from ' + profile.schema);
           }
-
-          var dataColumns = _.unzip(data.rows || []);
-
-          var resource = {
-            name: resourceName,
-            title: utils.convertToTitle(resourceName),
-            source: source,
-            data: {
-              headers: data.headers,
-              rows: data.rows,
-              raw: data.raw
-            },
-            fields: _.map(data.schema.fields, function(field, index) {
-              field = _.clone(field);
-              field.concept = (field.concept || '') + '';
-              field.inferredType = field.type;
-              field.title = utils.convertToTitle(field.name);
-              field.allowedTypes = utils.getAllowedTypesForValues(
-                dataColumns[index]);
-              field.allowedConcepts = utils.getAllowedConcepts(
-                field.allowedTypes);
-              field.currencyCode = utils.defaultCurrency.code;
-              return field;
-            })
-          };
-
-          resolve(resource);
-          return data;
+          return res.text();
+        })
+        .then(function(data) {
+          try {
+            var schema = JSON.parse(data);
+            resolve(schema);
+          } catch (e) {
+            reject('Failed parsing schema json from ' + profile.schema);
+          }
         })
         .catch(reject);
+    }, function() {
+      reject('Registry request failed');
     });
-  };
-}
+  });
+};
 
-FiscalDataPackage.prototype.createFiscalDataPackage = function() {
+module.exports.validateDataPackage = function(dataPackage, schema) {
+  return new Promise(function(resolve, reject) {
+    resolve(datapackageValidate(dataPackage, schema));
+  });
+};
+
+module.exports.createFiscalDataPackage = function(attributes, resources) {
   var result = {};
 
   // Package metadata
-  _.extend(result, _.pick(this.attributes, function(value) {
+  _.extend(result, _.pick(attributes, function(value) {
     return !!value;
   }));
 
   // Resources
-  result.resources = _.map(this.resources, function(resource, index) {
+  result.resources = _.map(resources, function(resource, index) {
     var result = {};
-    result.name = getResourceName(resource, index);
+    result.name = resource.name;
     result.format = 'csv';
     if (resource.source.url) {
       result.url = resource.source.url;
@@ -105,7 +134,7 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
         delete field.inferredType;
         delete field.allowedTypes;
         delete field.allowedConcepts;
-        delete field.currencyCode;
+        delete field.options;
         return field;
       })
     };
@@ -119,12 +148,12 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
   };
 
   var groups = {};
-  _.each(this.resources, function(resource, index) {
+  _.each(resources, function(resource, index) {
     _.each(resource.fields, function(field) {
       if (field.concept) {
         groups[field.concept] = groups[field.concept] || [];
         groups[field.concept].push(_.extend({
-          resource: getResourceName(resource, index)
+          resource: resource.name
         }, field));
       }
     });
@@ -142,29 +171,29 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
       case 'measure': {
         _.each(fields, function(field) {
           mappingName = utils.createUniqueName(
-            utils.convertToSlug(concept.map.name),
+            utils.convertToSlug(field.title || field.name),
             _.keys(result.mapping.measures));
-          result.mapping.measures[mappingName] = {
+          result.mapping.measures[mappingName] = _.extend(field.options, {
             source: field.name,
             resource: field.resource,
             currency: (field.currencyCode + '').toUpperCase().substr(0, 3)
-          };
+          });
         });
         break;
       }
       case 'dimension': {
         mappingName = utils.createUniqueName(
-          utils.convertToSlug(concept.map.name),
+          utils.convertToSlug(field.title || field.name),
           _.keys(result.mapping.dimensions));
         result.mapping.dimensions[mappingName] = {
           dimensionType: concept.map.dimensionType,
           attributes: _.map(fields, function(field) {
             var result = {};
             var name = utils.convertToSlug(field.name);
-            result[name] = {
+            result[name] = _.extend(field.options, {
               source: field.name,
               resource: field.resource
-            };
+            });
             return result;
           })
         };
@@ -175,58 +204,3 @@ FiscalDataPackage.prototype.createFiscalDataPackage = function() {
 
   return result;
 };
-
-FiscalDataPackage.prototype.validateFiscalDataPackage = function() {
-  var dataPackage = this.createFiscalDataPackage();
-  return this.loadSchema().then(function(schema) {
-    return datapackageValidate(dataPackage, schema);
-  });
-};
-
-FiscalDataPackage.prototype.schema = null;
-
-FiscalDataPackage.prototype.loadSchema = function(forceReload) {
-  if (!FiscalDataPackage.prototype.schema || forceReload) {
-    var schemaID = 'fiscal';
-    return new Promise(function(resolve, reject) {
-      var options = {
-        backend: '/proxy?url=' + encodeURIComponent('https://rawgit.com/' +
-          'dataprotocols/registry/master/registry.csv')
-      };
-      registry.get(options).then(function(result) {
-        var profile = _.findWhere(result, {id: schemaID});
-
-        if (!profile) {
-          reject('No profile found with id ' + schemaID);
-          return null;
-        }
-
-        var options = {
-          method: 'GET'
-        };
-        fetch('/proxy?url=' + encodeURIComponent(profile.schema), options)
-          .then(function(res) {
-            if (res.status != 200) {
-              reject('Failed loading schema from ' + profile.schema);
-            }
-            return res.text();
-          })
-          .then(function(data) {
-            try {
-              FiscalDataPackage.prototype.schema = JSON.parse(data);
-              resolve(FiscalDataPackage.prototype.schema);
-            } catch (e) {
-              reject('Failed parsing schema json from ' + profile.schema);
-            }
-          })
-          .catch(reject);
-      }, function() {
-        reject('Registry request failed');
-      });
-    });
-  } else {
-    return Promise.resolve(FiscalDataPackage.prototype.schema);
-  }
-};
-
-module.exports = FiscalDataPackage;

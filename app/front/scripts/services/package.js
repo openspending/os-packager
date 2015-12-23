@@ -50,8 +50,9 @@
           validateFiscalDataPackage: function() {
             var dataPackage = this.createFiscalDataPackage();
             return $q(function(resolve, reject) {
-              return fiscalDataPackage.validateFiscalDataPackage(dataPackage,
-                schema).then(resolve).catch(reject);
+              return fiscalDataPackage.validateDataPackage(dataPackage, schema)
+                .then(resolve)
+                .catch(reject);
             });
           },
           createFiscalDataPackage: function() {

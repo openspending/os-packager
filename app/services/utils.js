@@ -339,3 +339,9 @@ module.exports.addItemWithUniqueName = function(collection, item) {
     _.pluck(collection, 'name'));
   collection.push(item);
 };
+
+module.exports.removeEmptyAttributes = function(object) {
+  return _.pick(object, function(value) {
+    return !!value;
+  });
+};

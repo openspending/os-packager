@@ -107,12 +107,10 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   var result = {};
 
   // Package metadata
-  _.extend(result, _.pick(attributes, function(value) {
-    return !!value;
-  }));
+  _.extend(result, utils.removeEmptyAttributes(attributes));
 
   // Resources
-  result.resources = _.map(resources, function(resource, index) {
+  result.resources = _.map(resources, function(resource) {
     var result = {};
     result.name = resource.name;
     result.format = 'csv';
@@ -135,6 +133,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
         delete field.allowedTypes;
         delete field.allowedConcepts;
         delete field.options;
+        delete field.additionalOptions;
         return field;
       })
     };
@@ -148,7 +147,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   };
 
   var groups = {};
-  _.each(resources, function(resource, index) {
+  _.each(resources, function(resource) {
     _.each(resource.fields, function(field) {
       if (field.concept) {
         groups[field.concept] = groups[field.concept] || [];
@@ -158,6 +157,13 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
       }
     });
   });
+
+  var createMappingFromField = function(field) {
+    return _.extend(utils.removeEmptyAttributes(field.options), {
+      source: field.name,
+      resource: field.resource
+    });
+  };
 
   var mappingName = null;
   _.each(groups, function(fields, concept) {
@@ -173,29 +179,26 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
           mappingName = utils.createUniqueName(
             utils.convertToSlug(field.title || field.name),
             _.keys(result.mapping.measures));
-          result.mapping.measures[mappingName] = _.extend(field.options, {
-            source: field.name,
-            resource: field.resource,
-            currency: (field.currencyCode + '').toUpperCase().substr(0, 3)
-          });
+          result.mapping.measures[mappingName] = createMappingFromField(field);
         });
         break;
       }
       case 'dimension': {
         mappingName = utils.createUniqueName(
-          utils.convertToSlug(field.title || field.name),
-          _.keys(result.mapping.dimensions));
+          utils.convertToSlug(
+            _.map(fields, function(field) {
+              return field.title || field.name;
+            }).join(' ')),
+            _.keys(result.mapping.dimensions));
         result.mapping.dimensions[mappingName] = {
           dimensionType: concept.map.dimensionType,
-          attributes: _.map(fields, function(field) {
-            var result = {};
-            var name = utils.convertToSlug(field.name);
-            result[name] = _.extend(field.options, {
-              source: field.name,
-              resource: field.resource
-            });
-            return result;
-          })
+          primaryKey: _.pluck(fields, 'name'),
+          attributes: _.object(_.map(fields, function(field) {
+            return [
+              utils.convertToSlug(field.name),
+              createMappingFromField(field)
+            ];
+          }))
         };
         break;
       }

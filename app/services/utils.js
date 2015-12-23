@@ -295,14 +295,27 @@ module.exports.createNameFromUrl = function(urlOfResource) {
   return urlOfResource;
 };
 
-module.exports.getAllowedTypesForValues = function(values) {
+module.exports.getAllowedTypesForValues = function(values, additionalTypes) {
+  var result = [];
   if (_.isArray(values)) {
-    var result = _.map(values, module.exports.getAllowedTypesForValues);
+    result = _.map(values, function(value) {
+      return module.exports.getAllowedTypesForValues(value, additionalTypes);
+    });
     return _.intersection.apply(_, result);
   } else {
-    return _.filter(module.exports.availableDataTypes, function(type) {
-      return type.cast(values);
+    result = {};
+    _.each(module.exports.availableDataTypes, function(type) {
+      if (type.cast(values)) {
+        result[type.id] = type;
+      } else
+      if (_.isArray(additionalTypes) && _.contains(additionalTypes, type.id)) {
+        result[type.id] = type;
+      } else
+      if (!!additionalTypes && (type.id == additionalTypes)) {
+        result[type.id] = type;
+      }
     });
+    return _.values(result);
   }
 };
 

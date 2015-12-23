@@ -2,6 +2,11 @@
 <section id="step2-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in scope.resources track by $index">
+    <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
+      <a href="{{ 'http://datapipes.okfnlabs.org/csv/html?url=' + resource.source.url }}" target="_blank">
+        <i class="fa fa-external-link-square margin-right-4"></i>View this file
+      </a>
+    </div>
     <div class="col-xs-12">
       <div class="table-responsive">
         <table class="table table-condensed" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">

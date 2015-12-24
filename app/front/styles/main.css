@@ -93,3 +93,22 @@ td.x-strong-highlight {
   font-weight: bold;
   letter-spacing: 0.07em;
 }
+
+.x-small-text {
+  font-size: 12px;
+}
+
+.x-small-text * {
+  font-size: inherit;
+}
+
+.x-small-text .form-control,
+.x-small-text .form-control-static {
+  padding: 3px 4px;
+  line-height: normal;
+  height: auto;
+}
+
+.x-small-text .form-control-static {
+  min-height: 0;
+}

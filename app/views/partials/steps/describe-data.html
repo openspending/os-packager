@@ -2,9 +2,14 @@
 <section id="step2-wrapper">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in scope.resources track by $index">
+    <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
+      <a href="{{ 'http://datapipes.okfnlabs.org/csv/html?url=' + resource.source.url }}" target="_blank">
+        <i class="fa fa-external-link-square margin-right-4"></i>View this file
+      </a>
+    </div>
     <div class="col-xs-12">
       <div class="table-responsive">
-        <table class="table table-condensed" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">
+        <table class="table table-condensed x-small-text" id="step2-describe-data-table" cellpadding="0" cellspacing="0" border="0">
           <tbody ng-init="sizeOfDataSample = (resource.data.rows.length > 3 ? 3 : resource.data.rows.length)">
           <!-- Several rows of sample of data -->
           <tr class="success">
@@ -23,7 +28,7 @@
           </tr>
 
           <!-- Editors -->
-          <tr class="success">
+          <tr class="x-strong-highlight">
             <td colspan="{{ resource.fields.length + 1 }}">
               <p class="form-control-static">Description</p>
             </td>
@@ -67,12 +72,23 @@
                 id="step2-concept-{{ $index }}"
                 ng-change="onConceptChanged(field)"
                 ng-options="item.id as item.name for item in field.allowedConcepts"></select>
-              <!-- Currency code - for `Amount` concept -->
-              <select ng-model="field.currencyCode" class="form-control margin-top-8"
-                ng-if="field.concept == 'measures.amount'"
-                id="step2-currency-{{ $index }}"
-                ng-change="onAdditionalPropertyChanged(field)"
-                ng-options="item.code as item.nameWithCode for item in scope.availableCurrencies"></select>
+
+              <div ng-repeat="option in field.additionalOptions" class="margin-top-8">
+                <div>
+                  <label class="control-label">{{ option.title }}</label>
+                </div>
+                <div ng-if="option.values">
+                  <select ng-model="field.options[option.name]" class="form-control"
+                    id="step2-concept-{{ $index }}-{{ option.name }}"
+                    ng-change="onAdditionalPropertyChanged(field)"
+                    ng-options="item.value as item.name for item in option.values"></select>
+                </div>
+                <div ng-if="!option.values">
+                  <input type="text" ng-model="field.options[option.name]" class="form-control"
+                    id="step2-concept-{{ $index }}-{{ option.name }}"
+                    ng-change="onAdditionalPropertyChanged(field)">
+                </div>
+              </div>
             </td>
           </tr>
           </tbody>
@@ -88,7 +104,7 @@
 
   <div ng-if="scope.validationStatus.concept" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
-    Now your resource seems to look well, so you can continue to the next step.
+    Now that you have modeled your resource, you can continue to the next step.
   </div>
 
   <div ng-if="scope.validationStatus.concept" class="row form-group">
@@ -96,6 +112,38 @@
       <button id="step2-button-next" ng-click="goToStep(nextStep)" type="button" class="btn btn-primary btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
+    </div>
+  </div>
+
+  <div class="row" ng-if="(scope.selectedMeasures.length > 0) || (scope.selectedDimensions.length > 0)">
+    <div class="col-xs-12">
+      <h3>Selected concepts</h3>
+      <p>These are the concepts you've identified for your data so far.</p>
+    </div>
+    <div class="col-xs-12 col-sm-4" ng-if="scope.selectedMeasures.length > 0">
+      <h3>Measures</h3>
+      <p>The data has {{ selectedMeasures.length }} measure(s)</p>
+      <div ng-repeat="field in scope.selectedMeasures track by $index">
+        <h4>{{ field.title }}</h4>
+        <ul>
+          <li>Mapped from "{{ field.name }}"</li>
+          <li ng-repeat="option in field.options">{{ option.name }}: {{ option.value }}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-8" ng-if="scope.selectedDimensions.length > 0">
+      <h3>Dimensions</h3>
+      <p>The data has {{ selectedDimensions.length }} dimension(s)</p>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6" ng-repeat="field in scope.selectedDimensions track by $index">
+          <h4>{{ field.title }}</h4>
+          <ul>
+            <li>Mapped from "{{ field.name }}"</li>
+            <li>A "{{ field.concept.dimensionType }}" dimension</li>
+            <li ng-repeat="option in field.options">{{ option.name }}: {{ option.value }}</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>

@@ -61,10 +61,9 @@
 
               $scope.validationStatus.$promise.then(function(data) {
                 if (!$scope.validationStatus.errors) {
-                  var dataPackage = PackageService.getPackage();
-                  dataPackage.resources.clear();
+                  PackageService.removeAllResources();
                   if ($scope.resource) {
-                    dataPackage.resources.add($scope.resource);
+                    PackageService.addResource(resource);
                   }
                   StepsService.resetStepsFrom($scope.$step);
                   return data;
@@ -82,7 +81,7 @@
 
         $scope.$watch('file', function() {
           StepsService.resetStepsFrom($scope.$step);
-          PackageService.createPackage();
+          PackageService.recreatePackage();
           if (!$scope.file && !$scope.url) {
             $scope.validationStatus = null;
             return;
@@ -91,7 +90,7 @@
         });
         $scope.$watch('url', function() {
           StepsService.resetStepsFrom($scope.$step);
-          PackageService.createPackage();
+          PackageService.recreatePackage();
           if (!$scope.file && !$scope.url) {
             $scope.validationStatus = null;
             return;

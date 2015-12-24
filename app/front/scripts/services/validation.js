@@ -7,8 +7,8 @@
 
   angular.module('Application')
     .factory('ValidationService', [
-      '$q', 'Configuration',
-      function($q, Configuration) {
+      '$q', 'PackageService', 'Configuration',
+      function($q, PackageService, Configuration) {
         return {
           validateResource: function(resource, validateSchema) {
             var validationResult = {
@@ -36,15 +36,12 @@
 
             return validationResult;
           },
-          validateFiscalDataPackage: function(dataPackage) {
+          validateFiscalDataPackage: function() {
             var validationResult = {
               state: 'checking'
             };
-            validationResult.$promise = $q(function(resolve, reject) {
-              dataPackage.validateFiscalDataPackage()
-                .then(resolve)
-                .catch(reject);
-            });
+            validationResult.$promise = PackageService
+              .validateFiscalDataPackage();
 
             validationResult.$promise
               .then(function(results) {
@@ -62,24 +59,27 @@
             return validationResult;
           },
           validateResourcesConcepts: function(resources) {
-            var result = true;
+            var utils = require('app/services').utils;
+            var requiredConcepts = _.chain(utils.availableConcepts)
+              .filter(function(item) {
+                return !!item.required;
+              })
+              .map(function(item) {
+                return [item.id, false];
+              })
+              .object()
+              .value();
+
             _.each(resources, function(resource) {
-              // TODO: Make it based on `required` property of concept object
-              var amountFound = false;
-              var dateTimeFound = false;
               _.each(resource.fields, function(field) {
-                if (field.concept == 'measures.amount') {
-                  amountFound = !!field.currencyCode;
-                }
-                if (field.concept == 'dimensions.datetime') {
-                  dateTimeFound = true;
+                if (requiredConcepts.hasOwnProperty(field.concept)) {
+                  requiredConcepts[field.concept] = true;
                 }
               });
-              if (!amountFound || !dateTimeFound) {
-                result = false;
-              }
             });
-            return result;
+
+            // There should not be `false` values
+            return !_.contains(requiredConcepts, false);
           }
         };
       }

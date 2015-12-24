@@ -132,112 +132,6 @@ module.exports.availableDataTypes = (function() {
     .value();
 })();
 
-module.exports.availableConcepts = (function() {
-  var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
-  var idTypes = ['integer', 'number', 'string'];
-  return [
-    {
-      name: '',
-      id: '',
-      allowedTypes: allTypes,
-      group: null,
-      required: false,
-      map: {
-        name: 'other',
-        dimensionType: 'other'
-      }
-    },
-    {
-      name: 'Amount',
-      id: 'measures.amount',
-      allowedTypes: ['number', 'integer'],
-      group: 'measure',
-      required: true,
-      map: {
-        name: 'amount',
-        dimensionType: 'amount'
-      }
-    },
-    {
-      name: 'Date / Time',
-      id: 'dimensions.datetime',
-      allowedTypes: ['datetime', 'date', 'time', 'integer', 'numeric'],
-      group: 'dimension',
-      required: true,
-      map: {
-        name: 'datetime',
-        dimensionType: 'datetime'
-      }
-    },
-    {
-      name: 'Classification',
-      id: 'dimensions.classification',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification',
-        dimensionType: 'classification'
-      }
-    },
-    {
-      name: 'Classification > ID',
-      id: 'dimensions.classification.id',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification-id',
-        dimensionType: 'classification'
-      }
-    },
-    {
-      name: 'Classification > Label',
-      id: 'dimensions.classification.label',
-      allowedTypes: allTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'classification-label',
-        dimensionType: 'classification'
-      }
-    },
-    {
-      name: 'Entity',
-      id: 'dimensions.entity',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'entity',
-        dimensionType: 'entity'
-      }
-    },
-    {
-      name: 'Entity > ID',
-      id: 'dimensions.entity.id',
-      allowedTypes: idTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'entity-id',
-        dimensionType: 'entity'
-      }
-    },
-    {
-      name: 'Entity > Label',
-      id: 'dimensions.entity.label',
-      allowedTypes: allTypes,
-      group: 'dimension',
-      required: false,
-      map: {
-        name: 'entity-label',
-        dimensionType: 'entity'
-      }
-    }
-  ];
-})();
-
 module.exports.availableCurrencies = require('../data/iso4217.json');
 
 module.exports.defaultCurrency = (function(currencies) {
@@ -249,6 +143,123 @@ module.exports.defaultCurrency = (function(currencies) {
     return item.code == defaultCurrencyCode;
   });
 })(module.exports.availableCurrencies);
+
+module.exports.availableConcepts = (function() {
+  var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
+  var idTypes = ['integer', 'number', 'string'];
+  return [
+    {
+      name: '',
+      id: '',
+      allowedTypes: allTypes,
+      group: null,
+      required: false,
+      dimensionType: 'other'
+    },
+    {
+      name: 'Amount',
+      id: 'measures.amount',
+      allowedTypes: ['number', 'integer'],
+      group: 'measure',
+      required: true,
+      options: [
+        {
+          name: 'currency',
+          title: 'Currency',
+          defaultValue: module.exports.defaultCurrency.code,
+          values: _.map(module.exports.availableCurrencies, function(item) {
+            return {
+              name: item.code + ' ' + item.name,
+              value: item.code
+            };
+          })
+        },
+        {
+          name: 'factor',
+          title: 'Factor',
+          defaultValue: '',
+          pattern: /^[+-]?[0-9]+(\.[0-9]+)?$/
+        },
+        {
+          name: 'direction',
+          title: 'Direction',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Expenditure', value: 'expenditure'},
+            {name: 'Revenue', value: 'revenue'}
+          ]
+        },
+        {
+          name: 'phase',
+          title: 'Phase',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Proposed', value: 'proposed'},
+            {name: 'Approved', value: 'approved'},
+            {name: 'Adjusted', value: 'adjusted'},
+            {name: 'Executed', value: 'executed'}
+          ]
+        }
+      ],
+      dimensionType: 'amount'
+    },
+    {
+      name: 'Date / Time',
+      id: 'dimensions.datetime',
+      allowedTypes: ['datetime', 'date', 'time', 'integer', 'numeric'],
+      group: 'dimension',
+      required: true,
+      dimensionType: 'datetime'
+    },
+    {
+      name: 'Entity',
+      id: 'dimensions.entity',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      dimensionType: 'entity'
+    },
+    {
+      name: 'Classification',
+      id: 'dimensions.classification',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      options: [
+        {
+          name: 'classificationType',
+          title: 'Classification type',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Functional', value: 'functional'},
+            {name: 'Administrative', value: 'administrative'},
+            {name: 'Economic', value: 'economic'}
+          ]
+        }
+      ],
+      dimensionType: 'classification'
+    },
+    {
+      name: 'Activity',
+      id: 'dimensions.activity',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      dimensionType: 'activity'
+    },
+    {
+      name: 'Location',
+      id: 'dimensions.location',
+      allowedTypes: idTypes,
+      group: 'dimension',
+      required: false,
+      dimensionType: 'location'
+    }
+  ];
+})();
 
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
@@ -263,14 +274,27 @@ module.exports.createNameFromUrl = function(urlOfResource) {
   return urlOfResource;
 };
 
-module.exports.getAllowedTypesForValues = function(values) {
+module.exports.getAllowedTypesForValues = function(values, additionalTypes) {
+  var result = [];
   if (_.isArray(values)) {
-    var result = _.map(values, module.exports.getAllowedTypesForValues);
+    result = _.map(values, function(value) {
+      return module.exports.getAllowedTypesForValues(value, additionalTypes);
+    });
     return _.intersection.apply(_, result);
   } else {
-    return _.filter(module.exports.availableDataTypes, function(type) {
-      return type.cast(values);
+    result = {};
+    _.each(module.exports.availableDataTypes, function(type) {
+      if (type.cast(values)) {
+        result[type.id] = type;
+      } else
+      if (_.isArray(additionalTypes) && _.contains(additionalTypes, type.id)) {
+        result[type.id] = type;
+      } else
+      if (!!additionalTypes && (type.id == additionalTypes)) {
+        result[type.id] = type;
+      }
     });
+    return _.values(result);
   }
 };
 
@@ -300,4 +324,16 @@ module.exports.createUniqueName = function(desiredName, availableNames) {
   });
   mapped.push(0);
   return desiredName + (_.max(mapped) + 1);
+};
+
+module.exports.addItemWithUniqueName = function(collection, item) {
+  item.name = module.exports.createUniqueName(item.name,
+    _.pluck(collection, 'name'));
+  collection.push(item);
+};
+
+module.exports.removeEmptyAttributes = function(object) {
+  return _.pick(object, function(value) {
+    return !!value;
+  });
 };

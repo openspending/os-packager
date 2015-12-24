@@ -36,14 +36,6 @@
             var utils = require('app/services').utils;
             return utils.availableDataTypes;
           },
-          getAvailableCurrencies: function() {
-            var utils = require('app/services').utils;
-            return _.map(utils.availableCurrencies, function(item) {
-              item = _.clone(item);
-              item.nameWithCode = item.code + ' ' + item.name;
-              return item;
-            });
-          },
           prepareFiscalPeriod: function(period) {
             var range = [];
             var result = undefined;

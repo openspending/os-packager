@@ -6,40 +6,58 @@
     .factory('PackageService', [
       '$q',
       function($q) {
+        var attributes = {};
+        var resources = [];
+        var schema = null;
+
+        var fiscalDataPackage = require('app/services').fiscalDataPackage;
+        var utils = require('app/services').utils;
+        fiscalDataPackage.getFiscalDataPackageSchema().then(function(result) {
+          schema = result;
+        });
+
         var createNewDataPackage = function() {
-          var FiscalDataPackage = require('app/services').FiscalDataPackage;
-          var result = new FiscalDataPackage();
-
-          result.attributes.regionCode = '';
-          result.attributes.countryCode = '';
-          result.attributes.cityCode = '';
-
-          return result;
+          attributes.regionCode = '';
+          attributes.countryCode = '';
+          attributes.cityCode = '';
+          resources.splice(0, resources.length);
         };
-
-        var dataPackage = null;
+        createNewDataPackage();
 
         return {
-          createPackage: function() {
-            dataPackage = createNewDataPackage();
-            return dataPackage;
+          getAttributes: function() {
+            return attributes;
           },
-          getPackage: function(forceRecreate) {
-            if (!dataPackage || !!forceRecreate) {
-              this.createPackage();
-            }
-            return dataPackage;
+          getResources: function() {
+            return resources;
+          },
+          recreatePackage: function() {
+            createNewDataPackage();
           },
           createResource: function(fileOrUrl) {
-            var dataPackage = this.getPackage();
             return $q(function(resolve, reject) {
-              dataPackage.resources.createFromSource(fileOrUrl)
+              fiscalDataPackage.createResourceFromSource(fileOrUrl)
+                .then(resolve)
+                .catch(reject);
+            });
+          },
+          addResource: function(resource) {
+            utils.addItemWithUniqueName(resources, resource);
+          },
+          removeAllResources: function() {
+            resources.splice(0, resources.length);
+          },
+          validateFiscalDataPackage: function() {
+            var dataPackage = this.createFiscalDataPackage();
+            return $q(function(resolve, reject) {
+              return fiscalDataPackage.validateDataPackage(dataPackage, schema)
                 .then(resolve)
                 .catch(reject);
             });
           },
           createFiscalDataPackage: function() {
-            return this.getPackage().createFiscalDataPackage();
+            return fiscalDataPackage.createFiscalDataPackage(attributes,
+              resources);
           }
         };
       }

@@ -3,7 +3,7 @@
 var _ = require('underscore');
 var assert = require('chai').assert;
 var utils = require('../app/services/utils');
-var Package = require('../app/services/package');
+var dataPackage = require('../app/services/package');
 
 // Make PapaParse working (do not remove this line!)
 var testUtils = require('./utils');
@@ -104,13 +104,36 @@ describe('Application services', function() {
       done();
     });
 
+    it('Should add item with unique name', function(done) {
+      var item = {
+        name: 'example',
+        title: 'Example resource'
+      };
+      var collection = [];
+      utils.addItemWithUniqueName(collection, _.clone(item));
+      utils.addItemWithUniqueName(collection, _.clone(item));
+      utils.addItemWithUniqueName(collection, _.clone(item));
+
+      assert.equal(collection.length, 3);
+
+      assert.equal(collection[0].name, 'example');
+      assert.equal(collection[0].title, 'Example resource');
+
+      assert.equal(collection[1].name, 'example-1');
+      assert.equal(collection[1].title, 'Example resource');
+
+      assert.equal(collection[2].name, 'example-2');
+      assert.equal(collection[2].title, 'Example resource');
+
+      done();
+    });
+
   });
 
   describe('Package', function() {
 
     it('Should create resource from URL', function(done) {
-      var dataPackage = new Package();
-      dataPackage.resources.createFromSource(exampleResourceUrl)
+      dataPackage.createResourceFromSource(exampleResourceUrl)
         .then(function(resource) {
           assert.equal(resource.name, 'valid');
           assert.equal(resource.title, 'Valid');
@@ -130,42 +153,20 @@ describe('Application services', function() {
         .catch(console.trace.bind(console));
     });
 
-    it('Should add resource with unique name', function(done) {
-      var dataPackage = new Package();
-      var resource = {
-        name: 'example',
-        title: 'Example resource'
-      };
-      dataPackage.resources.add(_.clone(resource));
-      dataPackage.resources.add(_.clone(resource));
-      dataPackage.resources.add(_.clone(resource));
-
-      assert.equal(dataPackage.resources.length, 3);
-
-      assert.equal(dataPackage.resources[0].name, 'example');
-      assert.equal(dataPackage.resources[0].title, 'Example resource');
-
-      assert.equal(dataPackage.resources[1].name, 'example-1');
-      assert.equal(dataPackage.resources[1].title, 'Example resource');
-
-      assert.equal(dataPackage.resources[2].name, 'example-2');
-      assert.equal(dataPackage.resources[2].title, 'Example resource');
-
-      done();
-    });
-
     it('Should create Fiscal Data Package', function(done) {
-      var dataPackage = new Package();
-      dataPackage.resources.createFromSource(exampleResourceUrl)
+      var resources = [];
+      var attributes = {
+        name: 'example',
+        title: 'Example Data Package'
+      };
+      dataPackage.createResourceFromSource(exampleResourceUrl)
         .then(function(resource) {
-          dataPackage.attributes.name = 'example';
-          dataPackage.attributes.title = 'Example Data Package';
-
           resource.fields[0].concept = 'measures.amount';
           resource.fields[1].concept = 'dimensions.datetime';
-          dataPackage.resources.add(resource);
+          utils.addItemWithUniqueName(resources, resource);
 
-          var fiscalPackage = dataPackage.createFiscalDataPackage();
+          var fiscalPackage = dataPackage.createFiscalDataPackage(attributes,
+            resources);
 
           assert.deepEqual(fiscalPackage,
             require('./data/example-package.json'));

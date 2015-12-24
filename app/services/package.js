@@ -164,7 +164,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   });
 
   var createMappingFromField = function(field) {
-    var options = _.clone(field.options);
+    var options = _.isObject(field.options) ? field.options : {};
+    options = _.clone(options);
     options.classificationType = '';
     return _.extend(utils.removeEmptyAttributes(options), {
       source: field.name,

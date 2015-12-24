@@ -150,8 +150,13 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   _.each(resources, function(resource) {
     _.each(resource.fields, function(field) {
       if (field.concept) {
-        groups[field.concept] = groups[field.concept] || [];
-        groups[field.concept].push(_.extend({
+        var key = [field.concept];
+        if (_.isObject(field.options) && field.options.classificationType) {
+          key.push(field.options.classificationType);
+        }
+        key = JSON.stringify(key);
+        groups[key] = groups[key] || [];
+        groups[key].push(_.extend({
           resource: resource.name
         }, field));
       }
@@ -159,7 +164,10 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   });
 
   var createMappingFromField = function(field) {
-    return _.extend(utils.removeEmptyAttributes(field.options), {
+    var options = _.isObject(field.options) ? field.options : {};
+    options = _.clone(options);
+    options.classificationType = '';
+    return _.extend(utils.removeEmptyAttributes(options), {
       source: field.name,
       resource: field.resource
     });
@@ -167,6 +175,13 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
 
   var mappingName = null;
   _.each(groups, function(fields, concept) {
+    var optionalAttributes = {};
+    concept = JSON.parse(concept);
+    if (concept.length > 1) {
+      optionalAttributes.classificationType = concept[1];
+    }
+
+    concept = _.first(concept);
     concept = _.find(utils.availableConcepts, function(item) {
       return item.id == concept;
     });
@@ -190,7 +205,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
               return field.title || field.name;
             }).join(' ')),
             _.keys(result.mapping.dimensions));
-        result.mapping.dimensions[mappingName] = {
+        result.mapping.dimensions[mappingName] = _.extend(optionalAttributes, {
           dimensionType: concept.dimensionType,
           primaryKey: _.pluck(fields, 'name'),
           attributes: _.object(_.map(fields, function(field) {
@@ -199,7 +214,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
               createMappingFromField(field)
             ];
           }))
-        };
+        });
         break;
       }
     }

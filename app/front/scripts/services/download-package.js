@@ -43,16 +43,17 @@
           // Dimensions
           _.each(fiscalDataPackage.mapping.dimensions,
             function(dimension, name) {
+              var sources = [];
               _.each(dimension.attributes, function(mapping) {
-                mapping = _.first(_.values(mapping));
                 var resource = getResource(mapping.resource);
-                result.push({
-                  name: name,
-                  sources: [{
-                    fileName: resource.title || resource.name,
-                    fieldName: mapping.source
-                  }]
+                sources.push({
+                  fileName: resource.title || resource.name,
+                  fieldName: mapping.source
                 });
+              });
+              result.push({
+                name: name,
+                sources: sources
               });
             });
 

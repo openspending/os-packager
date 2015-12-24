@@ -45,13 +45,15 @@
                         value = temp.name;
                       }
                     }
-                    if (_.isUndefined(value) || _.isNull(value) || (value == '')) {
+                    var isEmptyValue = _.isUndefined(value) ||
+                      _.isNull(value) || (value == '');
+                    if (isEmptyValue) {
                       return false;
                     }
                     return {
                       name: option.title,
                       value: value
-                    }
+                    };
                   })
                   .filter()
                   .value();

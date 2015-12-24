@@ -171,7 +171,7 @@ module.exports.availableConcepts = (function() {
             return {
               name: item.code + ' ' + item.name,
               value: item.code
-            }
+            };
           })
         },
         {

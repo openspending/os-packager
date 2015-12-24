@@ -61,8 +61,8 @@ module.exports.getFiscalDataPackageSchema = function() {
 module.exports.getDataPackageSchema = function(schemaId) {
   return new Promise(function(resolve, reject) {
     var options = {
-      backend: '/proxy?url=' + encodeURIComponent('https://rawgit.com/' +
-        'dataprotocols/registry/master/registry.csv')
+      backend: '/proxy?url=' + encodeURIComponent(
+        'http://schemas.datapackages.org/registry.csv')
     };
     registry.get(options).then(function(result) {
       var profile = _.findWhere(result, {id: schemaId});

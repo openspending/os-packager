@@ -150,7 +150,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   _.each(resources, function(resource) {
     _.each(resource.fields, function(field) {
       if (field.concept) {
-        var key = [field.concept]
+        var key = [field.concept];
         if (_.isObject(field.options) && field.options.classificationType) {
           key.push(field.options.classificationType);
         }

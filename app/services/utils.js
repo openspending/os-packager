@@ -261,6 +261,84 @@ module.exports.availableConcepts = (function() {
   ];
 })();
 
+module.exports.availablePossibilities = (function() {
+  var updateByConcepts = function(resources) {
+    if (!this || !_.isArray(this.concepts)) {
+      return;
+    }
+
+    var conceptsToCheck = _.chain(this.concepts)
+      .map(function(concept) {
+        return [concept, false];
+      })
+      .object()
+      .value();
+
+    var self = this;
+    _.each(resources, function(resource) {
+      _.each(resource.fields, function(field) {
+        if (_.contains(self.concepts, field.concept)) {
+          conceptsToCheck[field.concept] = true;
+        }
+      });
+    });
+
+    this.isAvailable = !_.contains(conceptsToCheck, false);
+  };
+
+  return [
+    {
+      name: "Transaction Table",
+      isAvailable: false,
+      concepts: ['measures.amount'],
+      update: updateByConcepts
+    },
+    {
+      name: "Time series",
+      isAvailable: false,
+      concepts: ['measures.amount', 'dimensions.datetime'],
+      update: updateByConcepts
+    },
+    {
+      name: "Treemap",
+      isAvailable: false,
+      concepts: ['measures.amount', 'dimensions.classification'],
+      update: updateByConcepts
+    },
+    {
+      name: "Classification explorer",
+      isAvailable: false,
+      concepts: ['measures.amount', 'dimensions.classification'],
+      update: updateByConcepts
+    },
+    {
+      name: "Multiple dimension agg",
+      isAvailable: false,
+      concepts: ['measures.amount'],
+      update: function(resources) {
+        updateByConcepts.call(this, resources);
+        if (this.isAvailable) {
+          var countOfDimensions = 0;
+          _.each(resources, function(resource) {
+            _.each(resource.fields, function(field) {
+              var concept = _.findWhere(module.exports.availableConcepts, {
+                id: field.concept
+              });
+              if (concept && (concept.group == 'dimension')) {
+                countOfDimensions += 1;
+              }
+            });
+          });
+          // There should be at least one measure and more than one dimension
+          if (countOfDimensions < 2) {
+            this.isAvailable = false;
+          }
+        }
+      }
+    }
+  ];
+})();
+
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
   return module.exports.convertToSlug(result || fileName);

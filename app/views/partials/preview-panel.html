@@ -1,0 +1,21 @@
+{% raw %}
+<div ng-controller="PreviewDataController">
+  <h3>Using this data</h3>
+  <p>
+    Based on the current model selections, you could build the following
+    views on this data.
+  </p>
+
+  <div>
+    <button ng-repeat="possibility in scope.possibilities" type="button"
+      ng-disabled="!possibility.isAvailable"
+      ng-class="{'btn-default': true, 'btn-success': false}"
+      class="btn btn-block">{{ possibility.name }}</button>
+  </div>
+
+  <div ng-if="scope.displayGraph">
+    <h3>Preview</h3>
+    <div>Preview block</div>
+  </div>
+</div>
+{% endraw %}

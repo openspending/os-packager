@@ -5,9 +5,9 @@
   angular.module('Application')
     .factory('DescribeDataService', [
       '$rootScope', 'PackageService', 'UtilsService', 'ValidationService',
-      'StepsService',
+      'StepsService', 'Configuration',
       function($rootScope, PackageService, UtilsService, ValidationService,
-        StepsService) {
+        StepsService, Configuration) {
         var result = {};
 
         var $scope = $rootScope.$new();
@@ -94,6 +94,8 @@
             ValidationService.validateResourcesConcepts($scope.resources);
           $scope.selectedMeasures = getSelectedConcepts('measure');
           $scope.selectedDimensions = getSelectedConcepts('dimension');
+
+          $rootScope.$broadcast(Configuration.events.CONCEPTS_CHANGED);
         };
 
         return result;

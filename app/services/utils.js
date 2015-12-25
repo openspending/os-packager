@@ -288,31 +288,36 @@ module.exports.availablePossibilities = (function() {
 
   return [
     {
-      name: "Transaction Table",
+      id: 'transaction-table',
+      name: 'Transaction Table',
       isAvailable: false,
       concepts: ['measures.amount'],
       update: updateByConcepts
     },
     {
-      name: "Time series",
+      id: 'time-series',
+      name: 'Time series',
       isAvailable: false,
       concepts: ['measures.amount', 'dimensions.datetime'],
       update: updateByConcepts
     },
     {
-      name: "Treemap",
+      id: 'treemap',
+      name: 'Treemap',
       isAvailable: false,
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
     {
-      name: "Classification explorer",
+      id: 'classification',
+      name: 'Classification explorer',
       isAvailable: false,
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
     {
-      name: "Multiple dimension agg",
+      id: 'mutlidimension',
+      name: 'Multiple dimension agg',
       isAvailable: false,
       concepts: ['measures.amount'],
       update: function(resources) {

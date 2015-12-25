@@ -23,9 +23,14 @@
           });
           if ($scope.selectedPossibility) {
             var possibility = _.findWhere($scope.possibilities, {
-              isAvailable: true
+              id: $scope.selectedPossibility
             });
-            result.selectPossibility(possibility);
+            if (!possibility || !possibility.isAvailable) {
+              possibility = _.findWhere($scope.possibilities, {
+                isAvailable: true
+              });
+              result.selectPossibility(possibility);
+            }
           }
         });
 

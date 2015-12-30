@@ -23,7 +23,7 @@
                 return {
                   name: item[name],
                   value: item[value]
-                }
+                };
               });
               var treemap = d3.layout.treemap()
                 .children(function(d, depth) {
@@ -97,7 +97,7 @@
 
                 svg.append('text')
                   .datum(item)
-                  .attr("dy", ".75em")
+                  .attr('dy', '.75em')
                   .text(function(d) { return d.name; })
                   .call(text);
               });

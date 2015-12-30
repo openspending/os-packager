@@ -1,39 +1,33 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('UtilsService', [
-      '$q',
-      function($q) {
+      '$q', '_', 'Services',
+      function($q, _, Services) {
+        var utils = Services.utils;
+
         var allRegions = null;
         var allCountries = null;
 
         return {
           slug: function(string) {
-            var utils = require('app/services').utils;
             return utils.convertToSlug(string);
           },
           decorateProxyUrl: function(url) {
-            var utils = require('app/services').utils;
             return utils.decorateProxyUrl(url);
           },
           undecorateProxyUrl: function(url) {
-            var utils = require('app/services').utils;
             return utils.undecorateProxyUrl(url);
           },
           findConcept: function(conceptId) {
-            var utils = require('app/services').utils;
             return _.find(utils.availableConcepts, function(concept) {
               return concept.id == conceptId;
             });
           },
           getAvailableConcepts: function() {
-            var utils = require('app/services').utils;
             return utils.availableConcepts;
           },
           getAvailableTypes: function() {
-            var utils = require('app/services').utils;
             return utils.availableDataTypes;
           },
           prepareFiscalPeriod: function(period) {

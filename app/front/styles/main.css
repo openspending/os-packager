@@ -112,3 +112,61 @@ td.x-strong-highlight {
 .x-small-text .form-control-static {
   min-height: 0;
 }
+
+.aspect-ratio {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.aspect-ratio svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.aspect-ratio:before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.aspect-ratio.aspect-ratio-3-4:before {
+  padding-top: 75%;
+}
+
+.aspect-ratio.aspect-ratio-1-1:before,
+.aspect-ratio.aspect-ratio-square:before {
+  padding-top: 100%;
+}
+
+.aspect-ratio.aspect-ratio-3-2:before {
+  padding-top: 150%;
+}
+
+.treemap rect {
+  stroke: #fff;
+}
+
+.treemap text {
+  -moz-pointer-events: none;
+  -webkit-pointer-events: none;
+  pointer-events: none;
+}
+
+.lines {
+  position: relative;
+  max-height: none !important;
+}
+
+.c3 {
+  text-align: left;
+}
+
+.c3-tooltip {
+  table-layout: auto !important;
+}

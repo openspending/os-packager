@@ -1,7 +1,8 @@
 ;(function(angular) {
 
   angular.module('Application', [
-    'ngRoute'
+    'ngRoute',
+    'Visualization'
   ]);
 
 })(angular);

@@ -1,12 +1,10 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('ProvideMetadataService', [
-      '$rootScope', '$timeout', 'PackageService', 'UtilsService',
+      '$rootScope', '$timeout', '_', 'PackageService', 'UtilsService',
       'ValidationService', 'StepsService',
-      function($rootScope, $timeout, PackageService, UtilsService,
+      function($rootScope, $timeout, _, PackageService, UtilsService,
         ValidationService, StepsService) {
         var result = {};
 

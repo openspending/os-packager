@@ -7,6 +7,8 @@ var registry = require('datapackage-registry');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
+var dataPackageRegistryUrl = 'http://schemas.datapackages.org/registry.csv';
+
 module.exports.createResourceFromSource = function(urlOrFile) {
   return new Promise(function(resolve, reject) {
     utils.getCsvSchema(urlOrFile)
@@ -54,16 +56,20 @@ module.exports.createResourceFromSource = function(urlOrFile) {
   });
 };
 
-module.exports.getFiscalDataPackageSchema = function() {
-  return module.exports.getDataPackageSchema('fiscal');
+module.exports.getFiscalDataPackageSchema = function(useProxy) {
+  return module.exports.getDataPackageSchema('fiscal', useProxy);
 };
 
-module.exports.getDataPackageSchema = function(schemaId) {
+module.exports.getDataPackageSchema = function(schemaId, useProxy) {
   return new Promise(function(resolve, reject) {
     var options = {
-      backend: '/proxy?url=' + encodeURIComponent(
-        'http://schemas.datapackages.org/registry.csv')
+      backend: dataPackageRegistryUrl
     };
+    if (_.isUndefined(useProxy) || !!useProxy) {
+      options = {
+        backend: '/proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
+      };
+    }
     registry.get(options).then(function(result) {
       var profile = _.findWhere(result, {id: schemaId});
 
@@ -75,7 +81,12 @@ module.exports.getDataPackageSchema = function(schemaId) {
       var options = {
         method: 'GET'
       };
-      fetch('/proxy?url=' + encodeURIComponent(profile.schema), options)
+
+      var url = profile.schema;
+      if (_.isUndefined(useProxy) || !!useProxy) {
+        url = '/proxy?url=' + encodeURIComponent(profile.schema);
+      }
+      fetch(url, options)
         .then(function(res) {
           if (res.status != 200) {
             reject('Failed loading schema from ' + profile.schema);

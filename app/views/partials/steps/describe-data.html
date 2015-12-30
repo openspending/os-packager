@@ -1,5 +1,6 @@
 {% raw %}
-<section id="step2-wrapper">
+<section id="step2-wrapper" class="row">
+<div class="col-xs-12 col-sm-9">
   <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in scope.resources track by $index">
     <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
@@ -122,7 +123,7 @@
     </div>
     <div class="col-xs-12 col-sm-4" ng-if="scope.selectedMeasures.length > 0">
       <h3>Measures</h3>
-      <p>The data has {{ selectedMeasures.length }} measure(s)</p>
+      <p>The data has {{ scope.selectedMeasures.length }} measure(s)</p>
       <div ng-repeat="field in scope.selectedMeasures track by $index">
         <h4>{{ field.title }}</h4>
         <ul>
@@ -133,7 +134,7 @@
     </div>
     <div class="col-xs-12 col-sm-8" ng-if="scope.selectedDimensions.length > 0">
       <h3>Dimensions</h3>
-      <p>The data has {{ selectedDimensions.length }} dimension(s)</p>
+      <p>The data has {{ scope.selectedDimensions.length }} dimension(s)</p>
       <div class="row">
         <div class="col-xs-12 col-sm-6" ng-repeat="field in scope.selectedDimensions track by $index">
           <h4>{{ field.title }}</h4>
@@ -146,5 +147,11 @@
       </div>
     </div>
   </div>
+</div>
+<div class="col-sm-3 hidden-xs">
+{% endraw %}
+  {% include "partials/preview-panel.html" %}
+{% raw %}
+</div>
 </section>
 {% endraw %}

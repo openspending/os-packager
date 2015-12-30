@@ -1,10 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .filter('fieldConcepts', [
-      function() {
+      '_',
+      function(_) {
         return function(field) {
           var result = field.allowedConcepts;
           if (!!field.type) {
@@ -17,8 +16,8 @@
       }
     ])
     .filter('fieldTypes', [
-      'UtilsService',
-      function(UtilsService) {
+      '_', 'UtilsService',
+      function(_, UtilsService) {
         return function(field) {
           var result = field.allowedTypes;
           if (!!field.concept) {

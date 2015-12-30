@@ -18,7 +18,7 @@ describe('Wizard UI', function() {
   it('Should open app page', function(done) {
     var browser = utils.app.browser;
     browser.visit('/', function() {
-      browser.wait(10000, function() {
+      browser.waitForDigest().then(function() {
         assert.ok(browser.success);
         done();
       });
@@ -29,21 +29,15 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step1-wrapper'), 'It should be step #1');
     browser.fill('step1-resource-url', exampleResourceUrl);
-    setTimeout(function() {
-      browser.wait(10000, function() {
-        setTimeout(function() {
-          browser.wait(10000, function() {
-            assert(browser.query('#step1-button-next'),
-              'Next button should be available');
-            browser.click('#step1-button-next');
-            browser.wait(1000, function() {
-              assert(browser.query('#step2-wrapper'), 'It should be step #2');
-              done();
-            });
-          });
-        }, 1000);
+    browser.waitForDigest().then(function() {
+      assert(browser.query('#step1-button-next'),
+        'Next button should be available');
+      browser.click('#step1-button-next');
+      browser.waitForDigest().then(function() {
+        assert(browser.query('#step2-wrapper'), 'It should be step #2');
+        done();
       });
-    }, 1000);
+    });
   });
 
   it('Should map required concepts', function(done) {
@@ -53,75 +47,65 @@ describe('Wizard UI', function() {
     browser.evaluate('$("#step2-concept-0")' +
       '.val("string:dimensions.datetime").change();');
     browser.evaluate('$("#step2-concept-1")' +
-    '.val("string:measures.amount").change();');
+      '.val("string:measures.amount").change();');
 
-    setTimeout(function() {
-      browser.wait(10000, function() {
-        assert(browser.query('#step2-button-next'),
-          'Next button should be available');
-        browser.click('#step2-button-next');
-        browser.wait(1000, function() {
-          assert(browser.query('#step3-wrapper'), 'It should be step #3');
-          done();
-        });
+    browser.waitForDigest().then(function() {
+      assert(browser.query('#step2-button-next'),
+        'Next button should be available');
+
+      assert(browser.query('#preview-data-panel button:not(disabled)'),
+        'Some previews should be available');
+
+      browser.click('#step2-button-next');
+      browser.waitForDigest().then(function() {
+        assert(browser.query('#step3-wrapper'), 'It should be step #3');
+        done();
       });
-    }, 1000);
+    });
   });
 
   it('Should fill metadata', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step3-wrapper'), 'It should be step #3');
     browser.fill('title', dataPackageTitle);
-    browser.wait(10000, function() {
-      setTimeout(function() {
-        browser.wait(10000, function() {
-          setTimeout(function() {
-            browser.wait(10000, function() {
-              assert(browser.query('#step3-button-next'),
-                'Next button should be available');
-              browser.click('#step3-button-next');
-              browser.wait(1000, function() {
-                assert(browser.query('#step4-wrapper'), 'It should be step #4');
-                done();
-              });
-            });
-          }, 1000);
-        });
-      }, 5000);
+    browser.waitForDigest().then(function() {
+      assert(browser.query('#step3-button-next'),
+        'Next button should be available');
+      browser.click('#step3-button-next');
+      browser.waitForDigest().then(function() {
+        assert(browser.query('#step4-wrapper'), 'It should be step #4');
+        done();
+      });
     });
   });
 
   it('Should allow to download package', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
-    setTimeout(function() {
-      browser.wait(10000, function() {
-        assert(browser.query('#step4-button-download'),
-          'Download button should be available');
-        var dataPackage = browser.evaluate('$("[name=data]").val();');
-        dataPackage = JSON.parse(dataPackage);
-        assert.equal(dataPackage.title, dataPackageTitle);
-        assert.equal(dataPackage.name, dataPackageSlug);
-        assert.property(dataPackage, 'resources');
-        assert.equal(dataPackage.resources.length, 1);
-        assert.property(dataPackage, 'mapping');
-        assert.property(dataPackage.mapping, 'measures');
-        assert.property(dataPackage.mapping, 'dimensions');
-        done();
-      });
-    }, 1000);
+    browser.waitForDigest().then(function() {
+      assert(browser.query('#step4-button-download'),
+        'Download button should be available');
+      var dataPackage = browser.evaluate('$("[name=data]").val();');
+      dataPackage = JSON.parse(dataPackage);
+      assert.equal(dataPackage.title, dataPackageTitle);
+      assert.equal(dataPackage.name, dataPackageSlug);
+      assert.property(dataPackage, 'resources');
+      assert.equal(dataPackage.resources.length, 1);
+      assert.property(dataPackage, 'mapping');
+      assert.property(dataPackage.mapping, 'measures');
+      assert.property(dataPackage.mapping, 'dimensions');
+      done();
+    });
   });
 
   it('Should go to first step', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
     browser.evaluate('$("#steps-nav li a:eq(0)").click();');
-    setTimeout(function() {
-      browser.wait(10000, function() {
-        assert(browser.query('#step1-wrapper'), 'It should be step #1');
-        done();
-      });
-    }, 1000);
+    browser.waitForDigest().then(function() {
+      assert(browser.query('#step1-wrapper'), 'It should be step #1');
+      done();
+    });
   });
 
 });

@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', 'UploadFileService',
-      function($scope, UploadFileService) {
+      '$scope', '_', 'UploadFileService',
+      function($scope, _, UploadFileService) {
         // Restore state
         _.extend($scope, UploadFileService);
 

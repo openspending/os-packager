@@ -1,0 +1,25 @@
+{% raw %}
+<div ng-controller="PreviewDataController" id="preview-data-panel">
+  <h3>Using this data</h3>
+  <p>
+    Based on the current model selections, you could build the following
+    views on this data.
+  </p>
+
+  <div>
+    <button ng-repeat="possibility in scope.possibilities" type="button"
+      ng-disabled="!possibility.isAvailable"
+      ng-class="{'btn-default': possibility.id != scope.selectedPossibility, 'btn-success': possibility.id == scope.selectedPossibility}"
+      ng-click="selectPossibility(possibility)"
+      class="btn btn-block">{{ possibility.name }}</button>
+  </div>
+
+  <div ng-if="!!scope.selectedPossibility">
+    <h3>Preview</h3>
+
+    <treemap ng-if="scope.graph == 'treemap'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-4 treemap"></treemap>
+    <line-chart ng-if="scope.graph == 'lines'" data="scope.previewData" type="spline" class="aspect-ratio aspect-ratio-square lines"></line-chart>
+    <pie-chart ng-if="scope.graph == 'pie'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-2"></pie-chart>
+  </div>
+</div>
+{% endraw %}

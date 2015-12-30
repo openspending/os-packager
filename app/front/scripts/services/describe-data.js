@@ -1,13 +1,11 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('DescribeDataService', [
-      '$rootScope', 'PackageService', 'UtilsService', 'ValidationService',
-      'StepsService',
-      function($rootScope, PackageService, UtilsService, ValidationService,
-        StepsService) {
+      '$rootScope', '_', 'PackageService', 'UtilsService', 'ValidationService',
+      'StepsService', 'Configuration',
+      function($rootScope, _, PackageService, UtilsService, ValidationService,
+        StepsService, Configuration) {
         var result = {};
 
         var $scope = $rootScope.$new();
@@ -94,6 +92,8 @@
             ValidationService.validateResourcesConcepts($scope.resources);
           $scope.selectedMeasures = getSelectedConcepts('measure');
           $scope.selectedDimensions = getSelectedConcepts('dimension');
+
+          $rootScope.$broadcast(Configuration.events.CONCEPTS_CHANGED);
         };
 
         return result;

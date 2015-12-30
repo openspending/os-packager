@@ -261,6 +261,94 @@ module.exports.availableConcepts = (function() {
   ];
 })();
 
+module.exports.availablePossibilities = (function() {
+  var updateByConcepts = function(resources) {
+    if (!this || !_.isArray(this.concepts)) {
+      return;
+    }
+
+    var conceptsToCheck = _.chain(this.concepts)
+      .map(function(concept) {
+        return [concept, false];
+      })
+      .object()
+      .value();
+
+    var self = this;
+    _.each(resources, function(resource) {
+      _.each(resource.fields, function(field) {
+        if (_.contains(self.concepts, field.concept)) {
+          conceptsToCheck[field.concept] = true;
+        }
+      });
+    });
+
+    this.isAvailable = !_.contains(conceptsToCheck, false);
+  };
+
+  return [
+    {
+      id: 'transaction-table',
+      name: 'Transaction Table',
+      isAvailable: false,
+      concepts: ['measures.amount'],
+      graph: 'pie',
+      update: updateByConcepts
+    },
+    {
+      id: 'time-series',
+      name: 'Time series',
+      isAvailable: false,
+      graph: 'lines',
+      concepts: ['measures.amount', 'dimensions.datetime'],
+      update: updateByConcepts
+    },
+    {
+      id: 'treemap',
+      name: 'Treemap',
+      isAvailable: false,
+      graph: 'treemap',
+      concepts: ['measures.amount', 'dimensions.classification'],
+      update: updateByConcepts
+    },
+    {
+      id: 'classification',
+      name: 'Classification explorer',
+      isAvailable: false,
+      graph: 'treemap',
+      concepts: ['measures.amount', 'dimensions.classification'],
+      update: updateByConcepts
+    },
+    {
+      id: 'mutlidimension',
+      name: 'Multiple dimension agg',
+      isAvailable: false,
+      graph: 'treemap',
+      concepts: ['measures.amount'],
+      update: function(resources) {
+        updateByConcepts.call(this, resources);
+        if (this.isAvailable) {
+          var countOfDimensions = 0;
+          _.each(resources, function(resource) {
+            _.each(resource.fields, function(field) {
+              var concept = _.findWhere(module.exports.availableConcepts, {
+                id: field.concept
+              });
+              if (concept && (concept.group == 'dimension')) {
+                countOfDimensions += 1;
+              }
+            });
+          });
+          // There should be at least one measure and more than one dimension
+          if (countOfDimensions < 2) {
+            this.isAvailable = false;
+          }
+        }
+      }
+    }
+  ];
+})();
+
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
   return module.exports.convertToSlug(result || fileName);
@@ -335,5 +423,57 @@ module.exports.addItemWithUniqueName = function(collection, item) {
 module.exports.removeEmptyAttributes = function(object) {
   return _.pick(object, function(value) {
     return !!value;
+  });
+};
+
+module.exports.getDataForPreview = function(resources, maxCount) {
+  if (!_.isArray(resources) || (resources.length < 1)) {
+    return [];
+  }
+
+  var amountFieldIndex = null;
+  var dateTimeFieldIndex = null;
+  var dimensionFieldIndex = null;
+
+  var resource = _.first(resources);
+  _.each(resource.fields, function(field, index) {
+    switch (field.concept) {
+      case 'measures.amount': amountFieldIndex = index; break;
+      case 'dimensions.datetime': dateTimeFieldIndex = index; break;
+      case 'dimensions.entity': dimensionFieldIndex = index; break;
+      case 'dimensions.classification': dimensionFieldIndex = index; break;
+      case 'dimensions.activity': dimensionFieldIndex = index; break;
+      case 'dimensions.location': dimensionFieldIndex = index; break;
+    }
+  });
+
+  if (amountFieldIndex === null) {
+    return [];
+  }
+
+  if (dimensionFieldIndex === null) {
+    dimensionFieldIndex = dateTimeFieldIndex;
+  }
+  if (dimensionFieldIndex === null) {
+    dimensionFieldIndex = amountFieldIndex;
+  }
+
+  var rows = resource.data.rows;
+  maxCount = parseFloat(maxCount);
+  if (isFinite(maxCount)) {
+    rows = rows.slice(0, maxCount);
+  }
+
+  return _.map(rows, function(row) {
+    var result = {};
+    result.value = row[amountFieldIndex];
+    if (dateTimeFieldIndex !== null) {
+      result.dateTime = row[dateTimeFieldIndex];
+    }
+    if (dimensionFieldIndex !== null) {
+      result.name = row[dimensionFieldIndex];
+    }
+
+    return result;
   });
 };

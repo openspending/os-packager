@@ -1,5 +1,7 @@
 ;(function(angular) {
 
+  var services = require('app/services');
+
   var config = {
     defaultErrorHandler: function(error) {
       (console.trace || console.log || function() {})(error);
@@ -7,7 +9,7 @@
     events: {
       CONCEPTS_CHANGED: 'package.conceptsChanged'
     },
-    steps: require('app/services').data.steps
+    steps: services.data.steps
   };
 
   angular.module('Application')

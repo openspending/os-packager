@@ -2,14 +2,14 @@
 
   angular.module('Application')
     .factory('PackageService', [
-      '$q', '_',
-      function($q, _) {
+      '$q', '_', 'Services',
+      function($q, _, Services) {
         var attributes = {};
         var resources = [];
         var schema = null;
 
-        var fiscalDataPackage = require('app/services').fiscalDataPackage;
-        var utils = require('app/services').utils;
+        var fiscalDataPackage = Services.fiscalDataPackage;
+        var utils = Services.utils;
         fiscalDataPackage.getFiscalDataPackageSchema().then(function(result) {
           schema = result;
         });

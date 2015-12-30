@@ -5,15 +5,16 @@
 
   angular.module('Application')
     .factory('ValidationService', [
-      '$q', '_', 'PackageService', 'Configuration',
-      function($q, _, PackageService, Configuration) {
+      '$q', '_', 'Services', 'PackageService', 'Configuration',
+      function($q, _, Services, PackageService, Configuration) {
+        var utils = Services.utils;
+
         return {
           validateResource: function(resource, validateSchema) {
             var validationResult = {
               state: 'checking'
             };
             var schema = !!validateSchema ? resource.schema : undefined;
-            var utils = require('app/services').utils;
             validationResult.$promise = $q(function(resolve, reject) {
               utils.validateData(resource.data.raw, schema, goodTablesUrl)
                 .then(resolve)
@@ -57,7 +58,6 @@
             return validationResult;
           },
           validateResourcesConcepts: function(resources) {
-            var utils = require('app/services').utils;
             var requiredConcepts = _.chain(utils.availableConcepts)
               .filter(function(item) {
                 return !!item.required;

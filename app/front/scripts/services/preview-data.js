@@ -2,14 +2,14 @@
 
   angular.module('Application')
     .factory('PreviewDataService', [
-      '$rootScope', '_', 'PackageService', 'Configuration',
-      function($rootScope, _, PackageService, Configuration) {
+      '$rootScope', '_', 'Services', 'PackageService', 'Configuration',
+      function($rootScope, _, Services, PackageService, Configuration) {
         var result = {};
 
         var $scope = $rootScope.$new();
         result.scope = $scope;
 
-        $scope.possibilities = require('app/services')
+        $scope.possibilities = Services
           .utils.availablePossibilities;
 
         $scope.selectedPossibility = null;

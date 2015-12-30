@@ -176,6 +176,64 @@ describe('Application services', function() {
         .catch(console.trace.bind(console));
     });
 
+    it('Should prepare data for preview', function(done) {
+      dataPackage.createResourceFromSource(exampleResourceUrl)
+        .then(function(resource) {
+          resource.fields[0].concept = 'measures.amount';
+          resource.fields[1].concept = 'dimensions.classification';
+
+          var data = utils.getDataForPreview([resource], 5);
+
+          assert.isAbove(data.length, 0);
+          assert.isBelow(data.length, 6);
+
+          assert.equal(data[0].value, resource.data.rows[0][0]);
+          assert.equal(data[0].name, resource.data.rows[0][1]);
+
+          done();
+        })
+        .catch(console.trace.bind(console));
+    });
+
+    it('Should load Fiscal Data Package Schema', function(done) {
+      dataPackage.getFiscalDataPackageSchema(false)
+        .then(function(schema) {
+          assert.isObject(schema, 'Schema should be an object');
+          done();
+        })
+        .catch(console.trace.bind(console));
+    });
+
+    it('Should validate Fiscal Data Package', function(done) {
+      var resources = [];
+      var attributes = {
+        name: 'example',
+        title: 'Example Data Package'
+      };
+      dataPackage.createResourceFromSource(exampleResourceUrl)
+        .then(function(resource) {
+          resource.fields[0].concept = 'measures.amount';
+          resource.fields[0].options = {
+            currency: 'USD'
+          };
+          resource.fields[1].concept = 'dimensions.datetime';
+          utils.addItemWithUniqueName(resources, resource);
+
+          var fiscalPackage = dataPackage.createFiscalDataPackage(attributes,
+            resources);
+
+          return dataPackage.getFiscalDataPackageSchema(false)
+            .then(function(schema) {
+              return dataPackage.validateDataPackage(fiscalPackage, schema);
+            });
+        })
+        .then(function(results) {
+          assert(results.valid, 'It should be valid');
+          done();
+        })
+        .catch(console.trace.bind(console));
+    });
+
   });
 
 });

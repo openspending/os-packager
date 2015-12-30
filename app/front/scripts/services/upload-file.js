@@ -1,12 +1,10 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('UploadFileService', [
-      '$rootScope', '$timeout', 'PackageService', 'ValidationService',
+      '$rootScope', '$timeout', '_', 'PackageService', 'ValidationService',
       'Configuration', 'UtilsService', 'StepsService',
-      function($rootScope, $timeout, PackageService, ValidationService,
+      function($rootScope, $timeout, _, PackageService, ValidationService,
         Configuration, UtilsService, StepsService) {
         var result = {};
 

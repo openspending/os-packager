@@ -27,7 +27,9 @@ var nodeModulesDir = path.join(__dirname, '/node_modules');
 var modules = [
   'jquery',
   'underscore',
-  'bluebird'
+  'bluebird',
+  'd3',
+  'c3'
 ];
 
 var appModules = {
@@ -101,7 +103,8 @@ gulp.task('vendor.styles', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
     path.join(nodeModulesDir, '/bootstrap/dist/css/bootstrap.min.css'),
-    path.join(nodeModulesDir, '/angular/angular-csp.css')
+    path.join(nodeModulesDir, '/angular/angular-csp.css'),
+    path.join(nodeModulesDir, '/c3/c3.min.css')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.css'))

@@ -292,12 +292,14 @@ module.exports.availablePossibilities = (function() {
       name: 'Transaction Table',
       isAvailable: false,
       concepts: ['measures.amount'],
+      graph: 'donut',
       update: updateByConcepts
     },
     {
       id: 'time-series',
       name: 'Time series',
       isAvailable: false,
+      graph: 'lines',
       concepts: ['measures.amount', 'dimensions.datetime'],
       update: updateByConcepts
     },
@@ -305,6 +307,7 @@ module.exports.availablePossibilities = (function() {
       id: 'treemap',
       name: 'Treemap',
       isAvailable: false,
+      graph: 'treemap',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -312,6 +315,7 @@ module.exports.availablePossibilities = (function() {
       id: 'classification',
       name: 'Classification explorer',
       isAvailable: false,
+      graph: 'treemap',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -319,6 +323,7 @@ module.exports.availablePossibilities = (function() {
       id: 'mutlidimension',
       name: 'Multiple dimension agg',
       isAvailable: false,
+      graph: 'treemap',
       concepts: ['measures.amount'],
       update: function(resources) {
         updateByConcepts.call(this, resources);

@@ -112,3 +112,42 @@ td.x-strong-highlight {
 .x-small-text .form-control-static {
   min-height: 0;
 }
+
+.graph {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.graph svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.graph:before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 70%;
+}
+
+.graph.treemap rect {
+  stroke: #fff;
+}
+
+.graph.lines {
+  position: relative;
+  max-height: none !important;
+}
+
+.c3 {
+  text-align: left;
+}
+
+.c3-tooltip {
+  table-layout: auto !important;
+}

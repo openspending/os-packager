@@ -1,7 +1,5 @@
 ;(function(angular, undefined) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .directive('ngFileSelected', [
       '$timeout', '$compile',

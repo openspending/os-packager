@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('UtilsService', [
-      '$q',
-      function($q) {
+      '$q', '_',
+      function($q, _) {
         var allRegions = null;
         var allCountries = null;
 

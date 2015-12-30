@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .controller('DescribeDataController', [
-      '$scope', 'DescribeDataService',
-      function($scope, DescribeDataService) {
+      '$scope', '_', 'DescribeDataService',
+      function($scope, _, DescribeDataService) {
         _.extend($scope, DescribeDataService);
       }
     ]);

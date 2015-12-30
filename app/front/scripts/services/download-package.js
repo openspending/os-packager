@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('DownloadPackageService', [
-      '$rootScope', 'PackageService', 'StepsService',
-      function($rootScope, PackageService, StepsService) {
+      '$rootScope', '_', 'PackageService', 'StepsService',
+      function($rootScope, _, PackageService, StepsService) {
         var result = {};
 
         var $scope = $rootScope.$new();

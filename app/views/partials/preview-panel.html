@@ -16,7 +16,10 @@
 
   <div ng-if="!!scope.selectedPossibility">
     <h3>Preview</h3>
-    <div>Preview block</div>
+
+    <treemap ng-if="scope.graph == 'treemap'" data="scope.previewData" class="graph treemap"></treemap>
+    <line-chart ng-if="scope.graph == 'lines'" data="scope.previewData" class="graph lines"></line-chart>
+    <donut-chart ng-if="scope.graph == 'donut'" data="scope.previewData" class="graph"></donut-chart>
   </div>
 </div>
 {% endraw %}

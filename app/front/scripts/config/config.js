@@ -1,6 +1,11 @@
 ;(function(angular) {
 
+  var _ = require('underscore');
+  var services = require('app/services');
+
   angular.module('Application')
+    .constant('_', _)
+    .constant('Services', services)
     .config([
       '$httpProvider', '$compileProvider', '$logProvider',
       function($httpProvider, $compileProvider, $logProvider) {

@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .controller('StepsController', [
-      '$scope', '$location', 'StepsService',
-      function($scope, $location, StepsService) {
+      '$scope', '$location', '_', 'StepsService',
+      function($scope, $location, _, StepsService) {
         $scope.steps = StepsService.getSteps();
         $scope.currentStep = _.first($scope.steps);
         StepsService.updateStepsState($scope.currentStep);

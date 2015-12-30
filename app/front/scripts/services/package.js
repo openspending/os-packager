@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('PackageService', [
-      '$q',
-      function($q) {
+      '$q', '_',
+      function($q, _) {
         var attributes = {};
         var resources = [];
         var schema = null;

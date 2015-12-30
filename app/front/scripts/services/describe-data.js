@@ -1,12 +1,10 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('DescribeDataService', [
-      '$rootScope', 'PackageService', 'UtilsService', 'ValidationService',
+      '$rootScope', '_', 'PackageService', 'UtilsService', 'ValidationService',
       'StepsService', 'Configuration',
-      function($rootScope, PackageService, UtilsService, ValidationService,
+      function($rootScope, _, PackageService, UtilsService, ValidationService,
         StepsService, Configuration) {
         var result = {};
 

@@ -1,14 +1,12 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   var goodTablesUrl = '/proxy?url=' +
     encodeURIComponent('http://goodtables.okfnlabs.org/api/run');
 
   angular.module('Application')
     .factory('ValidationService', [
-      '$q', 'PackageService', 'Configuration',
-      function($q, PackageService, Configuration) {
+      '$q', '_', 'PackageService', 'Configuration',
+      function($q, _, PackageService, Configuration) {
         return {
           validateResource: function(resource, validateSchema) {
             var validationResult = {

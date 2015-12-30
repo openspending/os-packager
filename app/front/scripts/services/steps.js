@@ -1,11 +1,9 @@
 ;(function(angular) {
 
-  var _ = require('underscore');
-
   angular.module('Application')
     .factory('StepsService', [
-      '$q', 'Configuration',
-      function($q, Configuration) {
+      '$q', '_', 'Configuration',
+      function($q, _, Configuration) {
         return {
           getSteps: function() {
             return Configuration.steps;

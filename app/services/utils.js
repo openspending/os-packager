@@ -292,7 +292,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Transaction Table',
       isAvailable: false,
       concepts: ['measures.amount'],
-      graph: 'donut',
+      graph: 'pie',
       update: updateByConcepts
     },
     {
@@ -423,5 +423,57 @@ module.exports.addItemWithUniqueName = function(collection, item) {
 module.exports.removeEmptyAttributes = function(object) {
   return _.pick(object, function(value) {
     return !!value;
+  });
+};
+
+module.exports.getDataForPreview = function(resources, maxCount) {
+  if (!_.isArray(resources) || (resources.length < 1)) {
+    return [];
+  }
+
+  var amountFieldIndex = null;
+  var dateTimeFieldIndex = null;
+  var dimensionFieldIndex = null;
+
+  var resource = _.first(resources);
+  _.each(resource.fields, function(field, index) {
+    switch (field.concept) {
+      case 'measures.amount': amountFieldIndex = index; break;
+      case 'dimensions.datetime': dateTimeFieldIndex = index; break;
+      case 'dimensions.entity': dimensionFieldIndex = index; break;
+      case 'dimensions.classification': dimensionFieldIndex = index; break;
+      case 'dimensions.activity': dimensionFieldIndex = index; break;
+      case 'dimensions.location': dimensionFieldIndex = index; break;
+    }
+  });
+
+  if (amountFieldIndex === null) {
+    return [];
+  }
+
+  if (dimensionFieldIndex === null) {
+    dimensionFieldIndex = dateTimeFieldIndex;
+  }
+  if (dimensionFieldIndex === null) {
+    dimensionFieldIndex = amountFieldIndex;
+  }
+
+  var rows = resource.data.rows;
+  maxCount = parseFloat(maxCount);
+  if (isFinite(maxCount)) {
+    rows = rows.slice(0, maxCount);
+  }
+
+  return _.map(rows, function(row) {
+    var result = {};
+    result.value = row[amountFieldIndex];
+    if (dateTimeFieldIndex !== null) {
+      result.dateTime = row[dateTimeFieldIndex];
+    }
+    if (dimensionFieldIndex !== null) {
+      result.name = row[dimensionFieldIndex];
+    }
+
+    return result;
   });
 };

@@ -9,15 +9,34 @@
           scope: {
             data: '='
           },
-          link: function($scope, element) {
+          link: function($scope, element, attr) {
             var data = null;
+
+            var name = attr.name || 'name';
+            var value = attr.value || 'value';
+
+            var allowedTypes = ['line', 'spline', 'area-spline', 'area-step'];
+            var type = (attr.type + '').toLowerCase();
+            if (allowedTypes.indexOf(type) < 0) {
+              type = allowedTypes[0];
+            }
 
             function prepare(data) {
               if (!data) {
                 return false;
               }
 
-              return data;
+              var values = ['Preview'];
+              [].push.apply(values, data.map(function(item) {
+                return item[value];
+              }));
+
+              var x = ['x'];
+              [].push.apply(x, data.map(function(item) {
+                return item[name];
+              }));
+
+              return [x, values];
             }
 
             function render(data) {
@@ -29,21 +48,19 @@
               var chart = c3.generate({
                 bindto: element.get(0),
                 data: {
-                  columns: [
-                    ['data1', 30, 200, 100, 400, 150, 250],
-                    ['data2', 130, 100, 140, 200, 150, 50]
-                  ],
-                  type: 'spline'
+                  x: 'x',
+                  columns: data,
+                  type: type
+                },
+                legend: {
+                  show: false
                 },
                 axis: {
                   x: {
+                    type: 'category',
                     tick: {
-                      format: function(v) { return ''; }
-                    }
-                  },
-                  y: {
-                    tick: {
-                      format: function(v) { return ''; }
+                      rotate: 55,
+                      multiline: false
                     }
                   }
                 }

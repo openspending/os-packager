@@ -17,9 +17,9 @@
   <div ng-if="!!scope.selectedPossibility">
     <h3>Preview</h3>
 
-    <treemap ng-if="scope.graph == 'treemap'" data="scope.previewData" class="graph treemap"></treemap>
-    <line-chart ng-if="scope.graph == 'lines'" data="scope.previewData" class="graph lines"></line-chart>
-    <donut-chart ng-if="scope.graph == 'donut'" data="scope.previewData" class="graph"></donut-chart>
+    <treemap ng-if="scope.graph == 'treemap'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-4 treemap"></treemap>
+    <line-chart ng-if="scope.graph == 'lines'" data="scope.previewData" type="spline" class="aspect-ratio aspect-ratio-square lines"></line-chart>
+    <pie-chart ng-if="scope.graph == 'pie'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-2"></pie-chart>
   </div>
 </div>
 {% endraw %}

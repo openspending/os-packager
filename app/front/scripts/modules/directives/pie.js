@@ -1,7 +1,7 @@
 ;(function(angular, undefined) {
 
   angular.module('Visualization')
-    .directive('donutChart', [
+    .directive('pieChart', [
       'c3',
       function(c3) {
         return {
@@ -9,15 +9,26 @@
           scope: {
             data: '='
           },
-          link: function($scope, element) {
+          link: function($scope, element, attr) {
             var data = null;
+
+            var name = attr.name || 'name';
+            var value = attr.value || 'value';
+
+            var allowedTypes = ['pie', 'donut'];
+            var type = (attr.type + '').toLowerCase();
+            if (allowedTypes.indexOf(type) < 0) {
+              type = allowedTypes[0];
+            }
 
             function prepare(data) {
               if (!data) {
                 return false;
               }
 
-              return data;
+              return data.map(function(item) {
+                return [item[name], item[value]];
+              });
             }
 
             function render(data) {
@@ -29,11 +40,18 @@
               var chart = c3.generate({
                 bindto: element.get(0),
                 data: {
-                  columns: [
-                    ['data1', 30],
-                    ['data2', 120]
-                  ],
-                  type : 'donut'
+                  columns: data,
+                  type: type
+                },
+                donut: {
+                  label: {
+                    format: function(v) { return v; }
+                  }
+                },
+                pie: {
+                  label: {
+                    format: function(v) { return v; }
+                  }
                 }
               });
             }

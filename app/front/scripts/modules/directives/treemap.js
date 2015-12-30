@@ -9,13 +9,22 @@
           scope: {
             data: '='
           },
-          link: function($scope, element) {
+          link: function($scope, element, attr) {
             var data = null;
+
+            var name = attr.name || 'name';
+            var value = attr.value || 'value';
 
             function prepare(data) {
               if (!data) {
                 return false;
               }
+              var result = data.map(function(item) {
+                return {
+                  name: item[name],
+                  value: item[value]
+                }
+              });
               var treemap = d3.layout.treemap()
                 .children(function(d, depth) {
                   return depth ? null : d.children;
@@ -28,28 +37,17 @@
 
               treemap.nodes({
                 name: 'root',
-                value: data.reduce(function(prev, value) {
+                value: result.reduce(function(prev, value) {
                   return prev + value.value;
                 }, 0),
-                children: data
+                children: result
               });
 
-              var min = null;
-              var max = null;
-              data.forEach(function(item) {
-                if ((min === null) || (item.value < min)) {
-                  min = item.value;
-                }
-                if ((max === null) || (item.value > max)) {
-                  max = item.value;
-                }
-              });
-              max += min;
-              data.forEach(function(item) {
-                item.color = (item.value + min) / max;
+              result.forEach(function(item, index) {
+                item.color = index / (data.length - 1);
               });
 
-              return data;
+              return result;
             }
 
             function render(data) {
@@ -96,7 +94,23 @@
                   .call(rect)
                   .append('title')
                   .text(function(d) { return d.value; });
+
+                svg.append('text')
+                  .datum(item)
+                  .attr("dy", ".75em")
+                  .text(function(d) { return d.name; })
+                  .call(text);
               });
+
+              function text(text) {
+                text
+                  .attr('x', function(d) {
+                    return x(d.x) + 4;
+                  })
+                  .attr('y', function(d) {
+                    return y(d.y) + 4;
+                  });
+              }
 
               function rect(rect) {
                 rect

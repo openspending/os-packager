@@ -23,6 +23,6 @@
         UtilsService.getCountries();
         UtilsService.getCountries();
       }
-    ])
+    ]);
 
 })(angular);

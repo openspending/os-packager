@@ -46,7 +46,7 @@ function getItemsFromSource(source, useProxy) {
             return results;
           }
           return [];
-        })
+        });
     });
 }
 
@@ -80,7 +80,7 @@ module.exports.getCurrencies = function(useProxy) {
       return {
         name: item.name,
         code: upper(item.code)
-      }
+      };
     });
   });
 };

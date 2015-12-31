@@ -49,7 +49,7 @@
         $scope.regions = prependEmptyItem([]);
         $scope.countries = prependEmptyItem([]);
 
-        UtilsService.getRegions().$promise
+        UtilsService.getContinents().$promise
           .then(prependEmptyItem)
           .then(function(items) {
             $scope.regions = items;

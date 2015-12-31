@@ -54,11 +54,10 @@
           .then(function(items) {
             $scope.regions = items;
           });
-        UtilsService.getCountries().$promise
-          .then(prependEmptyItem)
-          .then(function(items) {
-            $scope.countries = items;
-          });
+
+        // Preload countries, but do not show them until continent selected
+        UtilsService.getCountries();
+        $scope.countries = prependEmptyItem([]);
 
         result.updateCountries = function() {
           var regions = $scope.attributes.regionCode;

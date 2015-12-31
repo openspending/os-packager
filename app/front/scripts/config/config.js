@@ -14,6 +14,15 @@
         $httpProvider.defaults.withCredentials = true;
         $logProvider.debugEnabled(true);
       }
-    ]);
+    ])
+    .run([
+      'UtilsService',
+      function(UtilsService) {
+        // Preload continents and countries
+        UtilsService.getCurrencies();
+        UtilsService.getCountries();
+        UtilsService.getCountries();
+      }
+    ])
 
 })(angular);

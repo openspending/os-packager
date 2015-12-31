@@ -8,6 +8,7 @@
 
         var allContinents = null;
         var allCountries = null;
+        var allCurrencies = null;
 
         return {
           slug: function(string) {
@@ -55,6 +56,29 @@
             return result;
           },
 
+          getCurrencies: function() {
+            if (allCurrencies) {
+              return allCurrencies;
+            }
+            var result = [];
+            result.$promise = $q(function(resolve, reject) {
+              Services.cosmopolitan.getCurrencies(true)
+                .then(resolve)
+                .catch(reject);
+            });
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
+            allCurrencies = result;
+
+            result.$promise.then(function(currencies) {
+              Services.utils.setAvailableCurrencies(currencies);
+              return currencies;
+            });
+            return result;
+          },
+
           getContinents: function() {
             if (allContinents) {
               return allContinents;
@@ -65,7 +89,10 @@
                 .then(resolve)
                 .catch(reject);
             });
-            result.$promise.then(_.identity); // It should load anyway
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
             allContinents = result;
             return result;
           },
@@ -101,7 +128,10 @@
                   .catch(reject);
               }
             });
-            result.$promise.then(_.identity); // It should load anyway
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
             if (!continent) {
               // If continent is not available, cache all countries
               allCountries = result;

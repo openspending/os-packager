@@ -3,7 +3,7 @@
 var _ = require('underscore');
 require('isomorphic-fetch');
 
-var cosmopolitanApiUrl = 'http://os-cosmopolitan.herokuapp.com/?format=json';
+var cosmopolitanApiUrl = 'http://cosmopolitan.openspending.org/?format=json';
 
 function upper(v) {
   return (v + '').toUpperCase();

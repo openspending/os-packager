@@ -68,15 +68,56 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step3-wrapper'), 'It should be step #3');
     browser.fill('title', dataPackageTitle);
-    browser.waitForDigest().then(function() {
-      assert(browser.query('#step3-button-next'),
-        'Next button should be available');
-      browser.click('#step3-button-next');
-      browser.waitForDigest().then(function() {
+    browser.waitForDigest()
+      .then(function() {
+        // Initially Region is enabled and Country and City is disabled
+        assert(!browser.query('#step3-location-region[disabled]'),
+          'Region input should be enabled');
+        assert(browser.query('#step3-location-country[disabled]'),
+          'Country input should be disabled');
+        assert(browser.query('#step3-location-city[disabled]'),
+          'City input should be disabled');
+
+        // Fill Region
+        browser.evaluate('$("#step3-location-region")' +
+          '.val("string:eu").change();');
+        return browser.waitForDigest();
+      })
+      .then(function() {
+        // When region is filled in, Country should be enabled and City
+        // should still disabled
+        assert(!browser.query('#step3-location-region[disabled]'),
+          'Region input should be enabled');
+        assert(!browser.query('#step3-location-country[disabled]'),
+          'Country input should be enabled');
+        assert(browser.query('#step3-location-city[disabled]'),
+          'City input should be disabled');
+
+        // Fill Country
+        browser.evaluate('$("#step3-location-country")' +
+          '.val("string:gb").change();');
+        return browser.waitForDigest();
+      })
+      .then(function() {
+        // And when Region and Country are filled in, all three fields should
+        // be enabled
+        assert(!browser.query('#step3-location-region[disabled]'),
+          'Region input should be enabled');
+        assert(!browser.query('#step3-location-country[disabled]'),
+          'Country input should be enabled');
+        assert(!browser.query('#step3-location-city[disabled]'),
+          'City input should be enabled');
+      })
+      .then(function() {
+        assert(browser.query('#step3-button-next'),
+          'Next button should be available');
+        browser.click('#step3-button-next');
+        return browser.waitForDigest();
+      })
+      .then(function() {
         assert(browser.query('#step4-wrapper'), 'It should be step #4');
         done();
       });
-    });
   });
 
   it('Should allow to download package', function(done) {

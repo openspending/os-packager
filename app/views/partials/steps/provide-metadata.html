@@ -20,7 +20,7 @@
 
   <div class="row form-group">
     <div class="col-sm-4">
-      <label class="control-label" for="step3-location-region">Region</label>
+      <label class="control-label" for="step3-location-region">Continent</label>
       <select id="step3-location-region" class="form-control"
         name="region"
         ng-model="scope.attributes.regionCode"
@@ -30,6 +30,7 @@
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-country">Country</label>
       <select id="step3-location-country" class="form-control"
+        ng-disabled="!scope.attributes.regionCode"
         name="country"
         ng-model="scope.attributes.countryCode"
         ng-change="updateCities()"
@@ -38,6 +39,7 @@
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-city">City</label>
       <input type="text" id="step3-location-city" class="form-control"
+        ng-disabled="!(scope.attributes.regionCode && scope.attributes.countryCode)"
         name="city" ng-model="scope.attributes.cityCode">
     </div>
   </div>

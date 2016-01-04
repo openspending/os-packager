@@ -132,9 +132,10 @@ module.exports.availableDataTypes = (function() {
     .value();
 })();
 
-module.exports.availableCurrencies = require('../data/iso4217.json');
+module.exports.availableCurrencies = [];
 
-module.exports.defaultCurrency = (function(currencies) {
+module.exports.getDefaultCurrency = function() {
+  var currencies = module.exports.availableCurrencies;
   var defaultCurrencies = _.intersection(
     ['USD', 'EUR', _.first(currencies).code],
     _.pluck(currencies, 'code'));
@@ -142,7 +143,7 @@ module.exports.defaultCurrency = (function(currencies) {
   return _.find(currencies, function(item) {
     return item.code == defaultCurrencyCode;
   });
-})(module.exports.availableCurrencies);
+};
 
 module.exports.availableConcepts = (function() {
   var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
@@ -166,13 +167,8 @@ module.exports.availableConcepts = (function() {
         {
           name: 'currency',
           title: 'Currency',
-          defaultValue: module.exports.defaultCurrency.code,
-          values: _.map(module.exports.availableCurrencies, function(item) {
-            return {
-              name: item.code + ' ' + item.name,
-              value: item.code
-            };
-          })
+          defaultValue: null,
+          values: []
         },
         {
           name: 'factor',
@@ -348,6 +344,34 @@ module.exports.availablePossibilities = (function() {
     }
   ];
 })();
+
+module.exports.setAvailableCurrencies = function(currencies) {
+  var temp = module.exports.availableCurrencies;
+  temp.splice(0, temp.length);
+  if (_.isArray(currencies)) {
+    [].push.apply(temp, currencies);
+  }
+
+  var concept = _.findWhere(module.exports.availableConcepts, {
+    id: 'measures.amount'
+  });
+  if (concept) {
+    var option = _.findWhere(concept.options, {name: 'currency'});
+    if (option) {
+      option.values = _.map(module.exports.availableCurrencies,
+        function(item) {
+          return {
+            name: item.code + ' ' + item.name,
+            value: item.code
+          };
+        });
+
+      option.defaultValue = module.exports.getDefaultCurrency().code;
+    }
+  }
+};
+
+module.exports.setAvailableCurrencies(require('../data/iso4217.json'));
 
 module.exports.createNameFromPath = function(fileName) {
   var result = path.basename(fileName, path.extname(fileName));

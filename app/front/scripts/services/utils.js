@@ -6,8 +6,9 @@
       function($q, _, Services) {
         var utils = Services.utils;
 
-        var allRegions = null;
+        var allContinents = null;
         var allCountries = null;
+        var allCurrencies = null;
 
         return {
           slug: function(string) {
@@ -55,45 +56,65 @@
             return result;
           },
 
-          getRegions: function() {
-            if (allRegions) {
-              return allRegions;
+          getCurrencies: function() {
+            if (allCurrencies) {
+              return allCurrencies;
             }
             var result = [];
             result.$promise = $q(function(resolve, reject) {
-              result.push({
-                code: 'Europe',
-                name: 'Europe'
-              });
-              result.push({
-                code: 'Asia',
-                name: 'Asia'
-              });
-              resolve(result);
+              Services.cosmopolitan.getCurrencies(true)
+                .then(resolve)
+                .catch(reject);
             });
-            result.$promise.then(_.identity); // It should load anyway
-            allRegions = result;
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
+            allCurrencies = result;
+
+            result.$promise.then(function(currencies) {
+              Services.utils.setAvailableCurrencies(currencies);
+              return currencies;
+            });
             return result;
           },
-          getCountries: function getCountries(region) {
-            if (!region && allCountries) {
-              // If region is not available, use cache (all countries)
+
+          getContinents: function() {
+            if (allContinents) {
+              return allContinents;
+            }
+            var result = [];
+            result.$promise = $q(function(resolve, reject) {
+              Services.cosmopolitan.getContinents(true)
+                .then(resolve)
+                .catch(reject);
+            });
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
+            allContinents = result;
+            return result;
+          },
+          getCountries: function getCountries(continent) {
+            if (!continent && allCountries) {
+              // If continent is not available, use cache (all countries)
               return allCountries;
             }
             var result = [];
             result.$promise = $q(function(resolve, reject) {
-              if (!!region) {
-                // If region is available, try to load all countries, and then
-                // filter them. Resolve with filtered array
+              if (!!continent) {
+                // If continent is available, try to load all countries,
+                // and then filter them. Resolve with filtered array
                 getCountries().$promise.then(function(countries) {
                   var filtered = [];
-                  if (_.isArray(region)) {
+                  if (_.isArray(continent)) {
                     filtered = _.filter(countries, function(country) {
-                      return _.contains(region, country.region);
+                      return _.contains(continent, country.continent);
                     });
                   } else {
                     filtered = _.filter(countries, function(country) {
-                      return country.region == region;
+                      return country.continent == continent;
                     });
                   }
 
@@ -101,28 +122,18 @@
                   resolve(result);
                 }).catch(reject);
               } else {
-                // If region is not available, just load all countries
-                result.push({
-                  code: 'GB',
-                  name: 'Great Britain',
-                  region: 'Europe'
-                });
-                result.push({
-                  code: 'UA',
-                  name: 'Ukraine',
-                  region: 'Europe'
-                });
-                result.push({
-                  code: 'CN',
-                  name: 'China',
-                  region: 'Asia'
-                });
-                resolve(result);
+                // If continent is not available, just load all countries
+                Services.cosmopolitan.getCountries(true)
+                  .then(resolve)
+                  .catch(reject);
               }
             });
-            result.$promise.then(_.identity); // It should load anyway
-            if (!region) {
-              // If region is not available, cache all countries
+            result.$promise.then(function(items) {
+              [].push.apply(result, items);
+              return items;
+            });
+            if (!continent) {
+              // If continent is not available, cache all countries
               allCountries = result;
             }
             return result;

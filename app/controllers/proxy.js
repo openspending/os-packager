@@ -12,7 +12,16 @@ module.exports.proxy = function(req, res) {
   }
 
   try {
-    req.pipe(request(url)).pipe(res);
+    req.on('error', function(error) {
+      console.trace(error);
+      res.sendStatus(404);
+    });
+    var proxy = request(url);
+    proxy.on('error', function(error) {
+      console.trace(error);
+      res.sendStatus(404);
+    });
+    req.pipe(proxy).pipe(res);
   } catch (e) {
     res.sendStatus(404);
   }

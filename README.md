@@ -12,13 +12,15 @@ Get a local server setup with the following steps:
 3. Clone the code with `git clone https://github.com/openspending/fiscal-data-packager.git .`.
 4. Install the dependencies with `npm install`.
 5. Create a `settings.json` file with these contents, changing any values as required:
-```
-{
-  "app": {
-    "port": 5000
+   
+   ```
+  {
+    "app": {
+      "port": 5000
+    }
   }
-}
-```
+   ```
+6. Run `gulp` to build the frontend app
 
 Now we should be ready to run the server:
 

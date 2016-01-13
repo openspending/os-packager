@@ -2,8 +2,8 @@
 
   angular.module('Application')
     .factory('PackageService', [
-      '$q', '_', 'Services', 'UtilsService', 'Configuration',
-      function($q, _, Services, UtilsService, Configuration) {
+      '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
+      function($q, $timeout, _, Services, UtilsService, Configuration) {
         var attributes = {};
         var resources = [];
         var schema = null;
@@ -22,6 +22,10 @@
         };
         createNewDataPackage();
 
+        var triggerDigest = function() {
+          $timeout(_.noop);
+        };
+
         return {
           getAttributes: function() {
             return attributes;
@@ -39,7 +43,7 @@
                   // Save file object - it will be needed when publishing
                   // data package
                   if (_.isObject(fileOrUrl)) {
-                    resource.file = fileOrUrl;
+                    resource.blob = fileOrUrl;
                   }
                   return resource;
                 })
@@ -70,45 +74,72 @@
               return {
                 name: resource.name + '.csv',
                 data: resource.data.raw,
-                url: resource.url,
+                url: '/proxy?url=' + encodeURIComponent(resource.source.url),
                 file: resource.blob
               };
             });
             var modifiedResources = _.map(resources, function(resource) {
-              resource = _.clone(resource);
-              resource.path = resource.name + '.csv';
+              if (resource.source.url) {
+                resource = _.clone(resource);
+                resource.source = {
+                  fileName: resource.name + '.csv'
+                };
+              }
               return resource;
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
-            files.push({
+
+            // Create and prepend datapackage.json
+            var packageFile = {
               name: Configuration.defaultPackageFileName,
               data: dataPackage
-            });
+            };
+            files.splice(0, 0, packageFile);
 
-            return _.map(files, function(file) {
+            files = _.map(files, function(file) {
               file.$promise = UtilsService.promisify(
-                Services.datastore.readContents(file))
+                Services.datastore.readContents(file, {update: triggerDigest}))
                 .then(function() {
                   return UtilsService.promisify(
                     Services.datastore.prepareForUpload(file, {
-                      name: dataPackage.name
+                      name: dataPackage.name,
+                      update: triggerDigest
                     }));
                 })
                 .then(function() {
                   return UtilsService.promisify(
-                    Services.datastore.upload(file));
+                    Services.datastore.upload(file, {update: triggerDigest}));
                 })
                 .then(function() {
-                  file.status = Services.datastore.ProcessingStatus.READY;
+                  // datapackage.json has one more step in processing chain
+                  if (file.name != Configuration.defaultPackageFileName) {
+                    file.status = Services.datastore.ProcessingStatus.READY;
+                  }
+                  return file;
                 })
                 .catch(function(error) {
                   file.status = Services.datastore.ProcessingStatus.FAILED;
                   file.error = error;
-                  Configuration.defaultErrorHandler(error);
                 });
               return file;
             });
+
+            files.$promise = $q.all(_.pluck(files, '$promise'))
+              //.then(function() {
+              //  return UtilsService.promisify(
+              //    Services.datastore.publish(packageFile, {update: triggerDigest}));
+              //})
+              .then(function() {
+                packageFile.status = Services.datastore.ProcessingStatus.READY;
+                return packageFile;
+              })
+              .catch(function(error) {
+                packageFile.status = Services.datastore.ProcessingStatus.FAILED;
+                packageFile.error = error;
+              });
+
+            return files;
           }
         };
       }

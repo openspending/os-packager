@@ -5,11 +5,10 @@ var crypto = require('crypto');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
-// TODO: Use real content-type if available, and fall back to 'application/octet-stream'
-// TODO: Review UI & state change stuff
-
 var defaultOptions = {
   conductorUrl: 'http://os-conductor.herokuapp.com/datastore/',
+  publishUrl: 'http://os-conductor.herokuapp.com/hooks/load/api/',
+  pollInterval: 3000,
   apiKey: 'openspending-next',
   owner: '__tests',
   name: 'test-datapackage'
@@ -21,6 +20,7 @@ var ProcessingStatus = {
   READING: 'reading',
   PREPARING: 'preparing',
   UPLOADING: 'uploading',
+  PUBLISHING: 'publishing',
   READY: 'ready',
   FAILED: 'failed'
 };
@@ -87,11 +87,28 @@ function requestViaXhr(url, options) {
 
     // Download events
     xhr.addEventListener('progress', function(event) {
+      var total = 0;
+      var loaded = event.loaded;
       if (event.lengthComputable) {
-        if (_.isFunction(options.onDownloadProgress)) {
-          // normalized to range 0.0 .. 1.0
-          options.onDownloadProgress(event.loaded / event.total);
+        total = event.total;
+      } else
+      if (xhr.explicitTotal) {
+        total = xhr.explicitTotal;
+      } else {
+        total = parseFloat(xhr.getResponseHeader('Content-Length'));
+        if (isFinite(total)) {
+          var encoding = xhr.getResponseHeader('Content-Encoding') || 'deflate';
+          if (('' + encoding).toLowerCase() != 'deflate') {
+            total = total * 17; // Magic number
+          }
+          xhr.explicitTotal = total;
+        } else {
+          total = 0;
         }
+      }
+      if ((total >= loaded) && _.isFunction(options.onDownloadProgress)) {
+        // normalized to range 0.0 .. 1.0
+        options.onDownloadProgress(loaded / total);
       }
     });
     xhr.addEventListener('load', function(event) {
@@ -257,18 +274,22 @@ function prepareFilesForUpload(files, options) {
     });
 }
 
-module.exports.readContents = function(descriptor) {
-  var options = {
+module.exports.readContents = function(descriptor, options) {
+  options = _.extend({}, defaultOptions, options, {
     onDownloadProgress: function(value) {
       descriptor.progress = value;
+      if (_.isFunction(options.update)) {
+        options.update();
+      }
     }
-  };
+  });
   descriptor.progress = 0.0;
 
   var result = null;
 
   if (_.isString(descriptor.url)) {
     descriptor.status = ProcessingStatus.DOWNLOADING;
+    options.headers = options.header || {};
     result = requestAutoDetect(descriptor.url, options);
   } else
   if (_.isObject(descriptor.file)) {
@@ -301,12 +322,15 @@ module.exports.prepareForUpload = function(descriptor, options) {
     });
 };
 
-module.exports.upload = function(descriptor) {
-  var options = {
+module.exports.upload = function(descriptor, options) {
+  options = _.extend({}, defaultOptions, options, {
     onUploadProgress: function(value) {
       descriptor.progress = value;
+      if (_.isFunction(options.update)) {
+        options.update();
+      }
     }
-  };
+  });
   descriptor.status = ProcessingStatus.UPLOADING;
   descriptor.progress = 0.0;
   return uploadFile(descriptor, options)
@@ -314,4 +338,64 @@ module.exports.upload = function(descriptor) {
       descriptor.progress = 1.0;
       return descriptor;
     });
+};
+
+module.exports.publish = function(descriptor, options) {
+  return new Promise(function(resolve, reject) {
+    options = _.extend({}, module.exports.defaultOptions, options);
+
+    descriptor.status = ProcessingStatus.PUBLISHING;
+    descriptor.progress = 0.0;
+
+    var pollUrl = options.publishUrl +
+      '?datapackage=' + encodeURIComponent(descriptor.uploadUrl);
+    var poll = function() {
+      fetch(pollUrl)
+        .then(function(response) {
+          if (response.status != 200) {
+            throw 'Failed to load data from ' + response.url;
+          }
+          return response.json()
+        })
+        .then(function(response) {
+          if (!_.isObject(response)) {
+            throw 'Response should be an object';
+          }
+          console.log(response);
+          switch (('' + response.status).toLowerCase()) {
+            case 'success':
+              descriptor.progress = 1.0;
+              resolve(descriptor);
+              break;
+            case 'error':
+              throw response.error; // Go to .catch()
+              break;
+            default:
+              // TODO: Update progress
+              setTimeout(poll, options.pollInterval);
+          }
+        })
+        .catch(function(error) {
+          descriptor.status = ProcessingStatus.FAILED;
+          descriptor.error = error;
+          reject(error);
+        });
+    };
+
+    var requestOptions = {
+      method: 'POST',
+      body: 'datapackage=' + encodeURIComponent(descriptor.uploadUrl),
+      mode: 'cors',
+      credentials: 'omit'
+    };
+    fetch(options.publishUrl, requestOptions)
+      .then(function() {
+        poll();
+      })
+      .catch(function(error) {
+        descriptor.status = ProcessingStatus.FAILED;
+        descriptor.error = error;
+        reject(error);
+      });
+  });
 };

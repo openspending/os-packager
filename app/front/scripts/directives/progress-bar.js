@@ -7,9 +7,10 @@
           restrict: 'EA',
           scope: {
             value: '@',
-            showLabel: '@'
+            label: '@'
           },
           templateUrl: '/templates/directives/progress.html',
+          replace: true,
           link: function($scope, element, attr) {
             $scope.$watch('value', function(newValue, oldValue) {
               if (newValue !== oldValue) {

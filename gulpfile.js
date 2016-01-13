@@ -53,7 +53,7 @@ gulp.task('app.scripts', function() {
   return gulp.src(files)
     .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(publicScriptsDir));
 });

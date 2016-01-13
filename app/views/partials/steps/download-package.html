@@ -77,16 +77,25 @@
   </div>
 
   <div ng-if="scope.uploads.length">
-    <div ng-repeat="upload in scope.uploads">
-      <pre>{{ upload | json }}</pre>
+    <h4>Publishing status:</h4>
 
-      <progress-bar value="{{ upload.progress * 100 }}" show-label="{{ true }}"></progress-bar>
+    <div class="alert"
+      ng-class="{'alert-success': upload.status != ProcessingStatus.FAILED, 'alert-danger': upload.status == ProcessingStatus.FAILED}"
+      ng-repeat="upload in scope.uploads">
+      <div class="margin-bottom-4"><b>{{ upload.name }}</b> - {{ upload.status }}</div>
+      <progress-bar ng-if="upload.status != ProcessingStatus.FAILED"
+        value="{{ upload.progress * 100 }}"
+        label="{{ (upload.progress * 100 | numberFormat:2) + '%' }}"></progress-bar>
+      <pre class="without-margins" ng-if="upload.status == ProcessingStatus.FAILED">{{ upload.error }}</pre>
     </div>
   </div>
 
   <div ng-if="!!scope.packagePublicUrl">
-    <input type="text" readonly="readonly" class="form-control"
-      value="{{ scope.packagePublicUrl }}">
+    <h4>Publishing status:</h4>
+    <p>
+      Your datapackage is available at
+      <a ng-href="{{ scope.packagePublicUrl }}" target="_blank">{{ scope.packagePublicUrl }}</a>
+    </p>
   </div>
 </section>
 {% endraw %}

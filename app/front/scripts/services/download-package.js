@@ -64,14 +64,9 @@
           $scope.packagePublicUrl = null;
           var files = PackageService.publish();
           $scope.uploads = files;
-          $q.all(_.pick(files, '$promise')).then(function(results) {
-            // TODO: Wait for all files
-            var packageFile = _.findWhere(files, {
-              name: Configuration.defaultPackageFileName
-            });
-            if (packageFile) {
-              $scope.packagePublicUrl = packageFile.uploadUrl;
-            }
+          files.$promise.then(function(dataPackage) {
+            $scope.packagePublicUrl = dataPackage.uploadUrl;
+            $scope.uploads = null;
           });
         };
 

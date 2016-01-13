@@ -2,8 +2,10 @@
 
   angular.module('Application')
     .factory('DownloadPackageService', [
-      '$rootScope', '_', 'PackageService', 'StepsService',
-      function($rootScope, _, PackageService, StepsService) {
+      '$q', '$rootScope', '_', 'PackageService', 'StepsService',
+      'Configuration',
+      function($q, $rootScope, _, PackageService, StepsService,
+        Configuration) {
         var result = {};
 
         var $scope = $rootScope.$new();
@@ -58,10 +60,25 @@
           return result;
         };
 
+        result.publishDataPackage = function() {
+          $scope.packagePublicUrl = null;
+          var files = PackageService.publish();
+          $scope.uploads = files;
+          $q.all(_.pick(files, '$promise')).then(function(results) {
+            // TODO: Wait for all files
+            var packageFile = _.findWhere(files, {
+              name: Configuration.defaultPackageFileName
+            });
+            if (packageFile) {
+              $scope.packagePublicUrl = packageFile.uploadUrl;
+            }
+          });
+        };
+
         // Initialize scope variables
         result.reset = function() {
           $scope.$step.isPassed = false;
-          $scope.fileName = 'datapackage.json';
+          $scope.fileName = Configuration.defaultPackageFileName;
           $scope.attributes = PackageService.getAttributes();
           $scope.resources = PackageService.getResources();
           $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();

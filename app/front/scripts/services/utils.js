@@ -31,6 +31,11 @@
           getAvailableTypes: function() {
             return utils.availableDataTypes;
           },
+          promisify: function(alienPromise) {
+            return $q(function(resolve, reject) {
+              alienPromise.then(resolve).catch(reject);
+            });
+          },
           prepareFiscalPeriod: function(period) {
             var range = [];
             var result = undefined;

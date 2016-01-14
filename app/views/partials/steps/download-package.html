@@ -70,7 +70,8 @@
     </div>
 
     <div class="col-xs-12 col-sm-6 text-right">
-      <button ng-click="publishDataPackage()" type="button" class="btn btn-primary btn-lg">
+      <button ng-click="publishDataPackage()" ng-disabled="scope.isUploading"
+        type="button" class="btn btn-primary btn-lg">
         <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
       </button>
     </div>
@@ -82,7 +83,7 @@
     <div class="alert"
       ng-class="{'alert-success': upload.status != ProcessingStatus.FAILED, 'alert-danger': upload.status == ProcessingStatus.FAILED}"
       ng-repeat="upload in scope.uploads">
-      <div class="margin-bottom-4"><b>{{ upload.name }}</b> - {{ upload.status }}</div>
+      <div class="margin-bottom-4"><b>{{ upload.name }}</b> - {{ upload.status || 'preparing' }}</div>
       <progress-bar ng-if="upload.status != ProcessingStatus.FAILED"
         value="{{ upload.progress * 100 }}"
         label="{{ (upload.progress * 100 | numberFormat:2) + '%' }}"></progress-bar>

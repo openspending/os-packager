@@ -22,10 +22,6 @@
         };
         createNewDataPackage();
 
-        var triggerDigest = function() {
-          $timeout(_.noop);
-        };
-
         return {
           getAttributes: function() {
             return attributes;
@@ -97,47 +93,70 @@
             };
             files.splice(0, 0, packageFile);
 
+            var triggerDigest = function(immediateCall) {
+              if (_.isFunction(triggerDigest)) {
+                $timeout(triggerDigest, 500);
+              }
+              if (!!immediateCall) {
+                $timeout(function() {});
+              }
+            };
+
             files = _.map(files, function(file) {
-              file.$promise = UtilsService.promisify(
-                Services.datastore.readContents(file, {update: triggerDigest}))
-                .then(function() {
-                  return UtilsService.promisify(
-                    Services.datastore.prepareForUpload(file, {
-                      name: dataPackage.name,
-                      update: triggerDigest
-                    }));
-                })
-                .then(function() {
-                  return UtilsService.promisify(
-                    Services.datastore.upload(file, {update: triggerDigest}));
-                })
-                .then(function() {
-                  // datapackage.json has one more step in processing chain
-                  if (file.name != Configuration.defaultPackageFileName) {
-                    file.status = Services.datastore.ProcessingStatus.READY;
-                  }
-                  return file;
-                })
-                .catch(function(error) {
-                  file.status = Services.datastore.ProcessingStatus.FAILED;
-                  file.error = error;
-                });
+              file.$promise = $q(function(resolve, reject) {
+                triggerDigest(true);
+                Services.datastore.readContents(file)
+                  .then(function() {
+                    return Services.datastore.prepareForUpload(file, {
+                      name: dataPackage.name
+                    });
+                  })
+                  .then(function() {
+                    return Services.datastore.upload(file);
+                  })
+                  .then(function() {
+                    // datapackage.json has one more step in processing chain
+                    if (file.name != Configuration.defaultPackageFileName) {
+                      file.status = Services.datastore.ProcessingStatus.READY;
+                    }
+                    return file;
+                  })
+                  .then(resolve)
+                  .catch(function(error) {
+                    file.status = Services.datastore.ProcessingStatus.FAILED;
+                    file.error = error;
+                    reject(error);
+                  });
+              });
               return file;
             });
 
-            files.$promise = $q.all(_.pluck(files, '$promise'))
-              //.then(function() {
-              //  return UtilsService.promisify(
-              //    Services.datastore.publish(packageFile, {update: triggerDigest}));
-              //})
-              .then(function() {
-                packageFile.status = Services.datastore.ProcessingStatus.READY;
-                return packageFile;
-              })
-              .catch(function(error) {
-                packageFile.status = Services.datastore.ProcessingStatus.FAILED;
-                packageFile.error = error;
-              });
+            files.$promise = $q(function(resolve, reject) {
+              $q.all(_.pluck(files, '$promise'))
+                .then(function(results) {
+                  packageFile.countOfLines = 0;
+                  _.each(files, function(file) {
+                    if (file !== packageFile) {
+                      packageFile.countOfLines += file.countOfLines;
+                    }
+                  });
+                  Services.datastore.publish(packageFile)
+                    .then(function() {
+                      triggerDigest = null;
+                      packageFile.status =
+                        Services.datastore.ProcessingStatus.READY;
+                      resolve(packageFile);
+                    })
+                    .catch(function(error) {
+                      triggerDigest = null;
+                      packageFile.status =
+                        Services.datastore.ProcessingStatus.FAILED;
+                      packageFile.error = error;
+                      reject(error);
+                    });
+                })
+                .catch(reject);
+            });
 
             return files;
           }

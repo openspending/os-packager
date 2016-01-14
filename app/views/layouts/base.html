@@ -50,7 +50,7 @@
   <script type="text/javascript">
     (function(options, conductor) {
       options.conductorUrl = conductor.url + '/datastore/';
-      options.publishUrl = conductor.url + '/hooks/load/api/';
+      options.publishUrl = conductor.url + '/hooks/load/api';
       options.pollInterval = conductor.pollInterval;
     })(require('app/services').datastore.defaultOptions, {{ conductor | json | safe }});
   </script>

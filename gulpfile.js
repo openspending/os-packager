@@ -29,7 +29,8 @@ var modules = [
   'underscore',
   'bluebird',
   'd3',
-  'c3'
+  'c3',
+  'isomorphic-fetch/fetch-npm-browserify'
 ];
 
 var appModules = {

@@ -62,12 +62,17 @@
 
         result.publishDataPackage = function() {
           $scope.packagePublicUrl = null;
+          $scope.isUploading = true;
           var files = PackageService.publish();
           $scope.uploads = files;
-          files.$promise.then(function(dataPackage) {
-            $scope.packagePublicUrl = dataPackage.uploadUrl;
-            $scope.uploads = null;
-          });
+          files.$promise
+            .then(function(dataPackage) {
+              $scope.packagePublicUrl = dataPackage.uploadUrl;
+              $scope.uploads = null;
+            })
+            .finally(function() {
+              $scope.isUploading = false;
+            });
         };
 
         // Initialize scope variables

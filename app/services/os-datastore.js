@@ -278,9 +278,6 @@ module.exports.readContents = function(descriptor, options) {
   options = _.extend({}, defaultOptions, options, {
     onDownloadProgress: function(value) {
       descriptor.progress = value;
-      if (_.isFunction(options.update)) {
-        options.update();
-      }
     }
   });
   descriptor.progress = 0.0;
@@ -307,11 +304,18 @@ module.exports.readContents = function(descriptor, options) {
     .then(function(data) {
       descriptor.progress = 1.0;
       descriptor.data = data;
+      descriptor.countOfLines = 0;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i] == '\n') {
+          descriptor.countOfLines ++;
+        }
+      }
       return descriptor;
     });
 };
 
 module.exports.prepareForUpload = function(descriptor, options) {
+  options = _.extend({}, defaultOptions, options);
   descriptor.status = ProcessingStatus.PREPARING;
   descriptor.progress = 0.0;
   return prepareFilesForUpload([descriptor], options)
@@ -326,9 +330,6 @@ module.exports.upload = function(descriptor, options) {
   options = _.extend({}, defaultOptions, options, {
     onUploadProgress: function(value) {
       descriptor.progress = value;
-      if (_.isFunction(options.update)) {
-        options.update();
-      }
     }
   });
   descriptor.status = ProcessingStatus.UPLOADING;
@@ -349,6 +350,7 @@ module.exports.publish = function(descriptor, options) {
 
     var pollUrl = options.publishUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl);
+
     var poll = function() {
       fetch(pollUrl)
         .then(function(response) {
@@ -361,9 +363,9 @@ module.exports.publish = function(descriptor, options) {
           if (!_.isObject(response)) {
             throw 'Response should be an object';
           }
-          console.log(response);
           switch (('' + response.status).toLowerCase()) {
             case 'success':
+            case 'done':
               descriptor.progress = 1.0;
               resolve(descriptor);
               break;
@@ -371,7 +373,11 @@ module.exports.publish = function(descriptor, options) {
               throw response.error; // Go to .catch()
               break;
             default:
-              // TODO: Update progress
+              // response.progress is count of processed lines
+              var progress = parseFloat(response.progress);
+              if (isFinite(progress) && (descriptor.countOfLines >= progress)) {
+                descriptor.progress = progress / descriptor.countOfLines;
+              }
               setTimeout(poll, options.pollInterval);
           }
         })
@@ -384,11 +390,10 @@ module.exports.publish = function(descriptor, options) {
 
     var requestOptions = {
       method: 'POST',
-      body: 'datapackage=' + encodeURIComponent(descriptor.uploadUrl),
       mode: 'cors',
       credentials: 'omit'
     };
-    fetch(options.publishUrl, requestOptions)
+    fetch(pollUrl, requestOptions)
       .then(function() {
         poll();
       })

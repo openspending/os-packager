@@ -44,6 +44,9 @@ module.exports.start = function() {
     env.addGlobal('marked', marked);
     env.addGlobal('sessionSalt', '' + Date.now() +
       Math.round(Math.random() * 10000));
+    env.addFilter('json', function(value, pretty) {
+      return JSON.stringify(value, null, !!pretty ? 2 : null);
+    });
 
     var server = app.listen(app.get('port'), function() {
       console.log('Listening on :' + app.get('port'));

@@ -126,6 +126,8 @@ describe('Wizard UI', function() {
     browser.waitForDigest().then(function() {
       assert(browser.query('#step4-button-download'),
         'Download button should be available');
+      assert(browser.query('#step4-button-publish'),
+        'Publish button should be available');
       var dataPackage = browser.evaluate('$("[name=data]").val();');
       dataPackage = JSON.parse(dataPackage);
       assert.equal(dataPackage.title, dataPackageTitle);

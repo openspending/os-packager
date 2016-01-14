@@ -58,7 +58,7 @@
   </div>
 
   <div class="row form-group">
-    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-6">
       <form action="{{ '/download/' + scope.fileName }}" method="post">
         <input type="hidden" name="name" value="{{ scope.fileName }}">
         <input type="hidden" name="mime" value="application/octet-stream">
@@ -68,10 +68,35 @@
         </button>
       </form>
     </div>
+
+    <div class="col-xs-12 col-sm-6 text-right">
+      <button ng-click="publishDataPackage()" ng-disabled="scope.isUploading"
+        type="button" class="btn btn-primary btn-lg" id="step4-button-publish">
+        <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
+      </button>
+    </div>
   </div>
 
-  <div class="row">
-    <pre class="col-xs-12">{{ scope.fiscalDataPackage | json }}</pre>
+  <div ng-if="scope.uploads.length">
+    <h4>Publishing status:</h4>
+
+    <div class="alert"
+      ng-class="{'alert-success': upload.status != ProcessingStatus.FAILED, 'alert-danger': upload.status == ProcessingStatus.FAILED}"
+      ng-repeat="upload in scope.uploads">
+      <div class="margin-bottom-4"><b>{{ upload.name }}</b> - {{ upload.status || 'preparing' }}</div>
+      <progress-bar ng-if="upload.status != ProcessingStatus.FAILED"
+        value="{{ upload.progress * 100 }}"
+        label="{{ (upload.progress * 100 | numberFormat:2) + '%' }}"></progress-bar>
+      <pre class="without-margins" ng-if="upload.status == ProcessingStatus.FAILED">{{ upload.error }}</pre>
+    </div>
+  </div>
+
+  <div ng-if="!!scope.packagePublicUrl">
+    <h4>Publishing status:</h4>
+    <p>
+      Your datapackage is available at
+      <a ng-href="{{ scope.packagePublicUrl }}" target="_blank">{{ scope.packagePublicUrl }}</a>
+    </p>
   </div>
 </section>
 {% endraw %}

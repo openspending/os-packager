@@ -16,8 +16,9 @@
       }
     ])
     .run([
-      'UtilsService',
-      function(UtilsService) {
+      '$rootScope', 'UtilsService', 'Services',
+      function($rootScope, UtilsService, Services) {
+        $rootScope.ProcessingStatus = Services.datastore.ProcessingStatus;
         // Preload continents and countries
         UtilsService.getCurrencies();
         UtilsService.getCountries();

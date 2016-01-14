@@ -10,7 +10,6 @@
         $scope.onShowValidationResults = function() {
           $scope.bootstrapModal().show('validation-results');
         };
-
       }
     ]);
 

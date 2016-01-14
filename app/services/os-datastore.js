@@ -64,29 +64,31 @@ function requestViaXhr(url, options) {
     var xhr = new XMLHttpRequest();
 
     // Upload events
-    xhr.upload.addEventListener('progress', function(event) {
-      if (event.lengthComputable) {
+    if (xhr.upload) {
+      xhr.upload.onprogress = function(event) {
+        if (event.lengthComputable) {
+          if (_.isFunction(options.onUploadProgress)) {
+            // normalized to range 0.0 .. 1.0
+            options.onUploadProgress(event.loaded / event.total);
+          }
+        }
+      };
+      xhr.upload.onload = function(event) {
         if (_.isFunction(options.onUploadProgress)) {
           // normalized to range 0.0 .. 1.0
-          options.onUploadProgress(event.loaded / event.total);
+          options.onUploadProgress(1.0);
         }
-      }
-    });
-    xhr.upload.addEventListener('load', function(event) {
-      if (_.isFunction(options.onUploadProgress)) {
-        // normalized to range 0.0 .. 1.0
-        options.onUploadProgress(1.0);
-      }
-    });
-    xhr.upload.addEventListener('error', function(event) {
-      reject('An error occurred while transferring the file.');
-    });
-    xhr.upload.addEventListener('abort', function(event) {
-      reject('The transfer has been canceled by the user.');
-    });
+      };
+      xhr.upload.onerror = function(event) {
+        reject('An error occurred while transferring the file.');
+      };
+      xhr.upload.onabort = function(event) {
+        reject('The transfer has been canceled by the user.');
+      };
+    }
 
     // Download events
-    xhr.addEventListener('progress', function(event) {
+    xhr.onprogress = function(event) {
       var total = 0;
       var loaded = event.loaded;
       if (event.lengthComputable) {
@@ -110,20 +112,20 @@ function requestViaXhr(url, options) {
         // normalized to range 0.0 .. 1.0
         options.onDownloadProgress(loaded / total);
       }
-    });
-    xhr.addEventListener('load', function(event) {
+    };
+    xhr.onload = function(event) {
       if (_.isFunction(options.onDownloadProgress)) {
         // normalized to range 0.0 .. 1.0
         options.onDownloadProgress(1.0);
       }
       resolve(xhr.responseText);
-    });
-    xhr.addEventListener('error', function(event) {
+    };
+    xhr.onerror = function(event) {
       reject('An error occurred while transferring the file.');
-    });
-    xhr.addEventListener('abort', function(event) {
+    };
+    xhr.onabort = function(event) {
       reject('The transfer has been canceled by the user.');
-    });
+    };
 
     xhr.open(options.method || 'GET', url);
 
@@ -140,13 +142,16 @@ function requestViaXhr(url, options) {
 }
 
 function requestAutoDetect(url, options) {
-  if ((typeof XMLHttpRequest != 'undefined') && _.isFunction(XMLHttpRequest)) {
-    return requestViaXhr(url, options);
+  if (!module.exports.disableXhr) {
+    if ((typeof XMLHttpRequest != 'undefined') &&
+      _.isFunction(XMLHttpRequest)) {
+      return requestViaXhr(url, options);
+    }
   }
   if ((typeof fetch != 'undefined') && _.isFunction(fetch)) {
     return requestViaFetch(url, options);
   }
-  return Promise.reject('Both XMLHttpRequest and fetch API are not supported.')
+  return Promise.reject('Both XMLHttpRequest and fetch API are not supported.');
 }
 
 function readFileBytes(fileOrBlob, options) {
@@ -248,17 +253,21 @@ function prepareFilesForUpload(files, options) {
       if (response.status != 200) {
         throw 'Failed to load data from ' + response.url;
       }
-      return response.json()
+      return response.json();
     })
     .then(function(response) {
       if (_.isObject(response.filedata)) {
         return _.chain(response.filedata)
           .map(function(item, key) {
+            // jscs:disable
+            var uploadUrl = item.upload_url;
+            var uploadParams = item.upload_query;
+            // jscs:enable
             return [
               key,
               {
-                uploadUrl: item.upload_url,
-                uploadParams: _.chain(item.upload_query)
+                uploadUrl: uploadUrl,
+                uploadParams: _.chain(uploadParams)
                   .map(function(values, key) {
                     return [key, _.first(values)];
                   })
@@ -357,7 +366,7 @@ module.exports.publish = function(descriptor, options) {
           if (response.status != 200) {
             throw 'Failed to load data from ' + response.url;
           }
-          return response.json()
+          return response.json();
         })
         .then(function(response) {
           if (!_.isObject(response)) {

@@ -67,10 +67,14 @@
           },
           publish: function() {
             var files = _.map(resources, function(resource) {
+              var url = resource.source.url;
+              if (_.isString(url) && (url.length > 0)) {
+                url = '/proxy?url=' + encodeURIComponent(url);
+              }
               return {
                 name: resource.name + '.csv',
                 data: resource.data.raw,
-                url: '/proxy?url=' + encodeURIComponent(resource.source.url),
+                url: url,
                 file: resource.blob
               };
             });

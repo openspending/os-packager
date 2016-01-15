@@ -1,4 +1,4 @@
-# Fiscal Data Packager
+# OS Packager
 App to make Fiscal Data Packages from a CSV of Fiscal Data.
 
 # Getting started
@@ -8,17 +8,19 @@ Fiscal Data Packager is a Node.js app, based on Express v4 framework.
 Get a local server setup with the following steps:
 
 1. Ensure you are running the supported version of Node.js, which is declared in the `package.json`.
-2. Create a local directory called `fiscal-data-packager` and move into it with `cd fiscal-data-packager`.
-3. Clone the code with `git clone https://github.com/openspending/fiscal-data-packager.git .`.
+2. Create a local directory called `os-packager` and move into it with `cd os-packager`.
+3. Clone the code with `git clone https://github.com/openspending/os-packager.git .`.
 4. Install the dependencies with `npm install`.
 5. Create a `settings.json` file with these contents, changing any values as required:
-```
-{
-  "app": {
-    "port": 5000
+   
+   ```
+  {
+    "app": {
+      "port": 5000
+    }
   }
-}
-```
+   ```
+6. Run `gulp` to build the frontend app
 
 Now we should be ready to run the server:
 

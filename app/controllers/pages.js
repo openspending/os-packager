@@ -1,7 +1,9 @@
 'use strict';
 
 module.exports.main = function(req, res) {
+  var config = req.app.get('config');
   res.render('pages/main.html', {
+    conductor: config.get('conductor'),
     title: 'Create a Fiscal Data Package'
   });
 };

@@ -4,8 +4,14 @@
 
   var config = {
     defaultErrorHandler: function(error) {
-      (console.trace || console.log || function() {})(error);
+      if (console.trace) {
+        return console.trace(error);
+      } else
+      if (console.log) {
+        return console.log(error);
+      }
     },
+    defaultPackageFileName: 'datapackage.json',
     events: {
       CONCEPTS_CHANGED: 'package.conceptsChanged'
     },

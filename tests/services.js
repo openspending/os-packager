@@ -4,6 +4,7 @@ var _ = require('underscore');
 var assert = require('chai').assert;
 var utils = require('../app/services/utils');
 var dataPackage = require('../app/services/package');
+var dataStore = require('../app/services/os-datastore');
 
 // Make PapaParse working (do not remove this line!)
 var testUtils = require('./utils');
@@ -232,6 +233,41 @@ describe('Application services', function() {
           done();
         })
         .catch(console.trace.bind(console));
+    });
+
+  });
+
+  describe('OS DataStore', function() {
+
+    dataStore.disableXhr = true;
+
+    it('Should read file contents', function(done) {
+      var file = {
+        name: 'test.csv',
+        url: exampleResourceUrl
+      };
+      dataStore.readContents(file).then(function(data) {
+        assert.notEqual(data, '');
+        done();
+      });
+    });
+
+    it('Should upload file to data store', function(done) {
+      var file = {
+        name: 'test.csv',
+        data: 'Hello,1,test'
+      };
+      dataStore.prepareForUpload(file)
+        .then(function() {
+          assert.property(file, 'uploadUrl');
+          assert.property(file, 'uploadParams');
+          return dataStore.upload(file);
+        })
+        .then(function() {
+          assert.equal(file.status, dataStore.ProcessingStatus.UPLOADING);
+          assert.equal(file.progress, 1.0, 'File should be uploaded');
+          done();
+        });
     });
 
   });

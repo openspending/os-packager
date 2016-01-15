@@ -29,7 +29,8 @@ var modules = [
   'underscore',
   'bluebird',
   'd3',
-  'c3'
+  'c3',
+  'isomorphic-fetch/fetch-npm-browserify'
 ];
 
 var appModules = {
@@ -53,7 +54,7 @@ gulp.task('app.scripts', function() {
   return gulp.src(files)
     .pipe(sourcemaps.init())
     .pipe(concat('app.js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(publicScriptsDir));
 });
@@ -72,7 +73,7 @@ gulp.task('app.modules', function() {
   return bundler.bundle()
     .pipe(source('modules.js'))
     .pipe(buffer())
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest(publicScriptsDir));
 });
 

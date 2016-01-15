@@ -13,6 +13,10 @@ nconf.defaults({
   debug: process.env.DEBUG || false,
   app: {
     port: process.env.PORT || 5000
+  },
+  conductor: {
+    url: process.env.OS_CONDUCTOR || 'http://os-conductor.herokuapp.com',
+    pollInterval: process.env.POLL_INTERVAL || 3000
   }
 });
 

@@ -298,11 +298,14 @@ module.exports.readContents = function(descriptor, options) {
     options.headers = options.header || {};
     result = requestAutoDetect(descriptor.url, options);
   } else
-  if (_.isObject(descriptor.file)) {
+  if (_.isObject(descriptor.file) && (descriptor.file instanceof Blob)) {
     descriptor.status = ProcessingStatus.READING;
     result = readFileBytes(descriptor.file, options);
   } else {
     var data = descriptor.data || '';
+    if (_.isObject(descriptor.file)) {
+      data = descriptor.file.data || '';
+    }
     if (!_.isString(data) && _.isObject(data)) {
       data = JSON.stringify(data, null, 2);
     }

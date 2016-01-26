@@ -6,6 +6,7 @@
   angular.module('Application')
     .constant('_', _)
     .constant('Services', services)
+    .value('ApplicationState', {})
     .config([
       '$httpProvider', '$compileProvider', '$logProvider',
       function($httpProvider, $compileProvider, $logProvider) {
@@ -16,13 +17,12 @@
       }
     ])
     .run([
-      '$rootScope', 'UtilsService', 'Services',
-      function($rootScope, UtilsService, Services) {
+      '$rootScope', 'Services', 'ApplicationLoader',
+      function($rootScope, Services, ApplicationLoader) {
         $rootScope.ProcessingStatus = Services.datastore.ProcessingStatus;
-        // Preload continents and countries
-        UtilsService.getCurrencies();
-        UtilsService.getCountries();
-        UtilsService.getCountries();
+        ApplicationLoader.then(function() {
+          $rootScope.applicationLoaded = true;
+        });
       }
     ]);
 

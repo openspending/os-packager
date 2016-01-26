@@ -2,11 +2,50 @@
 
   angular.module('Application')
     .factory('StepsService', [
-      '$q', '_', 'Configuration',
-      function($q, _, Configuration) {
-        return {
+      '$q', '$location', '_', 'Configuration', 'ApplicationState',
+      'ApplicationLoader', 'StorageService',
+      function($q, $location, _, Configuration, ApplicationState,
+        ApplicationLoader, StorageService) {
+        var currentStep = null;
+        var steps = [];
+
+        ApplicationLoader.then(function() {
+          if (_.isArray(ApplicationState.steps)) {
+            steps = _.filter(ApplicationState.steps, _.isObject);
+          }
+          if (steps.length == 0) {
+            steps = Configuration.steps;
+          }
+
+          currentStep = _.find(steps, 'isCurrent');
+          if (!currentStep) {
+            currentStep = _.first(steps);
+          }
+          result.updateStepsState(currentStep);
+          $location.path(currentStep.route);
+
+          ApplicationState.steps = steps;
+        });
+
+        var result = {
+          getCurrentStep: function() {
+            return currentStep;
+          },
+          goToStep: function(step, goNext) {
+            if (step) {
+              if (goNext || step.isPassed || step.isCurrent) {
+                currentStep = step;
+                result.updateStepsState(step);
+                $location.path(step.route);
+                StorageService.saveApplicationState();
+              } else {
+                $location.path('/');
+              }
+            }
+            return currentStep;
+          },
           getSteps: function() {
-            return Configuration.steps;
+            return steps;
           },
           getStepById: function(stepId) {
             return _.findWhere(this.getSteps(), {
@@ -26,18 +65,22 @@
               });
             }
           },
-          resetStepsFrom: function(step) {
+          resetStepsFrom: function(step, updateCurrentStep) {
             if (step) {
               var steps = this.getSteps();
               var found = false;
               _.each(steps, function(item) {
-                if (found && item.reset) {
-                  item.reset();
+                if (found) {
+                  item.isPassed = false;
+                  item.isCurrent = false;
                 }
                 if (item.id == step.id) {
-                  found = true;
+                  found = item;
                 }
               });
+              if (updateCurrentStep && found) {
+                result.goToStep(found);
+              }
             }
           },
           updateStepsState: function(step) {
@@ -62,6 +105,8 @@
             }
           }
         };
+
+        return result;
       }
     ]);
 

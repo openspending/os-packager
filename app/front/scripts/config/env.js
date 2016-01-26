@@ -15,6 +15,10 @@
     events: {
       CONCEPTS_CHANGED: 'package.conceptsChanged'
     },
+    storage: {
+      collection: 'appstate',
+      key: 'default'
+    },
     steps: services.data.steps
   };
 

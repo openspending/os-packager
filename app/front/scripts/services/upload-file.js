@@ -2,99 +2,78 @@
 
   angular.module('Application')
     .factory('UploadFileService', [
-      '$rootScope', '$timeout', '_', 'PackageService', 'ValidationService',
-      'Configuration', 'UtilsService', 'StepsService',
-      function($rootScope, $timeout, _, PackageService, ValidationService,
-        Configuration, UtilsService, StepsService) {
+      '_', 'PackageService', 'ValidationService', 'Configuration',
+      'UtilsService', 'Services', 'ApplicationState', 'ApplicationLoader',
+      function(_, PackageService, ValidationService, Configuration,
+        UtilsService, Services, ApplicationState, ApplicationLoader) {
+        var utils = Services.utils;
+
         var result = {};
 
-        var $scope = $rootScope.$new();
-        result.scope = $scope;
-
-        $scope.$step = StepsService.getStepById('upload-file');
-        $scope.$step.reset = function() {
-          result.reset();
-        };
-
-        // Initialize scope variables
-        result.reset = function() {
-          $scope.$step.isPassed = false;
-          $scope.file = null;
-          $scope.url = null;
-          $scope.validationStatus = null;
-          $scope.resource = null;
-        };
-        result.reset();
-
-        result.onClearSelectedFile = function() {
-          $scope.file = null;
-          $scope.validationStatus = null;
-        };
-
-        result.onClearSelectedUrl = function() {
-          $scope.url = null;
-          $scope.validationStatus = null;
-        };
-
-        result.onFileSelected = function() {
-          $scope.file = _.first(this.files);
-        };
-
-        var validateSource = function() {
-          if (!$scope.file && !$scope.url) {
-            $scope.validationStatus = null;
-            return;
+        var state = null;
+        ApplicationLoader.then(function() {
+          state = {};
+          if (_.isObject(ApplicationState.uploadFile)) {
+            state = ApplicationState.uploadFile;
           }
+          ApplicationState.uploadFile = state;
+        });
 
-          $scope.validationStatus = {
+        var validateSource = function(source) {
+          state.status = {
             state: 'reading'
           };
 
-          PackageService.createResource($scope.file ||
-          UtilsService.decorateProxyUrl($scope.url))
+          PackageService.createResource(source)
             .then(function(resource) {
-              $scope.resource = resource;
-              $scope.validationStatus = ValidationService
-                .validateResource(resource);
+              var status = ValidationService.validateResource(resource);
+              status.sampleSize = resource.data.rows.length;
+              if (resource.data.headers) {
+                status.sampleSize += 1;
+              }
+              state.status = status;
 
-              $scope.validationStatus.$promise.then(function(data) {
-                if (!$scope.validationStatus.errors) {
+              status.$promise.then(function(data) {
+                if (!status.errors) {
                   PackageService.removeAllResources();
-                  if ($scope.resource) {
+                  if (resource) {
                     PackageService.addResource(resource);
                   }
-                  StepsService.resetStepsFrom($scope.$step);
                   return data;
                 }
               });
             })
             .catch(function(error) {
-              $scope.validationStatus = null;
+              state.status = null;
               Configuration.defaultErrorHandler(error);
             });
         };
-        var validateSourceDelayed = _.debounce(function() {
-          $timeout(validateSource);
-        }, 500);
 
-        $scope.$watch('file', function() {
-          StepsService.resetStepsFrom($scope.$step);
-          PackageService.recreatePackage();
-          if (!$scope.file && !$scope.url) {
-            $scope.validationStatus = null;
-            return;
+        result.getState = function() {
+          return state;
+        };
+
+        result.resourceChanged = function(file, url) {
+          if (utils.isUrl(url)) {
+            state.isUrl = true;
+            state.url = url;
+            validateSource(url);
+            return state;
           }
-          validateSource();
-        });
-        $scope.$watch('url', function() {
-          StepsService.resetStepsFrom($scope.$step);
-          PackageService.recreatePackage();
-          if (!$scope.file && !$scope.url) {
-            $scope.validationStatus = null;
-            return;
+          if (_.isObject(file)) {
+            state.isFile = true;
+            state.file = {
+              name: file.name,
+              type: file.type,
+              size: file.size
+            };
+            validateSource(file);
+            return state;
           }
-          validateSourceDelayed();
-        });
+          state = {};
+          PackageService.recreatePackage();
+          return state;
+        };
 
         return result;
       }

@@ -2,33 +2,36 @@
 
   angular.module('Application')
     .factory('DescribeDataService', [
-      '$rootScope', '_', 'PackageService', 'UtilsService', 'ValidationService',
-      'StepsService', 'Configuration',
-      function($rootScope, _, PackageService, UtilsService, ValidationService,
-        StepsService, Configuration) {
+      '_', 'PackageService', 'UtilsService', 'ValidationService',
+      'PreviewDataService', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
+      function(_, PackageService, UtilsService, ValidationService,
+        PreviewDataService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
-        var $scope = $rootScope.$new();
-        result.scope = $scope;
+        var state = null;
+        ApplicationLoader.then(function() {
+          state = {};
+          if (_.isObject(ApplicationState.describeData)) {
+            state = ApplicationState.describeData;
+          }
+          ApplicationState.describeData = state;
+        });
 
-        $scope.$step = StepsService.getStepById('describe-data');
-        $scope.$step.reset = function() {
-          result.reset();
+        result.resetState = function() {
+          state = {};
+          ApplicationState.describeData = state;
         };
 
-        // Initialize scope variables
-        result.reset = function() {
-          $scope.$step.isPassed = false;
-          $scope.resources = PackageService.getResources();
-          $scope.validationStatus = {
-            concept: false
-          };
+        result.getState = function() {
+          return state;
         };
-        result.reset();
 
-        var getSelectedConcepts = function(group) {
+        result.getSelectedConcepts = function(group) {
           var mapped = [];
-          _.each($scope.resources, function(resource) {
+          var resources = PackageService.getResources();
+          _.each(resources, function(resource) {
             _.each(resource.fields, function(field) {
               var concept = UtilsService.findConcept(field.concept);
               if (concept && concept.group == group) {
@@ -62,17 +65,7 @@
           return mapped;
         };
 
-        result.onAdditionalPropertyChanged = function(field) {
-          if (!field) {
-            return;
-          }
-          $scope.validationStatus.concept =
-            ValidationService.validateResourcesConcepts($scope.resources);
-          $scope.selectedMeasures = getSelectedConcepts('measure');
-          $scope.selectedDimensions = getSelectedConcepts('dimension');
-        };
-
-        result.onConceptChanged = function(field) {
+        result.updateField = function(field) {
           if (!field) {
             return;
           }
@@ -88,12 +81,12 @@
             field.type = field.inferredType;
             field.options = {};
           }
-          $scope.validationStatus.concept =
-            ValidationService.validateResourcesConcepts($scope.resources);
-          $scope.selectedMeasures = getSelectedConcepts('measure');
-          $scope.selectedDimensions = getSelectedConcepts('dimension');
+          state.status = ValidationService.validateResourcesConcepts(
+            PackageService.getResources());
 
-          $rootScope.$broadcast(Configuration.events.CONCEPTS_CHANGED);
+          PreviewDataService.update();
+
+          return state;
         };
 
         return result;

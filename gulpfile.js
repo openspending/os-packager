@@ -30,6 +30,9 @@ var modules = [
   'bluebird',
   'd3',
   'c3',
+  'treo',
+  'treo/plugins/treo-promise',
+  'treo/plugins/treo-websql',
   'isomorphic-fetch/fetch-npm-browserify'
 ];
 

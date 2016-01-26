@@ -2,21 +2,31 @@
 
   angular.module('Application')
     .factory('DownloadPackageService', [
-      '$q', '$rootScope', '_', 'PackageService', 'StepsService',
-      'Configuration',
-      function($q, $rootScope, _, PackageService, StepsService,
-        Configuration) {
+      '$q', '_', 'PackageService', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
+      function($q, _, PackageService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
-        var $scope = $rootScope.$new();
-        result.scope = $scope;
+        var state = null;
+        ApplicationLoader.then(function() {
+          state = {};
+          if (_.isObject(ApplicationState.downloadPackage)) {
+            state = ApplicationState.downloadPackage;
+          }
+          ApplicationState.downloadPackage = state;
+        });
 
-        $scope.$step = StepsService.getStepById('download');
-        $scope.$step.reset = function() {
-          result.reset();
+        result.resetState = function() {
+          state = {};
+          ApplicationState.downloadPackage = state;
         };
 
-        var generateMappings = function(fiscalDataPackage) {
+        result.getState = function() {
+          return state;
+        };
+
+        result.generateMappings = function(fiscalDataPackage) {
           var result = [];
 
           var getResource = function(name) {
@@ -61,30 +71,20 @@
         };
 
         result.publishDataPackage = function() {
-          $scope.packagePublicUrl = null;
-          $scope.isUploading = true;
+          state.packagePublicUrl = null;
+          state.isUploading = true;
           var files = PackageService.publish();
-          $scope.uploads = files;
+          state.uploads = files;
           files.$promise
             .then(function(dataPackage) {
-              $scope.packagePublicUrl = dataPackage.uploadUrl;
-              $scope.uploads = null;
+              state.packagePublicUrl = dataPackage.uploadUrl;
+              state.uploads = null;
             })
             .finally(function() {
-              $scope.isUploading = false;
+              state.isUploading = false;
             });
+          return state;
         };
-
-        // Initialize scope variables
-        result.reset = function() {
-          $scope.$step.isPassed = false;
-          $scope.fileName = Configuration.defaultPackageFileName;
-          $scope.attributes = PackageService.getAttributes();
-          $scope.resources = PackageService.getResources();
-          $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();
-          $scope.mappings = generateMappings($scope.fiscalDataPackage);
-        };
-        result.reset();
 
         return result;
       }

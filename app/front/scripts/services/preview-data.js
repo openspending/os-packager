@@ -2,52 +2,64 @@
 
   angular.module('Application')
     .factory('PreviewDataService', [
-      '$rootScope', '_', 'Services', 'PackageService', 'Configuration',
-      function($rootScope, _, Services, PackageService, Configuration) {
+      '_', 'Services', 'PackageService', 'ApplicationState',
+      'ApplicationLoader',
+      function(_, Services, PackageService, ApplicationState,
+      ApplicationLoader) {
         var result = {};
 
-        var $scope = $rootScope.$new();
-        result.scope = $scope;
+        var state = null;
+        ApplicationLoader.then(function() {
+          state = {};
+          if (_.isObject(ApplicationState.previewData)) {
+            state = ApplicationState.previewData;
+          }
+          state.selectedPossibility = null;
+          ApplicationState.previewData = state;
+        });
 
-        $scope.possibilities = Services
-          .utils.availablePossibilities;
+        var possibilities = Services.utils.availablePossibilities;
 
-        $scope.selectedPossibility = null;
+        result.getState = function() {
+          return state;
+        };
 
-        var updatePreviewData = function() {
-          $scope.previewData = Services.utils.getDataForPreview(
+        result.getPossibilities = function() {
+          return possibilities;
+        };
+
+        result.getPreviewData = function() {
+          return Services.utils.getDataForPreview(
             PackageService.getResources(), 10);
         };
 
-        $scope.$on(Configuration.events.CONCEPTS_CHANGED, function() {
+        result.update = function() {
           var resources = PackageService.getResources();
-          _.each($scope.possibilities, function(possibility) {
+          _.each(possibilities, function(possibility) {
             possibility.update(resources);
           });
-          if ($scope.selectedPossibility) {
-            var possibility = _.findWhere($scope.possibilities, {
-              id: $scope.selectedPossibility
+          if (state.selectedPossibility) {
+            var possibility = _.findWhere(possibilities, {
+              id: state.selectedPossibility
             });
             if (!possibility || !possibility.isAvailable) {
-              possibility = _.findWhere($scope.possibilities, {
+              possibility = _.findWhere(possibilities, {
                 isAvailable: true
               });
               result.selectPossibility(possibility);
             }
           }
-          updatePreviewData();
-        });
+        };
 
         result.selectPossibility = function(possiblity) {
-          $scope.selectedPossibility = null;
+          state.selectedPossibility = null;
           if (_.isObject(possiblity)) {
-            possiblity = _.findWhere($scope.possibilities, {id: possiblity.id});
+            possiblity = _.findWhere(possibilities, {id: possiblity.id});
             if (_.isObject(possiblity) && possiblity.isAvailable) {
-              $scope.selectedPossibility = possiblity.id;
-              $scope.graph = possiblity.graph;
+              state.selectedPossibility = possiblity.id;
+              state.graph = possiblity.graph;
             }
           }
-          updatePreviewData();
         };
 
         return result;

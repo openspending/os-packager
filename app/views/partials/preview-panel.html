@@ -7,19 +7,19 @@
   </p>
 
   <div>
-    <button ng-repeat="possibility in scope.possibilities" type="button"
+    <button ng-repeat="possibility in possibilities" type="button"
       ng-disabled="!possibility.isAvailable"
-      ng-class="{'btn-default': possibility.id != scope.selectedPossibility, 'btn-success': possibility.id == scope.selectedPossibility}"
-      ng-click="selectPossibility(possibility)"
+      ng-class="{'btn-default': possibility.id != state.selectedPossibility, 'btn-success': possibility.id == state.selectedPossibility}"
+      ng-click="onSelectPossibility(possibility)"
       class="btn btn-block">{{ possibility.name }}</button>
   </div>
 
-  <div ng-if="!!scope.selectedPossibility">
+  <div ng-if="!!state.selectedPossibility">
     <h3>Preview</h3>
 
-    <treemap ng-if="scope.graph == 'treemap'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-4 treemap"></treemap>
-    <line-chart ng-if="scope.graph == 'lines'" data="scope.previewData" type="spline" class="aspect-ratio aspect-ratio-square lines"></line-chart>
-    <pie-chart ng-if="scope.graph == 'pie'" data="scope.previewData" class="aspect-ratio aspect-ratio-3-2"></pie-chart>
+    <treemap ng-if="state.graph == 'treemap'" data="previewData" class="aspect-ratio aspect-ratio-3-4 treemap"></treemap>
+    <line-chart ng-if="state.graph == 'lines'" data="previewData" type="spline" class="aspect-ratio aspect-ratio-square lines"></line-chart>
+    <pie-chart ng-if="state.graph == 'pie'" data="previewData" class="aspect-ratio aspect-ratio-3-2"></pie-chart>
   </div>
 </div>
 {% endraw %}

@@ -18,8 +18,20 @@
     ])
     .run([
       '$rootScope', 'Services', 'ApplicationLoader',
-      function($rootScope, Services, ApplicationLoader) {
+      'StepsService', 'UploadFileService', 'DescribeDataService',
+      'ProvideMetadataService', 'DownloadPackageService',
+      function($rootScope, Services, ApplicationLoader,
+        StepsService, UploadFileService, DescribeDataService,
+        ProvideMetadataService, DownloadPackageService) {
         $rootScope.ProcessingStatus = Services.datastore.ProcessingStatus;
+
+        StepsService.setStepResetCallbacks({
+          'upload-file': UploadFileService.resetState,
+          'describe-data': DescribeDataService.resetState,
+          'metadata': ProvideMetadataService.resetState,
+          'download': DownloadPackageService.resetState
+        });
+
         ApplicationLoader.then(function() {
           $rootScope.applicationLoaded = true;
         });

@@ -16,18 +16,25 @@
 
         function prepareValueForSaving(value) {
           if (_.isArray(value)) {
-            return _.map(value, prepareValueForSaving);
+            return _.chain(value)
+              .filter(function(value) {
+                return !_.isFunction(value);
+              })
+              .map(prepareValueForSaving)
+              .value();
           }
           if (_.isObject(value)) {
             var result = {};
             _.each(value, function(value, key) {
-              if (('' + key).substr(0, 1) != '$') {
+              var isFunction = _.isFunction(value);
+              var isAngular = ('' + key).substr(0, 1) == '$';
+              if (!isFunction && !isAngular) {
                 result[key] = prepareValueForSaving(value);
               }
             });
             return result;
           }
-          return value;
+          return _.isFunction(value) ? null : value;
         }
 
 

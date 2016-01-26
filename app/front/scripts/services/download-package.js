@@ -3,7 +3,9 @@
   angular.module('Application')
     .factory('DownloadPackageService', [
       '$q', '_', 'PackageService', 'ApplicationState', 'ApplicationLoader',
-      function($q, _, PackageService, ApplicationState, ApplicationLoader ) {
+      'StepsService',
+      function($q, _, PackageService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
         var state = null;
@@ -14,6 +16,11 @@
           }
           ApplicationState.downloadPackage = state;
         });
+
+        result.resetState = function() {
+          state = {};
+          ApplicationState.downloadPackage = state;
+        };
 
         result.getState = function() {
           return state;

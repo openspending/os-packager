@@ -4,8 +4,10 @@
     .factory('DescribeDataService', [
       '_', 'PackageService', 'UtilsService', 'ValidationService',
       'PreviewDataService', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
       function(_, PackageService, UtilsService, ValidationService,
-        PreviewDataService, ApplicationState, ApplicationLoader) {
+        PreviewDataService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
         var state = null;
@@ -16,6 +18,11 @@
           }
           ApplicationState.describeData = state;
         });
+
+        result.resetState = function() {
+          state = {};
+          ApplicationState.describeData = state;
+        };
 
         result.getState = function() {
           return state;

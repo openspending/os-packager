@@ -9,6 +9,8 @@
         var currentStep = null;
         var steps = [];
 
+        var resetCallbacks = {};
+
         ApplicationLoader.then(function() {
           if (_.isArray(ApplicationState.steps)) {
             steps = _.filter(ApplicationState.steps, _.isObject);
@@ -65,6 +67,12 @@
               });
             }
           },
+          setStepResetCallback: function(stepId, callback) {
+            resetCallbacks[stepId] = callback;
+          },
+          setStepResetCallbacks: function(callbacks) {
+            _.extend(resetCallbacks, callbacks);
+          },
           resetStepsFrom: function(step, updateCurrentStep) {
             if (step) {
               var steps = this.getSteps();
@@ -73,14 +81,21 @@
                 if (found) {
                   item.isPassed = false;
                   item.isCurrent = false;
+                  if (_.isFunction(resetCallbacks[item.id])) {
+                    resetCallbacks[item.id]();
+                  }
                 }
                 if (item.id == step.id) {
                   found = item;
+                  if (_.isFunction(resetCallbacks[item.id])) {
+                    resetCallbacks[item.id]();
+                  }
                 }
               });
               if (updateCurrentStep && found) {
                 result.goToStep(found);
               }
+              StorageService.saveApplicationState();
             }
           },
           updateStepsState: function(step) {

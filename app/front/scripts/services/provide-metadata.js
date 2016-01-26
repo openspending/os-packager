@@ -4,8 +4,10 @@
     .factory('ProvideMetadataService', [
       '$timeout', '_', 'PackageService', 'UtilsService',
       'ValidationService', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
       function($timeout, _, PackageService, UtilsService,
-        ValidationService, ApplicationState, ApplicationLoader) {
+        ValidationService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
         var geoData = {};
@@ -18,6 +20,11 @@
           }
           ApplicationState.provideMetadata = state;
         });
+
+        result.resetState = function() {
+          state = {};
+          ApplicationState.provideMetadata = state;
+        };
 
         result.getState = function() {
           return state;

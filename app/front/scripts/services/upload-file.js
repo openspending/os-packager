@@ -4,8 +4,10 @@
     .factory('UploadFileService', [
       '_', 'PackageService', 'ValidationService', 'Configuration',
       'UtilsService', 'Services', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
       function(_, PackageService, ValidationService, Configuration,
-        UtilsService, Services, ApplicationState, ApplicationLoader) {
+        UtilsService, Services, ApplicationState, ApplicationLoader,
+        StepsService) {
         var utils = Services.utils;
 
         var result = {};
@@ -18,6 +20,12 @@
           }
           ApplicationState.uploadFile = state;
         });
+
+        result.resetState = function() {
+          state = {};
+          ApplicationState.uploadFile = state;
+          PackageService.recreatePackage();
+        };
 
         var validateSource = function(source) {
           state.status = {
@@ -71,6 +79,7 @@
             return state;
           }
           state = {};
+          ApplicationState.uploadFile = state;
           PackageService.recreatePackage();
           return state;
         };

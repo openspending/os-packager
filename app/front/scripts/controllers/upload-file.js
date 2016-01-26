@@ -18,7 +18,9 @@
 
           $scope.$watch('url', function(newValue, oldValue) {
             if (newValue !== oldValue) {
-              $scope.state = UploadFileService.resourceChanged(null, $scope.url);
+              $scope.resetFromCurrentStep();
+              $scope.state = UploadFileService.resourceChanged(null,
+                $scope.url);
               $scope.isFileSelected = false;
               $scope.isUrlSelected = !!$scope.url || $scope.state.isUrl;
             }
@@ -27,6 +29,7 @@
           $scope.onFileSelected = function() {
             var file = _.first(this.files);
             $scope.file = file.name;
+            $scope.resetFromCurrentStep();
             $scope.state = UploadFileService.resourceChanged(file, null);
             $scope.isFileSelected = $scope.state.isFile;
             $scope.isUrlSelected = false;
@@ -37,8 +40,9 @@
             $scope.url = null;
             $scope.isFileSelected = false;
             $scope.isUrlSelected = false;
-            $scope.state = UploadFileService.resourceChanged(null, null);
+            UploadFileService.resourceChanged(null, null);
             $scope.resetFromCurrentStep();
+            $scope.state = UploadFileService.getState();
           };
 
           $scope.onShowValidationResults = function() {

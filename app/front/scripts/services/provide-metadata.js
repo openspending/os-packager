@@ -2,42 +2,49 @@
 
   angular.module('Application')
     .factory('ProvideMetadataService', [
-      '$rootScope', '$timeout', '_', 'PackageService', 'UtilsService',
-      'ValidationService', 'StepsService',
-      function($rootScope, $timeout, _, PackageService, UtilsService,
-        ValidationService, StepsService) {
+      '$timeout', '_', 'PackageService', 'UtilsService',
+      'ValidationService', 'ApplicationState', 'ApplicationLoader',
+      'StepsService',
+      function($timeout, _, PackageService, UtilsService,
+        ValidationService, ApplicationState, ApplicationLoader,
+        StepsService) {
         var result = {};
 
-        var $scope = $rootScope.$new();
-        result.scope = $scope;
+        var geoData = {};
 
-        $scope.$step = StepsService.getStepById('metadata');
-        $scope.$step.reset = function() {
-          result.reset();
-        };
-
-        // Initialize scope variables
-        result.reset = function() {
-          $scope.$step.isPassed = false;
-          $scope.attributes = PackageService.getAttributes();
-        };
-        result.reset();
-
-        $scope.$watch('attributes.title', function(value) {
-          if ($scope.attributes) {
-            $scope.attributes.name = UtilsService.slug(value);
+        var state = null;
+        ApplicationLoader.then(function() {
+          state = {};
+          if (_.isObject(ApplicationState.provideMetadata)) {
+            state = ApplicationState.provideMetadata;
           }
+          ApplicationState.provideMetadata = state;
         });
 
-        var updatePeriod = function() {
-          if ($scope.attributes) {
-            $scope.attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(
-              $scope.period);
-          }
+        result.resetState = function() {
+          state = {};
+          ApplicationState.provideMetadata = state;
         };
 
-        $scope.$watch('period.start', updatePeriod);
-        $scope.$watch('period.end', updatePeriod);
+        result.getState = function() {
+          return state;
+        };
+
+        result.getGeoData = function() {
+          return geoData;
+        };
+
+        result.updatePackageName = function() {
+          var attributes = PackageService.getAttributes();
+          attributes.name = UtilsService.slug(attributes.title);
+        };
+
+        result.updateFiscalPeriod = function(period) {
+          if (period) {
+            var attributes = PackageService.getAttributes();
+            attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(period);
+          }
+        };
 
         var prependEmptyItem = function(items) {
           return _.union([{
@@ -46,44 +53,46 @@
           }], items);
         };
 
-        $scope.regions = prependEmptyItem([]);
-        $scope.countries = prependEmptyItem([]);
+        geoData.regions = prependEmptyItem([]);
+        geoData.countries = prependEmptyItem([]);
 
         UtilsService.getContinents().$promise
           .then(prependEmptyItem)
           .then(function(items) {
-            $scope.regions = items;
+            geoData.regions = items;
           });
 
         // Preload countries, but do not show them until continent selected
         UtilsService.getCountries();
-        $scope.countries = prependEmptyItem([]);
+        geoData.countries = prependEmptyItem([]);
 
         result.updateCountries = function() {
-          var regions = $scope.attributes.regionCode;
+          var attributes = PackageService.getAttributes();
+          var regions = attributes.regionCode;
           regions = !!regions ? [regions]
             : _.map(
-            $scope.regions,
+            geoData.regions,
             function(item) {
               return item.code;
             }
           );
           UtilsService.getCountries(regions).$promise.then(function(items) {
-            $scope.countries = prependEmptyItem(items);
+            var attributes = PackageService.getAttributes();
+            geoData.countries = prependEmptyItem(items);
             var codes = _.map(items, function(item) {
               return item.code;
             });
-            if (!_.contains(codes, $scope.attributes.countryCode)) {
-              $scope.attributes.countryCode = '';
+            if (!_.contains(codes, attributes.countryCode)) {
+              attributes.countryCode = '';
             }
           });
         };
 
         result.validatePackage = function() {
           $timeout(function() {
-            $scope.validationState = ValidationService
-              .validateFiscalDataPackage();
+            state.status = ValidationService.validateFiscalDataPackage();
           });
+          return state;
         };
 
         return result;

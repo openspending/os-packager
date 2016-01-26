@@ -2,7 +2,7 @@
 
 {% block content %}
 <section ng-controller="StepsController">
-<div ng-if="false">
+<div ng-if="!applicationLoaded">
   <div class="text-center" style="margin-bottom: 1em;">
     <i class="fa fa-4x fa-spinner fa-pulse"></i>
   </div>
@@ -10,7 +10,7 @@
     Loading application...
   </div>
 </div>
-<div ng-cloak>
+<div ng-cloak ng-show="applicationLoaded">
   {% include "partials/steps.html" %}
   <div ng-view></div>
 </div>

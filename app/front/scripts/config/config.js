@@ -6,6 +6,7 @@
   angular.module('Application')
     .constant('_', _)
     .constant('Services', services)
+    .value('ApplicationState', {})
     .config([
       '$httpProvider', '$compileProvider', '$logProvider',
       function($httpProvider, $compileProvider, $logProvider) {
@@ -16,13 +17,24 @@
       }
     ])
     .run([
-      '$rootScope', 'UtilsService', 'Services',
-      function($rootScope, UtilsService, Services) {
+      '$rootScope', 'Services', 'ApplicationLoader',
+      'StepsService', 'UploadFileService', 'DescribeDataService',
+      'ProvideMetadataService', 'DownloadPackageService',
+      function($rootScope, Services, ApplicationLoader,
+        StepsService, UploadFileService, DescribeDataService,
+        ProvideMetadataService, DownloadPackageService) {
         $rootScope.ProcessingStatus = Services.datastore.ProcessingStatus;
-        // Preload continents and countries
-        UtilsService.getCurrencies();
-        UtilsService.getCountries();
-        UtilsService.getCountries();
+
+        StepsService.setStepResetCallbacks({
+          'upload-file': UploadFileService.resetState,
+          'describe-data': DescribeDataService.resetState,
+          'metadata': ProvideMetadataService.resetState,
+          'download': DownloadPackageService.resetState
+        });
+
+        ApplicationLoader.then(function() {
+          $rootScope.applicationLoaded = true;
+        });
       }
     ]);
 

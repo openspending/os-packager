@@ -8,6 +8,7 @@ var jts = require('json-table-schema');
 var inflector = require('inflected');
 var path = require('path');
 var url = require('url');
+var validator = require('validator');
 
 inflector.transliterations(function(t) {
   t.approximate('А', 'A');  t.approximate('а', 'a');
@@ -46,6 +47,10 @@ inflector.transliterations(function(t) {
   t.approximate('Э', 'E');  t.approximate('э', 'e');
   t.approximate('Ё', 'Jo'); t.approximate('ё', 'jo');
 });
+
+module.exports.isUrl = function(url) {
+  return validator.isURL(url);
+};
 
 module.exports.undecorateProxyUrl = function(urlToUndecorate) {
   var result = url.parse(urlToUndecorate, true);
@@ -500,4 +505,37 @@ module.exports.getDataForPreview = function(resources, maxCount) {
 
     return result;
   });
+};
+
+module.exports.blobToFileDescriptor = function(blob) {
+  if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
+    !(blob instanceof Blob)) {
+    return Promise.resolve(blob);
+  }
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.addEventListener('loadend', function() {
+      resolve({
+        name: blob.name,
+        type: blob.type,
+        size: reader.result.length,
+        data: reader.result
+      });
+    });
+    reader.addEventListener('error', function() {
+      reject(reader.error);
+    });
+    reader.readAsText(blob);
+  });
+};
+
+module.exports.fileDescriptorToBlob = function(descriptor) {
+  var result = descriptor;
+  if (_.isObject(descriptor) && _.isFunction(Blob)) {
+    result = new Blob([descriptor.data], {
+      type: descriptor.type
+    });
+    result.name = descriptor.name;
+  }
+  return Promise.resolve(result);
 };

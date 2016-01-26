@@ -3,16 +3,26 @@
   angular.module('Application')
     .factory('PackageService', [
       '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
-      function($q, $timeout, _, Services, UtilsService, Configuration) {
+      'ApplicationState', 'ApplicationLoader',
+      function($q, $timeout, _, Services, UtilsService, Configuration,
+        ApplicationState, ApplicationLoader) {
         var attributes = {};
         var resources = [];
         var schema = null;
 
+        ApplicationLoader.then(function() {
+          if (_.isObject(ApplicationState.package)) {
+            attributes = ApplicationState.package.attributes;
+            resources = ApplicationState.package.resources;
+          }
+          ApplicationState.package = {
+            attributes: attributes,
+            resources: resources
+          };
+        });
+
         var fiscalDataPackage = Services.fiscalDataPackage;
         var utils = Services.utils;
-        fiscalDataPackage.getFiscalDataPackageSchema().then(function(result) {
-          schema = result;
-        });
 
         var createNewDataPackage = function() {
           attributes.regionCode = '';
@@ -22,7 +32,17 @@
         };
         createNewDataPackage();
 
-        return {
+        var result = {
+          loadSchema: function() {
+            return $q(function(resolve, reject) {
+              fiscalDataPackage.getFiscalDataPackageSchema()
+                .then(function(result) {
+                  schema = result;
+                })
+                .then(resolve)
+                .catch(reject);
+            });
+          },
           getAttributes: function() {
             return attributes;
           },
@@ -34,12 +54,27 @@
           },
           createResource: function(fileOrUrl) {
             return $q(function(resolve, reject) {
-              fiscalDataPackage.createResourceFromSource(fileOrUrl)
+              var fileDescriptor = null;
+              utils.blobToFileDescriptor(fileOrUrl)
+                .then(function(fileOrUrl) {
+                  fileDescriptor = fileOrUrl;
+                  return utils.fileDescriptorToBlob(fileOrUrl);
+                })
+                .then(function(fileOrUrl) {
+                  var url = fileOrUrl;
+                  if (_.isString(url)) {
+                    url = UtilsService.decorateProxyUrl(url);
+                  }
+                  return fiscalDataPackage.createResourceFromSource(url);
+                })
                 .then(function(resource) {
                   // Save file object - it will be needed when publishing
                   // data package
-                  if (_.isObject(fileOrUrl)) {
-                    resource.blob = fileOrUrl;
+                  if (_.isObject(fileDescriptor)) {
+                    resource.blob = fileDescriptor;
+                  }
+                  if (_.isString(fileOrUrl)) {
+                    resource.source.url = fileOrUrl;
                   }
                   return resource;
                 })
@@ -165,6 +200,10 @@
             return files;
           }
         };
+
+        result.loadSchema();
+
+        return result;
       }
     ]);
 

@@ -6,7 +6,7 @@
   <div class="row form-group">
     <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
       <label class="control-label required" for="step3-package-name">Name your Data Package</label>
-      <input ng-model="scope.attributes.title" required="required" name="title"
+      <input ng-model="attributes.title" required="required" name="title"
         type="text" class="form-control" id="step3-package-name">
     </div>
   </div>
@@ -14,7 +14,7 @@
   <div class="row form-group">
     <div class="col-xs-12">
       <label class="control-label" for="step3-package-description">Short description</label>
-      <textarea ng-model="scope.attributes.description" class="form-control" id="step3-package-description"></textarea>
+      <textarea ng-model="attributes.description" class="form-control" id="step3-package-description"></textarea>
     </div>
   </div>
 
@@ -23,24 +23,22 @@
       <label class="control-label" for="step3-location-region">Continent</label>
       <select id="step3-location-region" class="form-control"
         name="region"
-        ng-model="scope.attributes.regionCode"
-        ng-change="updateCountries()"
-        ng-options="region.code as region.name for region in scope.regions"></select>
+        ng-model="attributes.regionCode"
+        ng-options="region.code as region.name for region in geoData.regions"></select>
     </div>
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-country">Country</label>
       <select id="step3-location-country" class="form-control"
-        ng-disabled="!scope.attributes.regionCode"
+        ng-disabled="!attributes.regionCode"
         name="country"
-        ng-model="scope.attributes.countryCode"
-        ng-change="updateCities()"
-        ng-options="country.code as country.name for country in scope.countries"></select>
+        ng-model="attributes.countryCode"
+        ng-options="country.code as country.name for country in geoData.countries"></select>
     </div>
     <div class="col-sm-4">
       <label class="control-label" for="step3-location-city">City</label>
       <input type="text" id="step3-location-city" class="form-control"
-        ng-disabled="!(scope.attributes.regionCode && scope.attributes.countryCode)"
-        name="city" ng-model="scope.attributes.cityCode">
+        ng-disabled="!(attributes.regionCode && attributes.countryCode)"
+        name="city" ng-model="attributes.cityCode">
     </div>
   </div>
 
@@ -50,20 +48,20 @@
     </div>
     <div class="col-sm-4" ng-class="{'has-error': metadata.periodFrom.$dirty && !metadata.periodFrom.$valid}">
       <input type="text" class="form-control" id="step3-period-from"
-        ng-model="scope.period.start" name="periodFrom"
+        ng-model="period.start" name="periodFrom"
         ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
       <p class="help-block">Format: YYYY-MM-DD</p>
     </div>
     <div class="col-sm-4" ng-class="{'has-error': metadata.periodTo.$dirty && !metadata.periodTo.$valid}">
       <input type="text" class="form-control" id="step3-period-to"
-        ng-model="scope.period.end" name="periodTo"
+        ng-model="period.end" name="periodTo"
         ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
       <p class="help-block">Format: YYYY-MM-DD</p>
     </div>
   </div>
   </form>
 
-  <div ng-if="!metadata.title.$dirty && !scope.validationState.state" class="alert alert-info">
+  <div ng-if="!metadata.title.$dirty && !state.status.state" class="alert alert-info">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Please, provide some additional info about your Data Package.
   </div>
@@ -73,28 +71,28 @@
     Please, provide data for all required fields.
   </div>
 
-  <div ng-if="metadata.$valid" ng-init="validatePackage()" class="row form-group">
+  <div ng-if="metadata.$valid" ng-init="onValidatePackage()" class="row form-group">
     <div class="col-xs-12">
-      <div ng-if="(scope.validationState.state == 'checking')" class="alert alert-warning">
+      <div ng-if="(state.status.state == 'checking')" class="alert alert-warning">
         <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
         Validating structure of your Data Package...
       </div>
 
-      <div ng-if="scope.validationState.state == 'completed'">
-        <div ng-repeat="error in scope.validationState.errors" class="alert alert-danger">
+      <div ng-if="state.status.state == 'completed'">
+        <div ng-repeat="error in state.status.errors" class="alert alert-danger">
           <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
           <b>Validation error: </b> {{ error.message }}
           <span ng-if="error.dataPath"><b>at</b> {{ error.dataPath }}</span>
           <pre>{{ error | json }}</pre>
         </div>
 
-        <div ng-if="!scope.validationState.errors" class="alert alert-success">
+        <div ng-if="!state.status.errors" class="alert alert-success">
           <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
           Congratulations! Now you can verify your Data Package and download it.
         </div>
 
-        <div ng-if="!scope.validationState.errors">
-          <button id="step3-button-next" ng-click="goToStep(nextStep)" type="button" class="btn btn-primary btn-lg">
+        <div ng-if="!state.status.errors">
+          <button id="step3-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
             Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
           </button>
         </div>

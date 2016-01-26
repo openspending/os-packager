@@ -2,11 +2,18 @@
 
   angular.module('Application')
     .controller('DownloadPackageController', [
-      '$scope', '_', 'DownloadPackageService', 'StepsService',
-      function($scope, _, DownloadPackageService, StepsService) {
-        DownloadPackageService.reset();
-        StepsService.updateStepsState($scope.currentStep);
-        _.extend($scope, DownloadPackageService);
+      '$scope', 'PackageService', 'DownloadPackageService',
+      'Configuration', 'ApplicationLoader',
+      function($scope, PackageService, DownloadPackageService,
+        Configuration, ApplicationLoader) {
+        ApplicationLoader.then(function() {
+          $scope.fileName = Configuration.defaultPackageFileName;
+          $scope.attributes = PackageService.getAttributes();
+          $scope.resources = PackageService.getResources();
+          $scope.fiscalDataPackage = PackageService.createFiscalDataPackage();
+          $scope.mappings = DownloadPackageService.generateMappings(
+            PackageService.createFiscalDataPackage());
+        });
       }
     ]);
 

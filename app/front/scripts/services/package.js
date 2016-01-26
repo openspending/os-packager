@@ -61,13 +61,20 @@
                   return utils.fileDescriptorToBlob(fileOrUrl);
                 })
                 .then(function(fileOrUrl) {
-                  return fiscalDataPackage.createResourceFromSource(fileOrUrl);
+                  var url = fileOrUrl;
+                  if (_.isString(url)) {
+                    url = UtilsService.decorateProxyUrl(url);
+                  }
+                  return fiscalDataPackage.createResourceFromSource(url);
                 })
                 .then(function(resource) {
                   // Save file object - it will be needed when publishing
                   // data package
                   if (_.isObject(fileDescriptor)) {
                     resource.blob = fileDescriptor;
+                  }
+                  if (_.isString(fileOrUrl)) {
+                    resource.source.url = fileOrUrl;
                   }
                   return resource;
                 })

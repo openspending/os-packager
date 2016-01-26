@@ -508,7 +508,8 @@ module.exports.getDataForPreview = function(resources, maxCount) {
 };
 
 module.exports.blobToFileDescriptor = function(blob) {
-  if (!(blob instanceof Blob)) {
+  if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
+    !(blob instanceof Blob)) {
     return Promise.resolve(blob);
   }
   return new Promise(function(resolve, reject) {
@@ -530,7 +531,7 @@ module.exports.blobToFileDescriptor = function(blob) {
 
 module.exports.fileDescriptorToBlob = function(descriptor) {
   var result = descriptor;
-  if (_.isObject(descriptor)) {
+  if (_.isObject(descriptor) && _.isFunction(Blob)) {
     result = new Blob([descriptor.data], {
       type: descriptor.type
     });

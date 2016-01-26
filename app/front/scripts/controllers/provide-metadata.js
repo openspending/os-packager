@@ -32,7 +32,7 @@
 
           $scope.onValidatePackage = function() {
             $scope.state = ProvideMetadataService.validatePackage();
-          }
+          };
         });
       }
     ]);

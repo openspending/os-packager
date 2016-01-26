@@ -28,6 +28,12 @@ describe('Wizard UI', function() {
   it('Should create resource from URL', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step1-wrapper'), 'It should be step #1');
+
+    assert(browser.evaluate('$("#step1-input-url").val()') == '',
+      'Url input should be empty on page load');
+    assert(browser.evaluate('$("#step1-input-file").val()') == '',
+      'File input should be empty on page load');
+
     browser.fill('step1-resource-url', exampleResourceUrl);
     browser.waitForDigest().then(function() {
       assert(browser.query('#step1-button-next'),

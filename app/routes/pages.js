@@ -11,6 +11,7 @@ module.exports = function() {
   _.each(steps, function(step) {
     router.get(step.route, pages.main);
   });
+  router.get('/login-success', pages.main);
 
   router.get('/about', pages.about);
   router.get('/templates/*', pages.templates);

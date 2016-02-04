@@ -4,6 +4,10 @@
     .config([
       '$routeProvider', '$locationProvider', '_', 'Configuration',
       function($routeProvider, $locationProvider, _, Configuration) {
+        $routeProvider.when('/login-success', {
+            templateUrl: '/templates/login-success.html',
+            controller: 'LoginSuccessController'
+        });
         _.each(Configuration.steps, function(step) {
           $routeProvider
             .when(step.route, {

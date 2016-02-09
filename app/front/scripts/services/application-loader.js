@@ -6,9 +6,9 @@
       function($q, UtilsService, StorageService) {
         var promises = [
           // Preload continents and countries
-          UtilsService.getCurrencies().$promise,
-          UtilsService.getCountries().$promise,
-          UtilsService.getCountries().$promise,
+          UtilsService.getCurrencies(),
+          UtilsService.getCountries(),
+          UtilsService.getCountries(),
 
           // Restore app state
           StorageService.restoreApplicationState()

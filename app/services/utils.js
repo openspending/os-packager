@@ -72,7 +72,11 @@ module.exports.convertToTitle = function(string) {
 };
 
 module.exports.convertToSlug = function(string) {
-  return inflector.parameterize(inflector.transliterate('' + (string || '')));
+  var ret=inflector.parameterize(inflector.transliterate('' + (string || '')));
+  if ( ret === '' ) {
+    return 'slug';
+  }
+  return ret;
 };
 
 module.exports.getCsvSchema = function(urlOrFile) {

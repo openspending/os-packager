@@ -33,28 +33,20 @@ function getItemsFromSource(source, useProxy) {
       if (!sources[source]) {
         throw 'Source "' + source + '" is not available';
       }
-
-      var allResults = [];
-      var fetchNext = function(url, options) {
-        if (useProxy) {
-          url = '/proxy?url=' + encodeURIComponent(url);
-        }
-
-        return fetch(url, options).then(processFetchResponse)
-          .then(function(results) {
-            if (_.isArray(results.results)) {
-              [].push.apply(allResults, results.results);
-            }
-            if (_.isArray(results)) {
-              [].push.apply(allResults, results);
-            }
-            if (!!results.next) {
-              return fetchNext(results.next, options);
-            }
-            return allResults;
-          });
-      };
-      return fetchNext(sources[source], options);
+      var url = sources[source];
+      if (useProxy) {
+        url = '/proxy?url=' + encodeURIComponent(url);
+      }
+      return fetch(url, options).then(processFetchResponse)
+        .then(function(results) {
+          if (_.isArray(results.results)) {
+            return results.results;
+          }
+          if (_.isArray(results)) {
+            return results;
+          }
+          return [];
+        });
     });
 }
 

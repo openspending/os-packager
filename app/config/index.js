@@ -15,7 +15,7 @@ nconf.defaults({
     port: process.env.PORT || 5000
   },
   conductor: {
-    url: process.env.OS_CONDUCTOR || 'http://os-conductor.herokuapp.com',
+    url: process.env.OS_CONDUCTOR || 'http://s145.okserver.org',
     pollInterval: process.env.POLL_INTERVAL || 3000
   }
 });

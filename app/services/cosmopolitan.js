@@ -33,20 +33,28 @@ function getItemsFromSource(source, useProxy) {
       if (!sources[source]) {
         throw 'Source "' + source + '" is not available';
       }
-      var url = sources[source];
-      if (useProxy) {
-        url = '/proxy?url=' + encodeURIComponent(url);
-      }
-      return fetch(url, options).then(processFetchResponse)
-        .then(function(results) {
-          if (_.isArray(results.results)) {
-            return results.results;
-          }
-          if (_.isArray(results)) {
-            return results;
-          }
-          return [];
-        });
+
+      var allResults = [];
+      var fetchNext = function(url, options) {
+        if (useProxy) {
+          url = '/proxy?url=' + encodeURIComponent(url);
+        }
+
+        return fetch(url, options).then(processFetchResponse)
+          .then(function(results) {
+            if (_.isArray(results.results)) {
+              [].push.apply(allResults, results.results);
+            }
+            if (_.isArray(results)) {
+              [].push.apply(allResults, results);
+            }
+            if (!!results.next) {
+              return fetchNext(results.next, options);
+            }
+            return allResults;
+          });
+      };
+      return fetchNext(sources[source], options);
     });
 }
 
@@ -54,7 +62,7 @@ module.exports.getCountries = function(useProxy) {
   return getItemsFromSource('countries', useProxy).then(function(items) {
     return _.map(items, function(item) {
       return {
-        code: item.id,
+        code: upper(item.id),
         name: item.name,
         continent: _.isObject(item.continent) ? item.continent.id : null,
         currency: _.isObject(item.currency) ? upper(item.currency.id) : null

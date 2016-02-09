@@ -5,9 +5,10 @@ var crypto = require('crypto');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
+var OS_CONDUCTOR = process.env.OS_CONDUCTOR || 'http://s145.okserver.org';
 var defaultOptions = {
-  conductorUrl: 'http://os-conductor.herokuapp.com/datastore/',
-  publishUrl: 'http://os-conductor.herokuapp.com/hooks/load/api/',
+  conductorUrl: OS_CONDUCTOR+'/datastore/',
+  publishUrl: OS_CONDUCTOR+'/hooks/load/api/',
   pollInterval: 3000,
   apiKey: 'openspending-next',
   owner: '__tests',

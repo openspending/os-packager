@@ -101,8 +101,8 @@ describe('Wizard UI', function() {
 
         // Fill Country
         browser.evaluate('$("#step3-location-country")' +
-          '.val("string:gb").change();');
-        return browser.waitForDigest();
+          '.val("string:GB").change();');
+        return browser.waitForDigest(10);
       })
       .then(function() {
         // And when Region and Country are filled in, all three fields should

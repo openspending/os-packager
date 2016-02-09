@@ -2,7 +2,8 @@
 
   angular.module('Application', [
     'ngRoute',
-    'Visualization'
+    'Visualization',
+    'authClient.services'
   ]);
 
 })(angular);

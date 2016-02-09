@@ -1,30 +1,22 @@
 <!--[if lt IE 8]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
-<div id="ok-panel" class="closed"><iframe src="//assets.okfn.org/themes/okfn/okf-panel.html" scrolling="no"></iframe></div>
-
-<nav class="navbar navbar-static-top">
-  <div class="container">
-    <a class="ok-ribbon" href="https://okfn.org/"><img src="//okfnlabs.org/ok-panel/assets/images/ok-ribbon.png" alt="Open Knowledge"></a>
-
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand has-icon" href="./">
-        <span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>
-        <span class="text">Fiscal Data Packager</span>
-      </a>
-      <span class="release badge">alpha</span>
-    </div>
-
-    <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="/about">About</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+{% raw %}
+<div class="site-header" ng-controller="LoginHeader as login">
+  <svg xmlns="http://www.w3.org/2000/svg" class="small logo">
+    <title>OS</title>
+    <path class="cls-1" d="M18.84,18.56A10.78,10.78,0,0,1,11,21.66a10.77,10.77,0,0,1-7.83-3.11A10.36,10.36,0,0,1,0,10.83,10.36,10.36,0,0,1,3.18,3.1,10.77,10.77,0,0,1,11,0a10.78,10.78,0,0,1,7.83,3.1A10.36,10.36,0,0,1,22,10.83,10.36,10.36,0,0,1,18.84,18.56Zm-1.59-7.71a6.86,6.86,0,0,0-1.8-4.79,5.75,5.75,0,0,0-4.43-2,5.75,5.75,0,0,0-4.42,2,6.86,6.86,0,0,0-1.8,4.79,6.81,6.81,0,0,0,1.8,4.77,5.77,5.77,0,0,0,4.42,2,5.77,5.77,0,0,0,4.43-2A6.81,6.81,0,0,0,17.25,10.85Z"></path><path class="cls-1" d="M24.86,4.67a1.81,1.81,0,0,0-.68,1.47A1.66,1.66,0,0,0,25,7.59a15.1,15.1,0,0,0,3.81,1.27,10.72,10.72,0,0,1,4.63,2.21,5.45,5.45,0,0,1,1.65,4.29A5.66,5.66,0,0,1,33,19.94a8.43,8.43,0,0,1-5.57,1.76,12.88,12.88,0,0,1-9-3.69l2.79-3.42q3.39,3,6.27,3a3.29,3.29,0,0,0,2-.55,1.78,1.78,0,0,0,.74-1.5,1.75,1.75,0,0,0-.78-1.5,10.18,10.18,0,0,0-3.09-1.13A13.43,13.43,0,0,1,21,10.6a5.35,5.35,0,0,1-1.69-4.38,5.43,5.43,0,0,1,2.15-4.6A8.63,8.63,0,0,1,26.85,0a12.89,12.89,0,0,1,4.2.72,11.25,11.25,0,0,1,3.66,2L32.34,6.18A9.24,9.24,0,0,0,26.7,4.11,2.82,2.82,0,0,0,24.86,4.67Z"></path>
+  </svg>
+  <object class="full logo" type="image/svg+xml" data="assets/logo.svg">
+    <div>OpenSpending</div>
+  </object>
+  <ul class="main-nav">
+    <li class="selected"><a href="#">OS Packager</a></li>
+  </ul>
+  <ul class="secondary-nav">
+    <li ng-if="!login.svc.logged_in" class="user"><a ng-click="login.svc.login()">Login / Register</a></li>
+    <li ng-if="login.svc.logged_in" class="user"><a>{{ login.svc.name }}</a></li>
+    <li class="dropdown"><a href="#">EN</a></li>
+  </ul>
+</div>
+{% endraw %}

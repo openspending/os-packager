@@ -184,6 +184,11 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     });
   };
 
+  var allConcepts = function() {
+    return _.keys(result.mapping.dimensions).concat(_.keys(result.mapping.measures));
+  }
+
+
   var mappingName = null;
   _.each(groups, function(fields, concept) {
     var optionalAttributes = {};
@@ -199,32 +204,34 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (!concept || !concept.dimensionType) {
       return;
     }
+    var conceptName = concept.dimensionType + ' ' + (optionalAttributes.classificationType || '');
     switch (concept.group) {
       case 'measure': {
         _.each(fields, function(field) {
           mappingName = utils.createUniqueName(
             utils.convertToSlug(field.title || field.name),
-            _.keys(result.mapping.measures));
+              allConcepts());
           result.mapping.measures[mappingName] = createMappingFromField(field);
         });
         break;
       }
       case 'dimension': {
         mappingName = utils.createUniqueName(
-          utils.convertToSlug(
-            _.map(fields, function(field) {
-              return field.title || field.name;
-            }).join(' ')),
-            _.keys(result.mapping.dimensions));
+          utils.convertToSlug(conceptName), allConcepts());
+        var attributes = [];
+        _.each(fields, function(field) {
+          attributes.push([
+            utils.createUniqueName(
+              utils.convertToSlug(field.title || field.name),
+              _.map(attributes, _.first)
+            ),
+            createMappingFromField(field)
+          ]);
+        });
         result.mapping.dimensions[mappingName] = _.extend(optionalAttributes, {
           dimensionType: concept.dimensionType,
-          primaryKey: _.pluck(fields, 'name'),
-          attributes: _.object(_.map(fields, function(field) {
-            return [
-              utils.convertToSlug(field.name),
-              createMappingFromField(field)
-            ];
-          }))
+          primaryKey: _.map(attributes, _.first),
+          attributes: _.object(attributes)
         });
         break;
       }

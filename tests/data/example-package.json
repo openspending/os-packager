@@ -41,7 +41,7 @@
       }
     },
     "dimensions": {
-      "name": {
+      "datetime": {
         "dimensionType": "datetime",
         "primaryKey": [
           "name"

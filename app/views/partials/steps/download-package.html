@@ -69,8 +69,11 @@
       </form>
     </div>
 
-    <div class="col-xs-12 col-sm-6 text-right">
-      <button ng-click="publishDataPackage()" ng-disabled="state.isUploading"
+    <div class="col-xs-12 col-sm-6 text-right"
+         ng-attr-title="{{ login.logged_in ? undefined : 'You need to login in order to upload packages' }}"
+    >
+      <button ng-click="publishDataPackage()"
+              ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
         type="button" class="btn btn-primary btn-lg" id="step4-button-publish">
         <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
       </button>

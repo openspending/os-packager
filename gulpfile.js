@@ -16,11 +16,13 @@ var _ = require('underscore');
 var frontSrcDir = path.join(__dirname, '/app/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
 var frontStylesDir = path.join(frontSrcDir, '/styles');
+var frontAssetsDir = path.join(frontSrcDir, '/assets');
 
 var publicDir = path.join(__dirname, '/app/public');
 var publicScriptsDir = path.join(publicDir, '/');
 var publicStylesDir = path.join(publicDir, '/');
 var publicFontsDir = path.join(publicDir, '/fonts');
+var publicAssetsDir = path.join(publicDir, '/assets');
 
 var nodeModulesDir = path.join(__dirname, '/node_modules');
 
@@ -44,6 +46,7 @@ gulp.task('default', [
   'app.scripts',
   'app.modules',
   'app.styles',
+  'app.assets',
   'vendor.scripts',
   'vendor.styles',
   'vendor.fonts'
@@ -95,8 +98,8 @@ gulp.task('vendor.scripts', function() {
   var files = [
     path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
     path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
-    path.join(nodeModulesDir, '/angular/angular.min.js'),
-    path.join(nodeModulesDir, '/angular-route/angular-route.min.js')
+    path.join(nodeModulesDir, '/angular/angular.js'),
+    path.join(nodeModulesDir, '/angular-route/angular-route.js'),
   ];
   return gulp.src(files)
     .pipe(concat('vendor.js'))
@@ -122,4 +125,12 @@ gulp.task('vendor.fonts', function() {
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicFontsDir));
+});
+
+gulp.task('app.assets', function() {
+  var files = [
+    path.join(frontAssetsDir, '*'),
+  ];
+  return gulp.src(files)
+    .pipe(gulp.dest(publicAssetsDir));
 });

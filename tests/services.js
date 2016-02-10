@@ -257,7 +257,12 @@ describe('Application services', function() {
         name: 'test.csv',
         data: 'Hello,1,test'
       };
-      dataStore.prepareForUpload(file)
+      var options = {
+        name: 'test.csv',
+        owner: '__tests',
+        permission_token: 'testing-token'
+      };
+      dataStore.prepareForUpload(file, options)
         .then(function() {
           assert.property(file, 'uploadUrl');
           assert.property(file, 'uploadParams');

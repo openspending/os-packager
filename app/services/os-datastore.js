@@ -10,9 +10,6 @@ var defaultOptions = {
   conductorUrl: OS_CONDUCTOR+'/datastore/',
   publishUrl: OS_CONDUCTOR+'/hooks/load/api/',
   pollInterval: 3000,
-  apiKey: 'openspending-next',
-  owner: '__tests',
-  name: 'test-datapackage'
 };
 module.exports.defaultOptions = defaultOptions;
 
@@ -242,7 +239,7 @@ function prepareFilesForUpload(files, options) {
   var requestOptions = {
     method: 'POST',
     headers: {
-      'API-Key': options.apiKey
+      'Auth-Token': options.permission_token
     },
     body: JSON.stringify(payload),
     mode: 'cors',

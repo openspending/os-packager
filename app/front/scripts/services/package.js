@@ -3,9 +3,9 @@
   angular.module('Application')
     .factory('PackageService', [
       '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
-      'ApplicationState', 'ApplicationLoader',
+      'ApplicationState', 'ApplicationLoader', 'LoginService',
       function($q, $timeout, _, Services, UtilsService, Configuration,
-        ApplicationState, ApplicationLoader) {
+        ApplicationState, ApplicationLoader, LoginService) {
         var attributes = {};
         var resources = [];
         var schema = null;
@@ -124,6 +124,7 @@
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
+            dataPackage.owner = LoginService.email;
 
             // Create and prepend datapackage.json
             var packageFile = {
@@ -147,7 +148,9 @@
                 Services.datastore.readContents(file)
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {
-                      name: dataPackage.name
+                      permission_token: LoginService.permission_token,
+                      name: dataPackage.name,
+                      owner: dataPackage.owner
                     });
                   })
                   .then(function() {

@@ -13,9 +13,19 @@
   <ul class="main-nav">
     <li class="selected"><a href="#">OS Packager</a></li>
   </ul>
-  <ul class="secondary-nav">
+  <ul class="secondary-nav" ng-cloak>
     <li ng-if="!login.svc.logged_in" class="user"><a ng-click="login.svc.login()">Login / Register</a></li>
-    <li ng-if="login.svc.logged_in" class="user"><a>{{ login.svc.name }}</a></li>
+    <li ng-if="login.svc.logged_in" class="user dropdown">
+      <a ng-click="login.menu_shown = !login.menu_shown">{{ login.svc.name }}</a>
+      <ul class="user-menu"
+          ng-class="{ 'show-menu': login.menu_shown }"
+          ng-style="{'background-image': 'url(' + login.svc.avatar + ')'}">
+        <li class="name">{{ login.svc.name }}</li>
+        <!--<li class="date">User since 25/01/2016</li>-->
+        <!--<li class="packages"><span>8</span> packages on OpenSpending</li>-->
+        <li class="logout"><a ng-click="login.svc.logout()">Logout</a></li>
+      </ul>
+    </li>
     <li class="dropdown"><a href="#">EN</a></li>
   </ul>
 </div>

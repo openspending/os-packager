@@ -17,7 +17,8 @@ nconf.defaults({
   conductor: {
     url: process.env.OS_CONDUCTOR || 'http://s145.okserver.org',
     pollInterval: process.env.POLL_INTERVAL || 3000
-  }
+  },
+  basePath: process.env.OS_PACKAGER_BASE_PATH || ''
 });
 
 module.exports = {

@@ -67,7 +67,7 @@ module.exports.getDataPackageSchema = function(schemaId, useProxy) {
     };
     if (_.isUndefined(useProxy) || !!useProxy) {
       options = {
-        backend: '/proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
+        backend: 'proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
       };
     }
     registry.get(options).then(function(result) {
@@ -84,7 +84,7 @@ module.exports.getDataPackageSchema = function(schemaId, useProxy) {
 
       var url = profile.schema;
       if (_.isUndefined(useProxy) || !!useProxy) {
-        url = '/proxy?url=' + encodeURIComponent(profile.schema);
+        url = 'proxy?url=' + encodeURIComponent(profile.schema);
       }
       fetch(url, options)
         .then(function(res) {

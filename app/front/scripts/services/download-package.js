@@ -77,7 +77,8 @@
           state.uploads = files;
           files.$promise
             .then(function(dataPackage) {
-              state.packagePublicUrl = dataPackage.uploadUrl;
+              var packageName = PackageService.getAttributes().name;
+              state.packagePublicUrl = '/viewer/'+packageName; //dataPackage.uploadUrl;
               state.uploads = null;
             })
             .finally(function() {

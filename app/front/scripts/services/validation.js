@@ -1,6 +1,6 @@
 ;(function(angular) {
 
-  var goodTablesUrl = '/proxy?url=' +
+  var goodTablesUrl = 'proxy?url=' +
     encodeURIComponent('http://goodtables.okfnlabs.org/api/run');
 
   angular.module('Application')

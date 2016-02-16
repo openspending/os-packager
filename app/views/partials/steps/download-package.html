@@ -59,7 +59,7 @@
 
   <div class="row form-group">
     <div class="col-xs-12 col-sm-6">
-      <form action="{{ '/download/' + fileName }}" method="post">
+      <form action="{{ 'download/' + fileName }}" method="post">
         <input type="hidden" name="name" value="{{ fileName }}">
         <input type="hidden" name="mime" value="application/octet-stream">
         <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">

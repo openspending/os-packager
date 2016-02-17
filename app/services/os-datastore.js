@@ -379,7 +379,7 @@ module.exports.publish = function(descriptor, options) {
               descriptor.progress = 1.0;
               resolve(descriptor);
               break;
-            case 'error':
+            case 'fail':
               throw response.error; // Go to .catch()
               break;
             default:

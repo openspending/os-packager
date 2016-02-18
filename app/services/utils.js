@@ -55,7 +55,7 @@ module.exports.isUrl = function(url) {
 module.exports.undecorateProxyUrl = function(urlToUndecorate) {
   var result = url.parse(urlToUndecorate, true);
   if (result && result.pathname) {
-    if ((result.pathname == '/proxy') && result.query && result.query.url) {
+    if ((result.pathname == 'proxy') && result.query && result.query.url) {
       return result.query.url;
     }
   }
@@ -63,7 +63,7 @@ module.exports.undecorateProxyUrl = function(urlToUndecorate) {
 };
 
 module.exports.decorateProxyUrl = function(urlToDecorate) {
-  return '/proxy?url=' + encodeURIComponent(
+  return 'proxy?url=' + encodeURIComponent(
     module.exports.undecorateProxyUrl(urlToDecorate));
 };
 

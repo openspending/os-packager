@@ -140,9 +140,9 @@ describe('Wizard UI', function() {
       assert.equal(dataPackage.name, dataPackageSlug);
       assert.property(dataPackage, 'resources');
       assert.equal(dataPackage.resources.length, 1);
-      assert.property(dataPackage, 'mapping');
-      assert.property(dataPackage.mapping, 'measures');
-      assert.property(dataPackage.mapping, 'dimensions');
+      assert.property(dataPackage, 'model');
+      assert.property(dataPackage.model, 'measures');
+      assert.property(dataPackage.model, 'dimensions');
       done();
     });
   });

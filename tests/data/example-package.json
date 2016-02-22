@@ -33,7 +33,7 @@
       }
     }
   ],
-  "mapping": {
+  "model": {
     "measures": {
       "id": {
         "source": "id",

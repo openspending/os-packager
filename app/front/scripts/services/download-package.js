@@ -39,26 +39,26 @@
           };
 
           // Measures
-          _.each(fiscalDataPackage.mapping.measures, function(mapping, name) {
-            var resource = getResource(mapping.resource);
+          _.each(fiscalDataPackage.model.measures, function(measure, name) {
+            var resource = getResource(measure.resource);
             result.push({
               name: name,
               sources: [{
                 fileName: resource.title || resource.name,
-                fieldName: mapping.source
+                fieldName: measure.source
               }]
             });
           });
 
           // Dimensions
-          _.each(fiscalDataPackage.mapping.dimensions,
+          _.each(fiscalDataPackage.model.dimensions,
             function(dimension, name) {
               var sources = [];
-              _.each(dimension.attributes, function(mapping) {
-                var resource = getResource(mapping.resource);
+              _.each(dimension.attributes, function(dimension) {
+                var resource = getResource(dimension.resource);
                 sources.push({
                   fileName: resource.title || resource.name,
-                  fieldName: mapping.source
+                  fieldName: dimension.source
                 });
               });
               result.push({

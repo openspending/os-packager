@@ -151,8 +151,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     return result;
   });
 
-  // Mappings
-  result.mapping = {
+  // Model
+  result.model = {
     measures: {},
     dimensions: {}
   };
@@ -185,7 +185,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   };
 
   var allConcepts = function() {
-    return _.keys(result.mapping.dimensions).concat(_.keys(result.mapping.measures));
+    return _.keys(result.model.dimensions).concat(_.keys(result.model.measures));
   }
 
 
@@ -211,7 +211,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
           mappingName = utils.createUniqueName(
             utils.convertToSlug(field.title || field.name),
               allConcepts());
-          result.mapping.measures[mappingName] = createMappingFromField(field);
+          result.model.measures[mappingName] = createMappingFromField(field);
         });
         break;
       }
@@ -228,7 +228,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
             createMappingFromField(field)
           ]);
         });
-        result.mapping.dimensions[mappingName] = _.extend(optionalAttributes, {
+        result.model.dimensions[mappingName] = _.extend(optionalAttributes, {
           dimensionType: concept.dimensionType,
           primaryKey: _.map(attributes, _.first),
           attributes: _.object(attributes)

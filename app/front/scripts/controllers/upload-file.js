@@ -5,16 +5,22 @@
       '$scope', '_', 'UploadFileService', 'ApplicationLoader',
       function($scope, _, UploadFileService, ApplicationLoader) {
         ApplicationLoader.then(function() {
-          $scope.state = UploadFileService.getState();
 
-          if ($scope.state.isUrl) {
-            $scope.url = $scope.state.url;
+          function reloadState() {
+            $scope.state = UploadFileService.getState();
+
+            if ($scope.state.isUrl) {
+              $scope.url = $scope.state.url;
+            }
+            if ($scope.state.isFile) {
+              $scope.file = $scope.state.file.name;
+            }
+            $scope.isFileSelected = $scope.state.isFile;
+            $scope.isUrlSelected = $scope.state.isUrl;
           }
-          if ($scope.state.isFile) {
-            $scope.file = $scope.state.file.name;
-          }
-          $scope.isFileSelected = $scope.state.isFile;
-          $scope.isUrlSelected = $scope.state.isUrl;
+          reloadState();
+
+          UploadFileService.onReset(reloadState);
 
           $scope.$watch('url', function(newValue, oldValue) {
             if (newValue !== oldValue) {

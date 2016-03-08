@@ -92,6 +92,8 @@ module.exports.getCsvSchema = function(urlOrFile) {
         var headers = _.first(results.data);
         var rows = _.rest(results.data);
         var schema = jts.infer(headers, rows);
+        var delimiter = results.meta.delimiter;
+        var linebreak = results.meta.linebreak;
         resolve({
           raw: csv.unparse(results.data, {
             quotes: true,
@@ -100,7 +102,11 @@ module.exports.getCsvSchema = function(urlOrFile) {
           }),
           headers: headers,
           rows: rows,
-          schema: schema
+          schema: schema,
+          dialect: {
+            delimiter: delimiter,
+            linebreak: linebreak
+          }
         });
       }
     };

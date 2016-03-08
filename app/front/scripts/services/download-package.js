@@ -3,9 +3,9 @@
   angular.module('Application')
     .factory('DownloadPackageService', [
       '$q', '_', 'PackageService', 'ApplicationState', 'ApplicationLoader',
-      'StepsService', 'StorageService',
+      'StepsService', 'StorageService', 'LoginService',
       function($q, _, PackageService, ApplicationState, ApplicationLoader,
-        StepsService, StorageService) {
+        StepsService, StorageService, LoginService) {
         var result = {};
 
         var state = null;
@@ -80,7 +80,8 @@
               StorageService.clearApplicationState()
                   .then(function() {
                     var packageName = PackageService.getAttributes().name;
-                    state.packagePublicUrl = '/viewer/'+packageName; //dataPackage.uploadUrl;
+                    var owner = LoginService.email;
+                    state.packagePublicUrl = '/viewer/'+owner+':'+packageName; //dataPackage.uploadUrl;
                   });
               state.uploads = null;
             })

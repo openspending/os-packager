@@ -100,8 +100,12 @@
             }).then(function() {}); // Force execute
           },
           saveApplicationState: function() {
-            var state = prepareValueForSaving(deepCloneValue(ApplicationState));
+            var state = deepCloneValue(prepareValueForSaving(ApplicationState));
             return result.set(Configuration.storage.key, state);
+          },
+          clearApplicationState: function() {
+            for (var x in ApplicationState) if (ApplicationState.hasOwnProperty(x)) delete ApplicationState[x];
+            return result.set(Configuration.storage.key, null);
           },
           restoreApplicationState: function() {
             return $q(function(resolve) {

@@ -128,7 +128,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (resource.source.url) {
       result.url = resource.source.url;
     } else {
-      result.path = resource.source.fileName;
+      result.path = resource.name+'.csv';
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;

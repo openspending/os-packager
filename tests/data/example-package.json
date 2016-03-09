@@ -30,6 +30,11 @@
             "format": "default"
           }
         ]
+      },
+      "dialect": {
+        "csvddfVersion": 1,
+        "delimiter": ",",
+        "lineTerminator": "\n"
       }
     }
   ],

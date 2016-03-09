@@ -36,6 +36,11 @@ module.exports.createResourceFromSource = function(urlOrFile) {
             rows: data.rows,
             raw: data.raw
           },
+          dialect: {
+            csvddfVersion: 1.0,
+            delimiter: data.dialect.delimiter,
+            lineTerminator: data.dialect.linebreak
+          },
           fields: _.map(data.schema.fields, function(field, index) {
             field = _.clone(field);
             field.concept = (field.concept || '') + '';
@@ -135,6 +140,9 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     }
     if (resource.source.size) {
       result.bytes = resource.source.size;
+    }
+    if (resource.dialect) {
+      result.dialect = _.clone(resource.dialect);
     }
     result.schema = {
       fields: _.map(resource.fields, function(field) {

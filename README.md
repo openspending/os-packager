@@ -1,4 +1,7 @@
 # OS Packager
+
+[![Gitter](https://img.shields.io/gitter/room/openspending/chat.svg)](https://gitter.im/openspending/chat)
+
 App to make Fiscal Data Packages from a CSV of Fiscal Data.
 
 ## Issues

@@ -3,9 +3,14 @@
 var path = require('path');
 var nconf = require('nconf');
 
+const DEFAULT_HOST = 'http://next.openspending.org';
+const DEFAULT_BASE_PATH = '';
+
 nconf.file({
   file: path.join(__dirname, '/../../settings.json')
 });
+
+var conductorHost = process.env.OS_PACKAGER_CONDUCTOR_HOST || DEFAULT_HOST;
 
 // this is the object that you want to override in your own local config
 nconf.defaults({
@@ -15,10 +20,10 @@ nconf.defaults({
     port: process.env.PORT || 5000
   },
   conductor: {
-    url: process.env.OS_CONDUCTOR || 'http://s145.okserver.org',
+    url: conductorHost,
     pollInterval: process.env.POLL_INTERVAL || 3000
   },
-  basePath: process.env.OS_PACKAGER_BASE_PATH || ''
+  basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH
 });
 
 module.exports = {

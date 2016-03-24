@@ -10,7 +10,7 @@ var dataPackageTitle = 'Test Перевірка';
 var dataPackageSlug = 'test-perevirka';
 
 describe('Wizard UI', function() {
-  this.timeout(20000);
+  this.timeout(60000);
 
   before(utils.app.start);
   after(utils.app.shutdown);
@@ -18,7 +18,7 @@ describe('Wizard UI', function() {
   it('Should open app page', function(done) {
     var browser = utils.app.browser;
     browser.visit('/', function() {
-      browser.waitForDigest().then(function() {
+      browser.waitForDigest('#step1-wrapper').then(function() {
         assert.ok(browser.success);
         done();
       });
@@ -34,12 +34,12 @@ describe('Wizard UI', function() {
     assert(browser.evaluate('$("#step1-input-file").val()') == '',
       'File input should be empty on page load');
 
-    browser.fill('step1-resource-url', exampleResourceUrl);
-    browser.waitForDigest().then(function() {
+    browser.fill('#step1-input-url', exampleResourceUrl);
+    browser.waitForDigest('#step1-button-next').then(function() {
       assert(browser.query('#step1-button-next'),
         'Next button should be available');
       browser.click('#step1-button-next');
-      browser.waitForDigest().then(function() {
+      browser.waitForDigest('#step2-wrapper').then(function() {
         assert(browser.query('#step2-wrapper'), 'It should be step #2');
         done();
       });
@@ -55,7 +55,7 @@ describe('Wizard UI', function() {
     browser.evaluate('$("#step2-concept-1")' +
       '.val("string:measures.amount").change();');
 
-    browser.waitForDigest().then(function() {
+    browser.waitForDigest('#step2-button-next').then(function() {
       assert(browser.query('#step2-button-next'),
         'Next button should be available');
 
@@ -74,7 +74,7 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step3-wrapper'), 'It should be step #3');
     browser.fill('title', dataPackageTitle);
-    browser.waitForDigest()
+    browser.waitForDigest('#step3-location-country[disabled]')
       .then(function() {
         // Initially Region is enabled and Country and City is disabled
         assert(!browser.query('#step3-location-region[disabled]'),
@@ -87,7 +87,7 @@ describe('Wizard UI', function() {
         // Fill Region
         browser.evaluate('$("#step3-location-region")' +
           '.val("string:eu").change();');
-        return browser.waitForDigest();
+        return browser.waitForDigest('#step3-location-city[disabled]');
       })
       .then(function() {
         // When region is filled in, Country should be enabled and City
@@ -102,7 +102,7 @@ describe('Wizard UI', function() {
         // Fill Country
         browser.evaluate('$("#step3-location-country")' +
           '.val("string:GB").change();');
-        return browser.waitForDigest(10);
+        return browser.waitForDigest('#step3-location-region[disabled]');
       })
       .then(function() {
         // And when Region and Country are filled in, all three fields should
@@ -118,7 +118,7 @@ describe('Wizard UI', function() {
         assert(browser.query('#step3-button-next'),
           'Next button should be available');
         browser.click('#step3-button-next');
-        return browser.waitForDigest();
+        return browser.waitForDigest('#step4-wrapper');
       })
       .then(function() {
         assert(browser.query('#step4-wrapper'), 'It should be step #4');
@@ -129,7 +129,7 @@ describe('Wizard UI', function() {
   it('Should allow to download package', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
-    browser.waitForDigest().then(function() {
+    browser.waitForDigest('#step4-button-download').then(function() {
       assert(browser.query('#step4-button-download'),
         'Download button should be available');
       assert(browser.query('#step4-button-publish'),
@@ -140,9 +140,9 @@ describe('Wizard UI', function() {
       assert.equal(dataPackage.name, dataPackageSlug);
       assert.property(dataPackage, 'resources');
       assert.equal(dataPackage.resources.length, 1);
-      assert.property(dataPackage, 'mapping');
-      assert.property(dataPackage.mapping, 'measures');
-      assert.property(dataPackage.mapping, 'dimensions');
+      assert.property(dataPackage, 'model');
+      assert.property(dataPackage.model, 'measures');
+      assert.property(dataPackage.model, 'dimensions');
       done();
     });
   });
@@ -151,7 +151,7 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
     browser.evaluate('$("#steps-nav li a:eq(0)").click();');
-    browser.waitForDigest().then(function() {
+    browser.waitForDigest('#step1-wrapper').then(function() {
       assert(browser.query('#step1-wrapper'), 'It should be step #1');
       done();
     });

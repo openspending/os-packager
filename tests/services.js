@@ -51,9 +51,9 @@ describe('Application services', function() {
         ['/skip/перевірка', 'perevirka'],
 
         // Proxy
-        ['/proxy?url=http%3A%2F%2Fexample.com%2Fexample.csv', 'example'],
-        ['/proxy?url=http%3A%2F%2Fexample.com%2Fskip%2Fexample.csv', 'example'],
-        ['/proxy?url=%2Fskip%2Fexample.csv', 'example']
+        ['proxy?url=http%3A%2F%2Fexample.com%2Fexample.csv', 'example'],
+        ['proxy?url=http%3A%2F%2Fexample.com%2Fskip%2Fexample.csv', 'example'],
+        ['proxy?url=%2Fskip%2Fexample.csv', 'example']
       ];
       _.each(tests, function(test) {
         assert.equal(utils.createNameFromUrl(test[0]), test[1]);
@@ -257,7 +257,12 @@ describe('Application services', function() {
         name: 'test.csv',
         data: 'Hello,1,test'
       };
-      dataStore.prepareForUpload(file)
+      var options = {
+        name: 'test.csv',
+        owner: '__tests',
+        permission_token: 'testing-token'
+      };
+      dataStore.prepareForUpload(file, options)
         .then(function() {
           assert.property(file, 'uploadUrl');
           assert.property(file, 'uploadParams');

@@ -2,8 +2,8 @@
 
   angular.module('Application')
     .controller('StepsController', [
-      '$scope', 'StepsService', 'ApplicationLoader',
-      function($scope, StepsService, ApplicationLoader) {
+      '$scope', 'StepsService', 'ApplicationLoader', 'StorageService',
+      function($scope, StepsService, ApplicationLoader, StorageService) {
         ApplicationLoader.then(function() {
           $scope.steps = StepsService.getSteps();
           $scope.currentStep = StepsService.getCurrentStep();
@@ -19,6 +19,14 @@
 
           $scope.resetFromCurrentStep = function() {
             StepsService.resetStepsFrom($scope.currentStep);
+          };
+
+          $scope.restartFlow = function() {
+            StorageService.clearApplicationState()
+                .then(function() {
+                  $scope.currentStep = StepsService.goToStep($scope.steps[0]);
+                  StepsService.resetStepsFrom($scope.currentStep);
+                });
           };
 
           $scope.$on('$routeChangeSuccess', function(event, route) {

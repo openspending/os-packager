@@ -3,9 +3,9 @@
   angular.module('Application')
     .factory('DownloadPackageService', [
       '$q', '_', 'PackageService', 'ApplicationState', 'ApplicationLoader',
-      'StepsService',
+      'StepsService', 'StorageService', 'LoginService',
       function($q, _, PackageService, ApplicationState, ApplicationLoader,
-        StepsService) {
+        StepsService, StorageService, LoginService) {
         var result = {};
 
         var state = null;
@@ -39,26 +39,26 @@
           };
 
           // Measures
-          _.each(fiscalDataPackage.mapping.measures, function(mapping, name) {
-            var resource = getResource(mapping.resource);
+          _.each(fiscalDataPackage.model.measures, function(measure, name) {
+            var resource = getResource(measure.resource);
             result.push({
               name: name,
               sources: [{
                 fileName: resource.title || resource.name,
-                fieldName: mapping.source
+                fieldName: measure.source
               }]
             });
           });
 
           // Dimensions
-          _.each(fiscalDataPackage.mapping.dimensions,
+          _.each(fiscalDataPackage.model.dimensions,
             function(dimension, name) {
               var sources = [];
-              _.each(dimension.attributes, function(mapping) {
-                var resource = getResource(mapping.resource);
+              _.each(dimension.attributes, function(dimension) {
+                var resource = getResource(dimension.resource);
                 sources.push({
                   fileName: resource.title || resource.name,
-                  fieldName: mapping.source
+                  fieldName: dimension.source
                 });
               });
               result.push({
@@ -77,7 +77,12 @@
           state.uploads = files;
           files.$promise
             .then(function(dataPackage) {
-              state.packagePublicUrl = dataPackage.uploadUrl;
+              StorageService.clearApplicationState()
+                  .then(function() {
+                    var packageName = PackageService.getAttributes().name;
+                    var owner = LoginService.email;
+                    state.packagePublicUrl = '/viewer/'+owner+':'+packageName; //dataPackage.uploadUrl;
+                  });
               state.uploads = null;
             })
             .finally(function() {

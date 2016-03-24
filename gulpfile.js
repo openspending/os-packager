@@ -20,7 +20,7 @@ var frontAssetsDir = path.join(frontSrcDir, '/assets');
 
 var publicDir = path.join(__dirname, '/app/public');
 var publicScriptsDir = path.join(publicDir, '/');
-var publicStylesDir = path.join(publicDir, '/');
+var publicStylesDir = path.join(publicDir, '/styles');
 var publicFontsDir = path.join(publicDir, '/fonts');
 var publicAssetsDir = path.join(publicDir, '/assets');
 

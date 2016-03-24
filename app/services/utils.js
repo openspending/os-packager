@@ -55,7 +55,7 @@ module.exports.isUrl = function(url) {
 module.exports.undecorateProxyUrl = function(urlToUndecorate) {
   var result = url.parse(urlToUndecorate, true);
   if (result && result.pathname) {
-    if ((result.pathname == '/proxy') && result.query && result.query.url) {
+    if ((result.pathname == 'proxy') && result.query && result.query.url) {
       return result.query.url;
     }
   }
@@ -63,7 +63,7 @@ module.exports.undecorateProxyUrl = function(urlToUndecorate) {
 };
 
 module.exports.decorateProxyUrl = function(urlToDecorate) {
-  return '/proxy?url=' + encodeURIComponent(
+  return 'proxy?url=' + encodeURIComponent(
     module.exports.undecorateProxyUrl(urlToDecorate));
 };
 
@@ -92,6 +92,8 @@ module.exports.getCsvSchema = function(urlOrFile) {
         var headers = _.first(results.data);
         var rows = _.rest(results.data);
         var schema = jts.infer(headers, rows);
+        var delimiter = results.meta.delimiter;
+        var linebreak = results.meta.linebreak;
         resolve({
           raw: csv.unparse(results.data, {
             quotes: true,
@@ -100,7 +102,11 @@ module.exports.getCsvSchema = function(urlOrFile) {
           }),
           headers: headers,
           rows: rows,
-          schema: schema
+          schema: schema,
+          dialect: {
+            delimiter: delimiter,
+            linebreak: linebreak
+          }
         });
       }
     };

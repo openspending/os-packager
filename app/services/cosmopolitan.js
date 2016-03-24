@@ -21,7 +21,7 @@ function getItemsFromSource(source, useProxy) {
 
   var url = cosmopolitanApiUrl;
   if (useProxy) {
-    url = '/proxy?url=' + encodeURIComponent(url);
+    url = 'proxy?url=' + encodeURIComponent(url);
   }
 
   var options = {
@@ -37,7 +37,7 @@ function getItemsFromSource(source, useProxy) {
       var allResults = [];
       var fetchNext = function(url, options) {
         if (useProxy) {
-          url = '/proxy?url=' + encodeURIComponent(url);
+          url = 'proxy?url=' + encodeURIComponent(url);
         }
 
         return fetch(url, options).then(processFetchResponse)

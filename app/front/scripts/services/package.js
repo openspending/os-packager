@@ -3,9 +3,9 @@
   angular.module('Application')
     .factory('PackageService', [
       '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
-      'ApplicationState', 'ApplicationLoader',
+      'ApplicationState', 'ApplicationLoader', 'LoginService',
       function($q, $timeout, _, Services, UtilsService, Configuration,
-        ApplicationState, ApplicationLoader) {
+        ApplicationState, ApplicationLoader, LoginService) {
         var attributes = {};
         var resources = [];
         var schema = null;
@@ -104,7 +104,7 @@
             var files = _.map(resources, function(resource) {
               var url = resource.source.url;
               if (_.isString(url) && (url.length > 0)) {
-                url = '/proxy?url=' + encodeURIComponent(url);
+                url = 'proxy?url=' + encodeURIComponent(url);
               }
               return {
                 name: resource.name + '.csv',
@@ -124,6 +124,7 @@
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
+            dataPackage.owner = LoginService.email;
 
             // Create and prepend datapackage.json
             var packageFile = {
@@ -147,7 +148,9 @@
                 Services.datastore.readContents(file)
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {
-                      name: dataPackage.name
+                      permission_token: LoginService.permission_token,
+                      name: dataPackage.name,
+                      owner: dataPackage.owner
                     });
                   })
                   .then(function() {

@@ -36,6 +36,11 @@ module.exports.createResourceFromSource = function(urlOrFile) {
             rows: data.rows,
             raw: data.raw
           },
+          dialect: {
+            csvddfVersion: 1.0,
+            delimiter: data.dialect.delimiter,
+            lineTerminator: data.dialect.linebreak
+          },
           fields: _.map(data.schema.fields, function(field, index) {
             field = _.clone(field);
             field.concept = (field.concept || '') + '';
@@ -67,7 +72,7 @@ module.exports.getDataPackageSchema = function(schemaId, useProxy) {
     };
     if (_.isUndefined(useProxy) || !!useProxy) {
       options = {
-        backend: '/proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
+        backend: 'proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
       };
     }
     registry.get(options).then(function(result) {
@@ -84,7 +89,7 @@ module.exports.getDataPackageSchema = function(schemaId, useProxy) {
 
       var url = profile.schema;
       if (_.isUndefined(useProxy) || !!useProxy) {
-        url = '/proxy?url=' + encodeURIComponent(profile.schema);
+        url = 'proxy?url=' + encodeURIComponent(profile.schema);
       }
       fetch(url, options)
         .then(function(res) {
@@ -128,13 +133,16 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (resource.source.url) {
       result.url = resource.source.url;
     } else {
-      result.path = resource.source.fileName;
+      result.path = resource.name+'.csv';
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;
     }
     if (resource.source.size) {
       result.bytes = resource.source.size;
+    }
+    if (resource.dialect) {
+      result.dialect = _.clone(resource.dialect);
     }
     result.schema = {
       fields: _.map(resource.fields, function(field) {
@@ -151,8 +159,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     return result;
   });
 
-  // Mappings
-  result.mapping = {
+  // Model
+  result.model = {
     measures: {},
     dimensions: {}
   };
@@ -185,7 +193,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   };
 
   var allConcepts = function() {
-    return _.keys(result.mapping.dimensions).concat(_.keys(result.mapping.measures));
+    return _.keys(result.model.dimensions).concat(_.keys(result.model.measures));
   }
 
 
@@ -211,7 +219,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
           mappingName = utils.createUniqueName(
             utils.convertToSlug(field.title || field.name),
               allConcepts());
-          result.mapping.measures[mappingName] = createMappingFromField(field);
+          result.model.measures[mappingName] = createMappingFromField(field);
         });
         break;
       }
@@ -228,7 +236,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
             createMappingFromField(field)
           ]);
         });
-        result.mapping.dimensions[mappingName] = _.extend(optionalAttributes, {
+        result.model.dimensions[mappingName] = _.extend(optionalAttributes, {
           dimensionType: concept.dimensionType,
           primaryKey: _.map(attributes, _.first),
           attributes: _.object(attributes)

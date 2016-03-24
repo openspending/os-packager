@@ -4,6 +4,7 @@ module.exports.main = function(req, res) {
   var config = req.app.get('config');
   res.render('pages/main.html', {
     conductor: config.get('conductor'),
+    basePath: config.get('basePath'),
     title: 'Create a Fiscal Data Package'
   });
 };

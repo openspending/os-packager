@@ -9,23 +9,23 @@ var exports = module.exports;
 exports.app = null;
 exports.browser = null;
 
-function waitForDigest(iterationCount) {
+function waitForDigest(element) {
   var browser = this;
 
-  iterationCount = parseFloat(iterationCount);
-  if (!isFinite(iterationCount)) {
-    iterationCount = 3;
-  }
+  var wait = 500;
+  var iterations = 40;
 
   function waiter(resolve) {
-    browser.wait(10000, function() {
-      iterationCount -= 1;
-      if (iterationCount <= 0) {
+    browser.wait(wait,function() {
+      iterations -= 1;
+      if (iterations <= 0) {
+        resolve();
+      } else if (element && browser.query(element)) {
         resolve();
       } else {
         setTimeout(function() {
           waiter(resolve);
-        }, 500);
+        }, wait);
       }
     });
   }

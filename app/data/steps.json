@@ -5,7 +5,7 @@
     "title": "Provide your data",
     "route": "/",
     "controller": "UploadFileController",
-    "templateUrl": "/templates/steps/upload-file.html"
+    "templateUrl": "templates/steps/upload-file.html"
   },
   {
     "id": "describe-data",
@@ -13,7 +13,7 @@
     "title": "Describe your data",
     "route": "/describe-data",
     "controller": "DescribeDataController",
-    "templateUrl": "/templates/steps/describe-data.html"
+    "templateUrl": "templates/steps/describe-data.html"
   },
   {
     "id": "metadata",
@@ -21,7 +21,7 @@
     "title": "Provide metadata",
     "route": "/provide-metadata",
     "controller": "ProvideMetadataController",
-    "templateUrl": "/templates/steps/provide-metadata.html"
+    "templateUrl": "templates/steps/provide-metadata.html"
   },
   {
     "id": "download",
@@ -29,6 +29,6 @@
     "title": "Confirm and download",
     "route": "/download-package",
     "controller": "DownloadPackageController",
-    "templateUrl": "/templates/steps/download-package.html"
+    "templateUrl": "templates/steps/download-package.html"
   }
 ]

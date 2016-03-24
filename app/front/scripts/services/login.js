@@ -6,12 +6,15 @@
       function(authenticate, authorize, $window, $rootScope) {
           var that = this;
 
-          this.logged_in = false;
-          this.name = null;
-          this.email = null;
-          this.avatar = null;
-          this.permissions = null;
-          this.permission_token = null;
+          this.reset = function() {
+              that.logged_in = false;
+              that.name = null;
+              that.email = null;
+              that.avatar = null;
+              that.permissions = null;
+              that.permission_token = null;
+          };
+          this.reset();
 
           var token = null;
           var registeredEvent = false;
@@ -55,6 +58,15 @@
               }
               attempting = true;
               authenticate.login( href, '_self' );
+          };
+
+          this.logout = function() {
+              if ( !that.logged_in ) {
+                  return;
+              }
+              that.reset();
+
+              authenticate.logout();
           };
 
           return this;

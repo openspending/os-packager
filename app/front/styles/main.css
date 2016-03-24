@@ -182,3 +182,15 @@ td.x-strong-highlight {
 .c3-tooltip {
   table-layout: auto !important;
 }
+
+span.restart {
+  display: block;
+  width: 100%;
+  margin: 4px;
+  text-align: center;
+}
+
+span.restart:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

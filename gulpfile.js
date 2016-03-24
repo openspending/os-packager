@@ -11,6 +11,7 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var resolve = require('resolve');
+var less = require('gulp-less');
 var _ = require('underscore');
 
 var frontSrcDir = path.join(__dirname, '/app/front');
@@ -47,6 +48,7 @@ gulp.task('default', [
   'app.modules',
   'app.styles',
   'app.assets',
+  'app.fonts',
   'vendor.scripts',
   'vendor.styles',
   'vendor.fonts'
@@ -85,12 +87,15 @@ gulp.task('app.modules', function() {
 
 gulp.task('app.styles', function() {
   var files = [
-    path.join(frontStylesDir, '/main.css')
+    path.join(frontStylesDir, '/styles.less')
   ];
   return gulp.src(files)
+    .pipe(sourcemaps.init())
+    .pipe(less())
     .pipe(prefixer({browsers: ['last 4 versions']}))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('app.css'))
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest(publicStylesDir));
 });
 
@@ -127,9 +132,19 @@ gulp.task('vendor.fonts', function() {
     .pipe(gulp.dest(publicFontsDir));
 });
 
+gulp.task('app.fonts', function() {
+  var files = [
+    path.join(frontAssetsDir, '/fonts/*')
+  ];
+  return gulp.src(files)
+    .pipe(gulp.dest(publicFontsDir));
+});
+
 gulp.task('app.assets', function() {
   var files = [
-    path.join(frontAssetsDir, '*'),
+    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/os.svg'),
+    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
+    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/ospackager.svg'),
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicAssetsDir));

@@ -9,7 +9,7 @@
   <div>
     <button ng-repeat="possibility in possibilities" type="button"
       ng-disabled="!possibility.isAvailable"
-      ng-class="{'btn-default': possibility.id != state.selectedPossibility, 'btn-success': possibility.id == state.selectedPossibility}"
+      ng-class="{'btn-default': possibility.id != state.selectedPossibility, 'btn-primary': possibility.id == state.selectedPossibility}"
       ng-click="onSelectPossibility(possibility)"
       class="btn btn-block">{{ possibility.name }}</button>
   </div>

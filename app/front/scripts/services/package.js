@@ -124,7 +124,8 @@
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
-            dataPackage.owner = LoginService.email;
+            dataPackage.owner = LoginService.userid;
+            dataPackage.author = LoginService.name + ' <' + LoginService.email + '>';
 
             // Create and prepend datapackage.json
             var packageFile = {

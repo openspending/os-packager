@@ -9,6 +9,7 @@
           this.reset = function() {
               that.logged_in = false;
               that.name = null;
+              that.userid = null;
               that.email = null;
               that.avatar = null;
               that.permissions = null;
@@ -31,6 +32,7 @@
                   that.name = response.profile.name;
                   that.email = response.profile.email;
                   that.avatar = response.profile.avatar_url;
+                  that.userid = response.profile.idhash;
 
                   var perm_check = authorize.check(token, 'os.datastore');
                   perm_check.then(function(permission_data) {

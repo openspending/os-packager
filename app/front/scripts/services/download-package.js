@@ -80,8 +80,8 @@
               StorageService.clearApplicationState()
                   .then(function() {
                     var packageName = PackageService.getAttributes().name;
-                    var owner = LoginService.email;
-                    state.packagePublicUrl = '/viewer/'+owner+':'+packageName; //dataPackage.uploadUrl;
+                    var owner = LoginService.userid;
+                    state.packagePublicUrl = '/viewer/'+owner+':'+packageName;
                   });
               state.uploads = null;
             })

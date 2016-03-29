@@ -5,7 +5,7 @@ var crypto = require('crypto');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
-var OS_CONDUCTOR = process.env.OS_CONDUCTOR || 'http://s145.okserver.org';
+var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST || 'http://next.openspending.org';
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR+'/datastore/',
   publishUrl: OS_CONDUCTOR+'/hooks/load/api/',
@@ -218,7 +218,8 @@ function prepareFilesForUpload(files, options) {
   var payload = {
     metadata: {
       owner: options.owner,
-      name: options.name
+      name: options.name,
+      author: options.name
     },
     filedata: _.chain(files)
       .map(function(item) {

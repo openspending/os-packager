@@ -78,11 +78,12 @@
           files.$promise
             .then(function(dataPackage) {
               StorageService.clearApplicationState()
-                  .then(function() {
-                    var packageName = PackageService.getAttributes().name;
-                    var owner = LoginService.email;
-                    state.packagePublicUrl = '/viewer/'+owner+':'+packageName; //dataPackage.uploadUrl;
-                  });
+                .then(function() {
+                  var packageName = PackageService.getAttributes().name;
+                  var owner = LoginService.userId;
+                  state.packagePublicUrl = '/viewer/' + owner + ':' +
+                    packageName;
+                });
               state.uploads = null;
             })
             .finally(function() {

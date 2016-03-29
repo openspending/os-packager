@@ -6,33 +6,35 @@
       function(authenticate, authorize, $window) {
         var that = this;
 
-        this.reset = function() {
-          that.isLoggedIn = false;
-          that.name = null;
-          that.email = null;
-          that.avatar = null;
-          that.permissions = null;
-          that.permissionToken = null;
-        };
-        this.reset();
+          this.reset = function() {
+            that.isLoggedIn = false;
+            that.name = null;
+            that.userId = null;
+            that.email = null;
+            that.avatar = null;
+            that.permissions = null;
+            that.permissionToken = null;
+          };
+          this.reset();
 
         var token = null;
         var isEventRegistered = false;
         var attempting = false;
         var href = null;
 
-        this.check = function() {
-          var next = $window.location.href;
-          authenticate.check(next)
-            .then(function(response) {
-              attempting = false;
-              token = response.token;
-              that.isLoggedIn = true;
-              that.name = response.profile.name;
-              that.email = response.profile.email;
-              // jscs:disable
-              that.avatar = response.profile.avatar_url;
-              // jscs:enable
+          this.check = function() {
+              var next = $window.location.href;
+              var check = authenticate.check(next);
+              check.then(function(response) {
+                attempting = false;
+                token = response.token;
+                that.isLoggedIn = true;
+                that.name = response.profile.name;
+                that.email = response.profile.email;
+                // jscs:disable
+                that.avatar = response.profile.avatar_url;
+                // jscs:enable
+                that.userId = response.profile.idhash;
 
               authorize.check(token, 'os.datastore')
                 .then(function(permissionData) {

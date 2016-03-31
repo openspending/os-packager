@@ -15,15 +15,7 @@
 <body ng-app="Application">
   {% include "partials/header.html" %}
 
-  <!-- page content start -->
-  <div class="jumbotron jumbotron-inverse">
-    <div class="container">
-      <h1>{% block title %}{{ title }}{% endblock %}</h1>
-      <p>{% block subtitle %}{% endblock %}</p>
-    </div>
-  </div>
-
-  <div class="container-fluid x-page-container">
+  <div class="x-page-container">
   {% block content %}{% endblock %}
   </div>
 

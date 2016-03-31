@@ -96,7 +96,7 @@
     </div>
   </div>
 
-  <div ng-if="!state.status" class="alert alert-info">
+  <div ng-if="!state.status" class="alert alert-default">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     You should map at least an <b>Amount</b> and a <b>Date / Time</b> to continue.
   </div>
@@ -108,7 +108,7 @@
 
   <div ng-if="state.status" class="row form-group">
     <div class="col-xs-12">
-      <button id="step2-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step2-button-next" ng-click="goToNextStep()" type="button" class="btn btn-inverse btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>
@@ -145,11 +145,6 @@
       </div>
     </div>
   </div>
-</div>
-<div class="col-sm-3 hidden-xs">
-{% endraw %}
-  {% include "partials/preview-panel.html" %}
-{% raw %}
 </div>
 </section>
 {% endraw %}

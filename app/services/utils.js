@@ -304,6 +304,7 @@ module.exports.availablePossibilities = (function() {
       isAvailable: false,
       concepts: ['measures.amount'],
       graph: 'pie',
+      icon: 'os-icon os-icon-piechart',
       update: updateByConcepts
     },
     {
@@ -311,6 +312,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Time series',
       isAvailable: false,
       graph: 'lines',
+      icon: 'os-icon os-icon-linechart',
       concepts: ['measures.amount', 'dimensions.datetime'],
       update: updateByConcepts
     },
@@ -319,6 +321,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Treemap',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-treemap',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -327,6 +330,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Classification explorer',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-table',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -335,6 +339,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Multiple dimension agg',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-layers',
       concepts: ['measures.amount'],
       update: function(resources) {
         updateByConcepts.call(this, resources);

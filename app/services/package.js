@@ -46,8 +46,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
             field.concept = (field.concept || '') + '';
             field.inferredType = field.type;
             field.title = utils.convertToTitle(field.name);
-            field.allowedTypes = utils.getAllowedTypesForValues(
-              dataColumns[index], field.inferredType);
+            field.allowedTypes = utils.availableDataTypes;
             field.allowedConcepts = utils.getAllowedConcepts(
               field.allowedTypes);
             return field;

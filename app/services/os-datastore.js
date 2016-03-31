@@ -302,7 +302,7 @@ module.exports.readContents = function(descriptor, options) {
     result = readFileBytes(descriptor.file, options);
   } else {
     var data = descriptor.data || '';
-    if (_.isObject(descriptor.file)) {
+    if (_.isObject(descriptor.file) && !(descriptor.file.data instanceof ArrayBuffer)) {
       data = descriptor.file.data || '';
     }
     if (!_.isString(data) && _.isObject(data)) {

@@ -95,12 +95,13 @@ module.exports.getCsvSchema = function(urlOrFile) {
         var schema = jts.infer(headers, rows);
         var delimiter = results.meta.delimiter;
         var linebreak = results.meta.linebreak;
+        var raw = csv.unparse(results.data, {
+          quotes: true,
+          delimiter: ',',
+          newline: '\r\n'
+        });
         resolve({
-          raw: csv.unparse(results.data, {
-            quotes: true,
-            delimiter: ',',
-            newline: '\r\n'
-          }),
+          raw: raw,
           headers: headers,
           rows: rows,
           schema: schema,

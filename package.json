@@ -43,7 +43,7 @@
     "datapackage-validate": "git+https://github.com/okfn/datapackage-validate.git",
     "express": "^4.13.3",
     "font-awesome": "^4.4.0",
-    "goodtables": "git+https://github.com/okfn/goodtables-js.git",
+    "goodtables": "git+https://github.com/akariv/goodtables-js.git",
     "inflected": "^1.1.6",
     "isomorphic-fetch": "^2.2.0",
     "js-polyfills": "^0.1.12",

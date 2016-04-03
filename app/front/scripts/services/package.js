@@ -67,7 +67,6 @@
                   });
                 })
                 .then(function(fileOrUrl) {
-                  fileDescriptor = fileOrUrl;
                   return utils.fileDescriptorToBlob(fileOrUrl);
                 })
                 .then(function(fileOrUrl) {
@@ -75,6 +74,7 @@
                   if (_.isString(url)) {
                     url = UtilsService.decorateProxyUrl(url);
                   }
+                  fileDescriptor = fileOrUrl;
                   return fiscalDataPackage.createResourceFromSource(url);
                 })
                 .then(function(resource) {

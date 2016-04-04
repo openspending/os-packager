@@ -50,29 +50,18 @@ textarea.resize-both {
   margin: 0;
 }
 
-.margin-right-4 {
-  margin-right: 4px;
+.margin-side-x(@side, @multiplier: 5) when (@multiplier > 0) {
+  @n: @multiplier * 4;
+  .margin-@{side}-@{n} {
+    margin-@{side}: unit(@n, px);
+  }
+  .margin-side-x(@side, (@multiplier - 1));
 }
 
-.margin-right-8 {
-  margin-right: 8px;
-}
-
-.margin-top-4 {
-  margin-top: 4px;
-}
-
-.margin-top-8 {
-  margin-top: 8px;
-}
-
-.margin-bottom-4 {
-  margin-bottom: 4px;
-}
-
-.margin-bottom-8 {
-  margin-bottom: 8px;
-}
+.margin-side-x(top);
+.margin-side-x(right);
+.margin-side-x(bottom);
+.margin-side-x(left);
 
 .fa.fa-1-5x {
   font-size: 150%;
@@ -82,20 +71,54 @@ textarea.resize-both {
   vertical-align: middle;
 }
 
+.x-steps-area-wrapper {
+  padding-top: 15px;
+
+  #step1-wrapper,
+  #step3-wrapper,
+  #step4-wrapper {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+}
+
 #step2-describe-data-table td {
   min-width: 150px;
 }
 
 .step4-package-info {
-  margin-bottom: 3em;
+  margin-bottom: 35px;
+
+  .well {
+    background-color: #fff;
+  }
+
+  .x-icon {
+    font-size: 150%;
+    width: 50px;
+    float: left;
+    padding-left: 15px;
+  }
+
+  h3 {
+    margin: 5px 0 0 0;
+    padding: 0 0 0 50px;
+  }
+
+  p {
+    margin: 7px 0 0 0;
+    padding: 0 0 0 50px;
+  }
 }
 
-.step4-package-info .row {
-  margin-bottom: 1em;
-}
+.step4-package-mappings {
+  margin-bottom: 35px;
+  margin-top: 0;
+  padding: 0 0.5em;
 
-.step4-package-info .row p {
-  margin-bottom: 0.1em;
+  p {
+    margin-bottom: 0.1em;
+  }
 }
 
 tr.x-strong-highlight td,
@@ -308,7 +331,7 @@ td.x-strong-highlight {
     vertical-align: top;
     float: left;
     width: 20px;
-    height: 15px;
+    height: 16px;
     border-bottom: 2px solid @color;
     box-sizing: border-box;
   }

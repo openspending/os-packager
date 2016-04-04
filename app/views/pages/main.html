@@ -16,13 +16,13 @@
       {% include "partials/steps.html" %}
     </div>
     <div class="col-xs-12 col-sm-4">
-      <h3 class="text-center">{% block title %}{{ title }}{% endblock %}</h3>
+      <h3 class="text-center">{% raw %}{{ currentStep.title }}{% endraw %}</h3>
     </div>
     <div class="hidden-xs col-sm-4">
       {% include "partials/preview-panel.html" %}
     </div>
   </div>
-  <div class="container-fluid" ng-view></div>
+  <div class="container-fluid x-steps-area-wrapper" ng-view></div>
 </div>
 </section>
 {% endblock %}

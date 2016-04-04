@@ -1,7 +1,5 @@
 {% raw %}
 <section id="step3-wrapper">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-
   <form class="row" novalidate="novalidate" name="metadata" onsubmit="return false;">
   <div class="col-xs-12 col-md-6">
     <div class="form-group" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">

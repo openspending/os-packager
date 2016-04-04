@@ -1,7 +1,6 @@
 {% raw %}
 <section id="step2-wrapper">
 <div>
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group" ng-repeat="resource in resources track by $index">
     <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
       <a href="{{ 'http://datapipes.okfnlabs.org/csv/html?url=' + resource.source.url }}" target="_blank">

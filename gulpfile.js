@@ -3,6 +3,7 @@
 var path = require('path');
 var gulp = require('gulp');
 var concat = require('gulp-concat');
+var rename = require('gulp-rename');
 var minifyCss = require('gulp-minify-css');
 var prefixer = require('gulp-autoprefixer');
 var uglify = require('gulp-uglify');
@@ -51,7 +52,8 @@ gulp.task('default', [
   'app.fonts',
   'vendor.scripts',
   'vendor.styles',
-  'vendor.fonts'
+  'vendor.fonts',
+  'app.favicon'
 ]);
 
 gulp.task('app.scripts', function() {
@@ -148,4 +150,13 @@ gulp.task('app.assets', function() {
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicAssetsDir));
+});
+
+gulp.task('app.favicon', function() {
+  var files = [
+    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/packager-favicon.ico')
+  ];
+  return gulp.src(files)
+    .pipe(rename('favicon.ico'))
+    .pipe(gulp.dest(publicDir));
 });

@@ -1,8 +1,136 @@
-@import "./main.css";
-
 html {
   background: #131518;
   height: 100%;
+}
+.modal-backdrop {
+  z-index: 99990 !important;
+}
+
+.modal {
+  z-index: 99999 !important;
+}
+
+.modal .modal-dialog.modal-fluid {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#validation-results .panel.panel-default {
+  border-color: #ddd;
+  border-top: 0;
+  -moz-border-top-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-border-top-right-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+#validation-results .panel {
+  margin: 0;
+}
+
+textarea {
+  resize: none;
+}
+
+textarea.resize-vertical {
+  resize: vertical;
+}
+textarea.resize-horizontal {
+  resize: horizontal;
+}
+textarea.resize-vertical.resize-horizontal,
+textarea.resize-both {
+  resize: both;
+}
+
+.without-margins {
+  margin: 0;
+}
+
+.margin-right-4 {
+  margin-right: 4px;
+}
+
+.margin-right-8 {
+  margin-right: 8px;
+}
+
+.margin-top-4 {
+  margin-top: 4px;
+}
+
+.margin-top-8 {
+  margin-top: 8px;
+}
+
+.margin-bottom-4 {
+  margin-bottom: 4px;
+}
+
+.margin-bottom-8 {
+  margin-bottom: 8px;
+}
+
+.fa.fa-1-5x {
+  font-size: 150%;
+}
+
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+#step2-describe-data-table td {
+  min-width: 150px;
+}
+
+.step4-package-info {
+  margin-bottom: 3em;
+}
+
+.step4-package-info .row {
+  margin-bottom: 1em;
+}
+
+.step4-package-info .row p {
+  margin-bottom: 0.1em;
+}
+
+tr.x-strong-highlight td,
+td.x-strong-highlight {
+  background: #2abb9c;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 0.07em;
+}
+
+.x-small-text {
+  font-size: 12px;
+}
+
+.x-small-text * {
+  font-size: inherit;
+}
+
+.x-small-text .form-control,
+.x-small-text .form-control-static {
+  padding: 3px 4px;
+  line-height: normal;
+  height: auto;
+}
+
+.x-small-text .form-control-static {
+  min-height: 0;
+}
+
+.c3 {
+  text-align: left;
+}
+
+.c3-tooltip {
+  table-layout: auto !important;
 }
 
 .x-application-loader {
@@ -97,10 +225,12 @@ html {
   font-size: 200%;
   margin-left: 8px;
   color: #fff;
+  cursor: pointer;
 
   &[disabled],
   &.disabled {
     color: inherit;
+    cursor: text;
   }
 }
 
@@ -109,6 +239,10 @@ html {
   height: 200px;
   display: block;
   position: relative;
+
+  &.treemap rect {
+    stroke: #fff;
+  }
 }
 
 .navbar.navbar-footer {
@@ -141,6 +275,73 @@ html {
 
   h3 {
     color: #fff;
+  }
+}
+
+.x-steps-container {
+  @color: #585e6c;
+
+  a {
+    display: block;
+    float: left;
+    vertical-align: top;
+    width: 30px;
+    height: 30px;
+    border: 2px solid @color;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    color: @color;
+    box-sizing: border-box;
+    font-weight: bold;
+
+    &,
+    &:hover,
+    &:active {
+      color: @color;
+      text-decoration: none;
+    }
+  }
+
+  span {
+    display: block;
+    vertical-align: top;
+    float: left;
+    width: 20px;
+    height: 15px;
+    border-bottom: 2px solid @color;
+    box-sizing: border-box;
+  }
+
+  .active,
+  .passed {
+    @color: #2abb9c;
+
+    a {
+      &,
+      &:hover,
+      &:active {
+        color: @color;
+        border-color: @color;
+      }
+    }
+
+    span {
+      border-color: @color;
+    }
+  }
+
+  .active {
+    @color: #fff;
+
+    a {
+      &,
+      &:hover,
+      &:active {
+        color: @color;
+        border-color: @color;
+      }
+    }
   }
 }
 

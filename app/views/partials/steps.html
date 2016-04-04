@@ -1,18 +1,14 @@
 {% raw %}
-<ul class="nav nav-pills" id="steps-nav">
-  <li role="presentation" ng-repeat="step in steps"
-    ng-class="{active: step.id == currentStep.id, disabled: !step.isCurrent && !step.isPassed}">
-    <a href='#'
-       ng-click="goToStep(step)">
-      <i ng-if="step.isPassed" class="fa fa-1-5x fa-check-circle-o vertical-align-middle margin-right-4"></i>
-      <span class="vertical-align-middle">{{ step.title }}</span>
+<div class="x-steps-container">
+  <div class="pull-left active margin-right-8">
+    <a href="javascript:void(0)" ng-click="restartFlow()">
+      <i class="fa fa-refresh"></i>
     </a>
-    <span class="restart"
-       ng-if="step.isCurrent && step.id !== steps[0].id"
-       ng-click="restartFlow()">
-      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-      <span>Restart Flow</span>
-    </span>
-  </li>
-</ul>
+  </div>
+  <div ng-repeat="step in steps" class="pull-left"
+    ng-class="{active: step.id == currentStep.id, passed: step.isCurrent || step.isPassed}">
+    <span ng-if="$index > 0"></span>
+    <a href="javascript:void(0)" ng-click="(step.isCurrent || step.isPassed) ? goToStep(step) : null">{{ $index + 1 }}</a>
+  </div>
+</div>
 {% endraw %}

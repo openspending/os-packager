@@ -317,7 +317,7 @@ module.exports.readContents = function(descriptor, options) {
       descriptor.data = data;
       descriptor.countOfLines = 0;
       for (var i = 0; i < data.length; i++) {
-        if (data[i] == '\n') {
+        if (data[i] == '\n' || data[i] == 10) {
           descriptor.countOfLines ++;
         }
       }

@@ -105,8 +105,9 @@ gulp.task('vendor.scripts', function() {
   var files = [
     path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
     path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
-    path.join(nodeModulesDir, '/angular/angular.js'),
-    path.join(nodeModulesDir, '/angular-route/angular-route.js'),
+    path.join(nodeModulesDir, '/angular/angular.min.js'),
+    path.join(nodeModulesDir, '/angular-animate/angular-animate.min.js'),
+    path.join(nodeModulesDir, '/angular-route/angular-route.min.js'),
   ];
   return gulp.src(files)
     .pipe(concat('vendor.js'))

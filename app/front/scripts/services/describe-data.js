@@ -78,6 +78,7 @@
               _.pluck(field.allowedTypes, 'id')));
           } else {
             field.type = field.inferredType;
+            field.additionalOptions = [];
             field.options = {};
           }
           state.status = ValidationService.validateResourcesConcepts(

@@ -85,6 +85,7 @@ module.exports.getCsvSchema = function(urlOrFile) {
       download: true,
       preview: 1000,
       skipEmptyLines: true,
+      encoding: urlOrFile.encoding,
       complete: function(results) {
         if (results.errors.length) {
           reject(results.errors);
@@ -94,12 +95,13 @@ module.exports.getCsvSchema = function(urlOrFile) {
         var schema = jts.infer(headers, rows);
         var delimiter = results.meta.delimiter;
         var linebreak = results.meta.linebreak;
+        var raw = csv.unparse(results.data, {
+          quotes: true,
+          delimiter: ',',
+          newline: '\r\n'
+        });
         resolve({
-          raw: csv.unparse(results.data, {
-            quotes: true,
-            delimiter: ',',
-            newline: '\r\n'
-          }),
+          raw: raw,
           headers: headers,
           rows: rows,
           schema: schema,
@@ -114,23 +116,28 @@ module.exports.getCsvSchema = function(urlOrFile) {
   });
 };
 
-module.exports.validateData = function(data, schema, userEndpointURL) {
+module.exports.validateData = function(data, data_url, schema, userEndpointURL) {
   var goodTables = new GoodTables({
     'method': 'post',
     'report_type': 'grouped'
   }, userEndpointURL);
-  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined)
+  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined, data_url)
     .then(function(results) {
       if (!results) {
         return false;
       }
-      var groupped = results.getGroupedByRows();
-      var headers = results.getHeaders();
-      return _.map(groupped, function(item) {
-        return _.extend(_.values(item)[0], {
-          headers: headers
-        });
-      });
+      var grouped = results.getGroupedByRows();
+      var headers= results.getHeaders();
+      var encoding = results.getEncoding();
+      return {
+        headers: headers,
+        encoding: encoding,
+        errors: _.map(grouped, function(item) {
+          return _.extend(_.values(item)[0], {
+            headers: headers
+          });
+        })
+      };
     });
 };
 
@@ -540,7 +547,7 @@ module.exports.blobToFileDescriptor = function(blob) {
     reader.addEventListener('error', function() {
       reject(reader.error);
     });
-    reader.readAsText(blob);
+    reader.readAsArrayBuffer(blob);
   });
 };
 
@@ -551,6 +558,7 @@ module.exports.fileDescriptorToBlob = function(descriptor) {
       type: descriptor.type
     });
     result.name = descriptor.name;
+    result.encoding = descriptor.encoding;
   }
   return Promise.resolve(result);
 };

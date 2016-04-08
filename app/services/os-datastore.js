@@ -1,7 +1,8 @@
 'use strict';
 
 var _ = require('underscore');
-var crypto = require('crypto');
+var md5 = require('js-md5');
+var base64 = require('base64-js');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
@@ -170,7 +171,7 @@ function readFileBytes(fileOrBlob, options) {
         // normalized to range 0.0 .. 1.0
         options.onDownloadProgress(1.0);
       }
-      resolve(reader.result);
+      resolve(new Uint8Array(reader.result));
     });
     reader.addEventListener('error', function(event) {
       reject('An error occurred while reading the file.');
@@ -179,14 +180,13 @@ function readFileBytes(fileOrBlob, options) {
       reject('Reading has been canceled by the user.');
     });
 
-    reader.readAsBinaryString(fileOrBlob);
+    reader.readAsArrayBuffer(fileOrBlob);
   });
 }
 
-function md5(str) {
-  var md5sum = crypto.createHash('md5');
-  md5sum.update(str);
-  return md5sum.digest('base64');
+function calculateMD5(data) {
+  var hash = md5.update(data);
+  return base64.fromByteArray(hash.array());
 }
 
 function uploadFile(descriptor, options) {
@@ -194,7 +194,7 @@ function uploadFile(descriptor, options) {
     method: 'PUT',
     headers: _.extend({}, options.headers, {
       'Content-Length': descriptor.data.length,
-      'Content-MD5': md5(descriptor.data),
+      'Content-MD5': calculateMD5(descriptor.data),
       'Content-Type': 'application/octet-stream'
     }),
     body: descriptor.data,
@@ -226,7 +226,7 @@ function prepareFilesForUpload(files, options) {
         return [
           item.name,
           {
-            md5: md5(item.data),
+            md5: calculateMD5(item.data),
             name: item.name,
             length: item.data.length,
             type: 'application/octet-stream'
@@ -302,7 +302,7 @@ module.exports.readContents = function(descriptor, options) {
     result = readFileBytes(descriptor.file, options);
   } else {
     var data = descriptor.data || '';
-    if (_.isObject(descriptor.file)) {
+    if (_.isObject(descriptor.file) && !(descriptor.file.data instanceof ArrayBuffer)) {
       data = descriptor.file.data || '';
     }
     if (!_.isString(data) && _.isObject(data)) {
@@ -317,7 +317,7 @@ module.exports.readContents = function(descriptor, options) {
       descriptor.data = data;
       descriptor.countOfLines = 0;
       for (var i = 0; i < data.length; i++) {
-        if (data[i] == '\n') {
+        if (data[i] == '\n' || data[i] == 10) {
           descriptor.countOfLines ++;
         }
       }

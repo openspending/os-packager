@@ -1,51 +1,35 @@
 ;(function(angular) {
 
-  var goodTablesUrl = 'proxy?url=' +
-    encodeURIComponent('http://goodtables.okfnlabs.org/api/run');
+  var goodTablesUrl = 'http://goodtables.okfnlabs.org/api/run';
 
   angular.module('Application')
     .factory('ValidationService', [
-      '$q', '_', 'Services', 'PackageService', 'Configuration',
-      function($q, _, Services, PackageService, Configuration) {
+      '$q', '_', 'Services', 'Configuration',
+      function($q, _, Services, Configuration) {
         var utils = Services.utils;
 
         return {
-          validateResource: function(resource, validateSchema) {
+          validateResource: function(source) {
             var validationResult = {
               state: 'checking'
             };
-            var schema = !!validateSchema ? resource.schema : undefined;
-            validationResult.$promise = $q(function(resolve, reject) {
-              utils.validateData(resource.data.raw, schema, goodTablesUrl)
-                .then(resolve)
-                .catch(reject);
-            });
-            validationResult.$promise
-              .then(function(results) {
-                validationResult.state = 'completed';
-                if (results && results.length) {
-                  validationResult.errors = results;
-                }
-                return results;
-              })
-              .catch(function(error) {
-                validationResult.state = null;
-                Configuration.defaultErrorHandler(error);
+            if ( typeof(source) !== 'string' ) {
+              validationResult.$promise = $q(function(resolve, reject) {
+                utils.validateData(source.data, undefined, undefined, goodTablesUrl)
+                    .then(resolve)
+                    .catch(reject);
               });
-
-            return validationResult;
-          },
-          validateFiscalDataPackage: function() {
-            var validationResult = {
-              state: 'checking'
-            };
-            validationResult.$promise = PackageService
-              .validateFiscalDataPackage();
-
+            } else {
+              validationResult.$promise = $q(function(resolve, reject) {
+                utils.validateData(undefined, source, undefined, goodTablesUrl)
+                    .then(resolve)
+                    .catch(reject);
+              });
+            }
             validationResult.$promise
               .then(function(results) {
                 validationResult.state = 'completed';
-                if (results && !results.valid) {
+                if (results && results.errors && results.errors.length) {
                   validationResult.errors = results.errors;
                 }
                 return results;

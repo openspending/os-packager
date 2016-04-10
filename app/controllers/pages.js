@@ -13,9 +13,12 @@ module.exports.main = function(req, res) {
 };
 
 module.exports.landing = function(req, res) {
+  var config = req.app.get('config');
   var firstStep = _.first(services.data.steps);
 
   res.render('pages/landing.html', {
+    conductor: config.get('conductor'),
+    basePath: config.get('basePath'),
     title: 'OS Packager',
     getStartedUrl: firstStep.route
   });

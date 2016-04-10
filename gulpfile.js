@@ -49,7 +49,6 @@ gulp.task('default', [
   'app.modules',
   'app.styles',
   'app.assets',
-  'app.fonts',
   'vendor.scripts',
   'vendor.styles',
   'vendor.fonts',
@@ -135,16 +134,9 @@ gulp.task('vendor.fonts', function() {
     .pipe(gulp.dest(publicFontsDir));
 });
 
-gulp.task('app.fonts', function() {
-  var files = [
-    path.join(frontAssetsDir, '/fonts/*')
-  ];
-  return gulp.src(files)
-    .pipe(gulp.dest(publicFontsDir));
-});
-
 gulp.task('app.assets', function() {
   var files = [
+    path.join(frontAssetsDir, '/**/*'),
     path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/os.svg'),
     path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
     path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/ospackager.svg'),

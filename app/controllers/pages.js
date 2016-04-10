@@ -1,5 +1,8 @@
 'use strict';
 
+var services = require('../services');
+var _ = require('underscore');
+
 module.exports.main = function(req, res) {
   var config = req.app.get('config');
   res.render('pages/main.html', {
@@ -9,9 +12,12 @@ module.exports.main = function(req, res) {
   });
 };
 
-module.exports.about = function(req, res) {
-  res.render('pages/about.html', {
-    title: 'About'
+module.exports.landing = function(req, res) {
+  var firstStep = _.first(services.data.steps);
+
+  res.render('pages/landing.html', {
+    title: 'OS Packager',
+    getStartedUrl: firstStep.route
   });
 };
 

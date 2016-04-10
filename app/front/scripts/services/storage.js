@@ -104,7 +104,11 @@
             return result.set(Configuration.storage.key, state);
           },
           clearApplicationState: function() {
-            for (var x in ApplicationState) if (ApplicationState.hasOwnProperty(x)) delete ApplicationState[x];
+            for (var x in ApplicationState) {
+              if (ApplicationState.hasOwnProperty(x)) {
+                delete ApplicationState[x];
+              }
+            }
             return result.set(Configuration.storage.key, null);
           },
           restoreApplicationState: function() {

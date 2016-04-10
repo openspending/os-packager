@@ -36,11 +36,11 @@
             // jscs:enable
             that.userId = response.profile.idhash;
 
-          authorize.check(token, 'os.datastore')
-            .then(function(permissionData) {
-              that.permissionToken = permissionData.token;
-              that.permissions = permissionData.permissions;
-            });
+            authorize.check(token, 'os.datastore')
+              .then(function(permissionData) {
+                that.permissionToken = permissionData.token;
+                that.permissions = permissionData.permissions;
+              });
           })
           .catch(function(providers) {
             if (!isEventRegistered) {

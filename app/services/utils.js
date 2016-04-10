@@ -72,8 +72,9 @@ module.exports.convertToTitle = function(string) {
 };
 
 module.exports.convertToSlug = function(string) {
-  var ret=inflector.parameterize(inflector.transliterate('' + (string || '')));
-  if ( ret === '' ) {
+  var ret = inflector.parameterize(
+    inflector.transliterate('' + (string || '')));
+  if (ret === '') {
     return 'slug';
   }
   return ret;
@@ -116,18 +117,23 @@ module.exports.getCsvSchema = function(urlOrFile) {
   });
 };
 
-module.exports.validateData = function(data, data_url, schema, userEndpointURL) {
+module.exports.validateData = function(data, dataUrl, schema,
+  userEndpointURL) {
   var goodTables = new GoodTables({
-    'method': 'post',
-    'report_type': 'grouped'
+    method: 'post',
+    // jscs:disable
+    report_type: 'grouped'
+    // jscs:enable
   }, userEndpointURL);
-  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined, data_url)
+
+  return goodTables.run(
+    data, !!schema ? JSON.stringify(schema) : undefined, dataUrl)
     .then(function(results) {
       if (!results) {
         return false;
       }
       var grouped = results.getGroupedByRows();
-      var headers= results.getHeaders();
+      var headers = results.getHeaders();
       var encoding = results.getEncoding();
       return {
         headers: headers,

@@ -13,17 +13,18 @@
             var validationResult = {
               state: 'checking'
             };
-            if ( typeof(source) !== 'string' ) {
+            if (typeof(source) !== 'string') {
               validationResult.$promise = $q(function(resolve, reject) {
-                utils.validateData(source.data, undefined, undefined, goodTablesUrl)
-                    .then(resolve)
-                    .catch(reject);
+                utils.validateData(source.data, undefined, undefined,
+                  goodTablesUrl)
+                  .then(resolve)
+                  .catch(reject);
               });
             } else {
               validationResult.$promise = $q(function(resolve, reject) {
                 utils.validateData(undefined, source, undefined, goodTablesUrl)
-                    .then(resolve)
-                    .catch(reject);
+                  .then(resolve)
+                  .catch(reject);
               });
             }
             validationResult.$promise

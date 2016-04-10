@@ -24,7 +24,7 @@
         var onResetCallback = null;
         result.onReset = function(cbk) {
           onResetCallback = cbk;
-        }
+        };
 
         result.resetState = function() {
           state = {};

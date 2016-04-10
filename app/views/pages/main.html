@@ -1,6 +1,9 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<script type="text/javascript">
+  window.isWizard = true;
+</script>
 <section ng-controller="StepsController">
 <div ng-if="!applicationLoaded" class="x-application-loader">
   <div class="text-center" style="margin-bottom: 1em;">

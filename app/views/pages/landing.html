@@ -1,0 +1,109 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="x-landing-page-wrapper">
+  <div class="jumbotron jumbotron-inverse row">
+    <div class="hidden-xs col-sm-2 col-md-3 col-lg-4 x-landing-image1">
+      <img src="assets/images/landing1.png">
+    </div>
+    <div class="hidden-xs col-sm-2 col-md-3 col-lg-4 x-landing-image2">
+      <img src="assets/images/landing2.png">
+    </div>
+    <div>
+      <h1 class="text-center">Get your data ready for <strong>OSViewer</strong></h1>
+      <h2 class="text-center">Create a data package in 5 minutes</h2>
+      <section class="text-center">
+        <a class="btn btn-lg btn-default btn-outline margin-right-8" href="#how-it-works" target="_self">How it works</a>
+        <a class="btn btn-lg btn-default btn-outline" href="{{ getStartedUrl }}" target="_self">Get Started</a>
+      </section>
+    </div>
+  </div>
+  <section class="odd first row">
+    <div class="col-xs-12">
+      <h1 class="text-center" id="how-it-works">How it works</h1>
+      <h2 class="text-center"><span>1</span> Provide your data</h2>
+      <p class="text-center">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat.
+      </p>
+    </div>
+    <div class="col-xs-12 x-landing-image3">
+      <img src="assets/images/landing3.png">
+    </div>
+  </section>
+  <section class="even row">
+    <div class="hidden-xs col-sm-4 col-lg-3 x-landing-image4">
+      <img src="assets/images/landing4.png">
+    </div>
+    <div class="col-xs-12 col-sm-8 col-lg-9">
+      <h2 class="text-left"><span>2</span> Describe your data</h2>
+      <p class="text-left">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat.
+      </p>
+      <p class="text-left">
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+  </section>
+  <section class="odd row">
+    <div class="col-xs-12 col-sm-6 col-lg-8">
+      <h2 class="text-left"><span>3</span> Provide metadata</h2>
+      <p class="text-left">
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+    <div class="hidden-xs col-sm-6 col-lg-4 x-landing-image5">
+      <img src="assets/images/landing5.png">
+    </div>
+  </section>
+  <section class="even row">
+    <h2 class="text-center"><span>4</span> Use your data package</h2>
+    <div class="col-xs-4 text-center">
+      <svg class="text-success" width="80" height="80" viewBox="0 0 24 24">
+        <path class="path1" d="M15 4h4q1.242 0 2.121 0.879t0.879 2.121v14q0 1.242-0.879 2.121t-2.121 0.879h-14q-1.242 0-2.121-0.879t-0.879-2.121v-14q0-1.242 0.879-2.121t2.121-0.879h4v2h-4q-0.414 0-0.707 0.293t-0.293 0.707v14q0 0.414 0.293 0.707t0.707 0.293h14q0.414 0 0.707-0.293t0.293-0.707v-14q0-0.414-0.293-0.707t-0.707-0.293h-4v-2zM12 0q0.414 0 0.707 0.293t0.293 0.707v12.586l2.289-2.297q0.289-0.289 0.711-0.289 0.43 0 0.715 0.285t0.285 0.715q0 0.422-0.289 0.711l-4 4q-0.289 0.289-0.711 0.289t-0.711-0.289l-4-4q-0.289-0.305-0.289-0.711 0-0.414 0.293-0.707t0.707-0.293q0.422 0 0.711 0.289l2.289 2.297v-12.586q0-0.414 0.293-0.707t0.707-0.293z"></path>
+      </svg>
+      <h3>Download</h3>
+      <p class="text-center">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt.
+      </p>
+    </div>
+    <div class="col-xs-4 text-center">
+      <svg class="text-primary" width="80" height="80" viewBox="0 0 24 24">
+        <path class="path1" d="M15 2q1.828 0 3.496 0.715t2.871 1.918 1.918 2.871 0.715 3.496q0 1.703-0.621 3.273t-1.688 2.75-2.547 1.957-3.145 0.965v-2.016q1.68-0.242 3.051-1.215t2.16-2.477 0.789-3.238q0-1.422-0.555-2.719t-1.492-2.234-2.234-1.492-2.719-0.555q-1.297 0-2.496 0.465t-2.109 1.262-1.523 1.906-0.793 2.367h-2.078q-1.656 0-2.828 1.172t-1.172 2.828q0 0.906 0.355 1.68t0.934 1.27 1.285 0.773 1.426 0.277h4v2h-4q-1.633 0-3.012-0.805t-2.184-2.184-0.805-3.012 0.805-3.012 2.184-2.184 3.012-0.805h0.516q0.617-1.742 1.859-3.098t2.973-2.129 3.652-0.773zM13 10q0.414 0 0.711 0.297l3 3q0.289 0.289 0.289 0.703 0 0.43-0.285 0.715t-0.715 0.285q-0.422 0-0.711-0.289l-1.289-1.297v6.586q0 0.414-0.293 0.707t-0.707 0.293-0.707-0.293-0.293-0.707v-6.586l-1.289 1.297q-0.289 0.289-0.711 0.289-0.414 0-0.707-0.293t-0.293-0.707q0-0.398 0.289-0.703l3-3q0.297-0.297 0.711-0.297z"></path>
+      </svg>
+      <h3>View</h3>
+      <p class="text-center">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt.
+      </p>
+    </div>
+    <div class="col-xs-4 text-center">
+      <svg class="text-info" width="80" height="80" viewBox="0 0 24 24">
+        <path d="M9.758 12.008c0 0.621-0.504 1.125-1.125 1.125s-1.125-0.504-1.125-1.125c0-0.621 0.504-1.125 1.125-1.125s1.125 0.504 1.125 1.125z"></path>
+        <path d="M13.133 12.008c0 0.621-0.504 1.125-1.125 1.125s-1.125-0.504-1.125-1.125c0-0.621 0.504-1.125 1.125-1.125s1.125 0.504 1.125 1.125z"></path>
+        <path d="M16.508 12.008c0 0.621-0.504 1.125-1.125 1.125s-1.125-0.504-1.125-1.125c0-0.621 0.504-1.125 1.125-1.125s1.125 0.504 1.125 1.125z"></path>
+        <path d="M7.875 18.375c-0.288 0-0.576-0.11-0.796-0.329l-5.25-5.25c-0.439-0.439-0.439-1.152 0-1.591l5.25-5.25c0.439-0.439 1.152-0.439 1.591 0s0.439 1.152 0 1.591l-4.454 4.454 4.454 4.454c0.439 0.439 0.439 1.152 0 1.591-0.22 0.22-0.508 0.33-0.795 0.33z"></path>
+        <path d="M16.125 18.375c0.288 0 0.576-0.11 0.796-0.329l5.25-5.25c0.439-0.439 0.439-1.152 0-1.591l-5.25-5.25c-0.439-0.439-1.152-0.439-1.591 0s-0.439 1.152 0 1.591l4.454 4.454-4.454 4.454c-0.439 0.439-0.439 1.152 0 1.591 0.22 0.22 0.508 0.33 0.795 0.33z"></path>
+      </svg>
+      <h3>API</h3>
+      <p class="text-center">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt.
+      </p>
+    </div>
+  </section>
+  <section class="even text-center last">
+    <a class="btn btn-lg btn-inverse btn-outline" href="{{ getStartedUrl }}" target="_self">Get Started</a>
+  </section>
+</div>
+{% endblock %}

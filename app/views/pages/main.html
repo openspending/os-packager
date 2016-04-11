@@ -1,8 +1,11 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<script type="text/javascript">
+  window.isWizard = true;
+</script>
 <section ng-controller="StepsController">
-<div ng-if="!applicationLoaded">
+<div ng-if="!applicationLoaded" class="x-application-loader">
   <div class="text-center" style="margin-bottom: 1em;">
     <i class="fa fa-4x fa-spinner fa-pulse"></i>
   </div>
@@ -10,9 +13,25 @@
     Loading application...
   </div>
 </div>
-<div ng-cloak ng-show="applicationLoaded">
-  {% include "partials/steps.html" %}
-  <div ng-view></div>
+<div ng-cloak ng-if="applicationLoaded">
+  <div class="jumbotron jumbotron-inverse row x-steps-container">
+    <div class=" col-xs-12 col-sm-4">
+      {% include "partials/steps.html" %}
+    </div>
+    <div class="col-xs-12 col-sm-4">
+      <h3 class="text-center">{% raw %}{{ currentStep.title }}{% endraw %}</h3>
+    </div>
+    <div class="hidden-xs col-sm-4">
+      {% include "partials/preview-panel.html" %}
+    </div>
+  </div>
+  <div class="container-fluid x-steps-area-wrapper" ng-view></div>
 </div>
 </section>
+<div class="container-fluid x-footer-help">
+  <a href="#" class="btn btn-outline btn-inverse pull-right">OpenSpending Community</a>
+  <p>
+    <i class="os-icon os-icon-people"></i><strong>Need help?</strong> Check out the guides on our community site
+  </p>
+</div>
 {% endblock %}

@@ -9,11 +9,14 @@ var exports = module.exports;
 exports.app = null;
 exports.browser = null;
 
-function waitForDigest(element) {
+function waitForDigest(element, iterations) {
   var browser = this;
 
   var wait = 500;
-  var iterations = 40;
+  iterations = parseInt(iterations);
+  if (!isFinite(iterations) || (iterations <= 0)) {
+    iterations = 40;
+  }
 
   function waiter(resolve) {
     browser.wait(wait,function() {

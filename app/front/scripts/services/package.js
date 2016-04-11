@@ -3,9 +3,11 @@
   angular.module('Application')
     .factory('PackageService', [
       '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
-      'ApplicationState', 'ApplicationLoader', 'LoginService', 'ValidationService',
+      'ApplicationState', 'ApplicationLoader', 'LoginService',
+      'ValidationService',
       function($q, $timeout, _, Services, UtilsService, Configuration,
-        ApplicationState, ApplicationLoader, LoginService, ValidationService) {
+        ApplicationState, ApplicationLoader, LoginService,
+        ValidationService) {
         var attributes = {};
         var resources = [];
         var schema = null;
@@ -60,7 +62,7 @@
                   var status = ValidationService.validateResource(fileOrUrl);
                   state.status = status;
                   return $q(function(resolve, reject) {
-                    status.$promise.then(function (results) {
+                    status.$promise.then(function(results) {
                       fileOrUrl.encoding = results.encoding;
                       resolve(fileOrUrl);
                     }).catch(reject);
@@ -152,8 +154,9 @@
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
-            dataPackage.owner = LoginService.userid;
-            dataPackage.author = LoginService.name + ' <' + LoginService.email + '>';
+            dataPackage.owner = LoginService.userId;
+            dataPackage.author = LoginService.name +
+              ' <' + LoginService.email + '>';
 
             // Create and prepend datapackage.json
             var packageFile = {
@@ -177,7 +180,9 @@
                 Services.datastore.readContents(file)
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {
-                      permission_token: LoginService.permission_token,
+                      // jscs:disable
+                      permission_token: LoginService.permissionToken,
+                      // jscs:enable
                       name: dataPackage.name,
                       owner: dataPackage.owner
                     });

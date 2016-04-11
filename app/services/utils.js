@@ -72,8 +72,9 @@ module.exports.convertToTitle = function(string) {
 };
 
 module.exports.convertToSlug = function(string) {
-  var ret=inflector.parameterize(inflector.transliterate('' + (string || '')));
-  if ( ret === '' ) {
+  var ret = inflector.parameterize(
+    inflector.transliterate('' + (string || '')));
+  if (ret === '') {
     return 'slug';
   }
   return ret;
@@ -116,18 +117,23 @@ module.exports.getCsvSchema = function(urlOrFile) {
   });
 };
 
-module.exports.validateData = function(data, data_url, schema, userEndpointURL) {
+module.exports.validateData = function(data, dataUrl, schema,
+  userEndpointURL) {
   var goodTables = new GoodTables({
-    'method': 'post',
-    'report_type': 'grouped'
+    method: 'post',
+    // jscs:disable
+    report_type: 'grouped'
+    // jscs:enable
   }, userEndpointURL);
-  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined, data_url)
+
+  return goodTables.run(
+    data, !!schema ? JSON.stringify(schema) : undefined, dataUrl)
     .then(function(results) {
       if (!results) {
         return false;
       }
       var grouped = results.getGroupedByRows();
-      var headers= results.getHeaders();
+      var headers = results.getHeaders();
       var encoding = results.getEncoding();
       return {
         headers: headers,
@@ -311,6 +317,7 @@ module.exports.availablePossibilities = (function() {
       isAvailable: false,
       concepts: ['measures.amount'],
       graph: 'pie',
+      icon: 'os-icon os-icon-piechart',
       update: updateByConcepts
     },
     {
@@ -318,6 +325,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Time series',
       isAvailable: false,
       graph: 'lines',
+      icon: 'os-icon os-icon-linechart',
       concepts: ['measures.amount', 'dimensions.datetime'],
       update: updateByConcepts
     },
@@ -326,6 +334,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Treemap',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-treemap',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -334,6 +343,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Classification explorer',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-table',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -342,6 +352,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Multiple dimension agg',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-layers',
       concepts: ['measures.amount'],
       update: function(resources) {
         updateByConcepts.call(this, resources);

@@ -6,11 +6,12 @@ var base64 = require('base64-js');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
-var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST || 'http://next.openspending.org';
+var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
+  'http://next.openspending.org';
 var defaultOptions = {
-  conductorUrl: OS_CONDUCTOR+'/datastore/',
-  publishUrl: OS_CONDUCTOR+'/hooks/load/api/',
-  pollInterval: 3000,
+  conductorUrl: OS_CONDUCTOR + '/datastore/',
+  publishUrl: OS_CONDUCTOR + '/hooks/load/api/',
+  pollInterval: 3000
 };
 module.exports.defaultOptions = defaultOptions;
 
@@ -240,7 +241,9 @@ function prepareFilesForUpload(files, options) {
   var requestOptions = {
     method: 'POST',
     headers: {
+      // jscs:disable
       'Auth-Token': options.permission_token
+      // jscs:enable
     },
     body: JSON.stringify(payload),
     mode: 'cors',
@@ -302,7 +305,8 @@ module.exports.readContents = function(descriptor, options) {
     result = readFileBytes(descriptor.file, options);
   } else {
     var data = descriptor.data || '';
-    if (_.isObject(descriptor.file) && !(descriptor.file.data instanceof ArrayBuffer)) {
+    if (_.isObject(descriptor.file) &&
+      !(descriptor.file.data instanceof ArrayBuffer)) {
       data = descriptor.file.data || '';
     }
     if (!_.isString(data) && _.isObject(data)) {

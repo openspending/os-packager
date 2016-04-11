@@ -1,32 +1,30 @@
 {% raw %}
 <section id="step3-wrapper">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-
-  <form novalidate="novalidate" name="metadata" onsubmit="return false;">
-  <div class="row form-group">
-    <div class="col-xs-12" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
+  <form class="row" novalidate="novalidate" name="metadata" onsubmit="return false;">
+  <div class="col-xs-12 col-md-6">
+    <div class="form-group" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
       <label class="control-label required" for="step3-package-name">Name your Data Package</label>
       <input ng-model="attributes.title" required="required" name="title"
         type="text" class="form-control" id="step3-package-name">
     </div>
-  </div>
 
-  <div class="row form-group">
-    <div class="col-xs-12">
+    <div class="form-group">
       <label class="control-label" for="step3-package-description">Short description</label>
-      <textarea ng-model="attributes.description" class="form-control" id="step3-package-description"></textarea>
+      <textarea ng-model="attributes.description" class="form-control"
+        style="height: 176px;"
+        id="step3-package-description"></textarea>
     </div>
   </div>
 
-  <div class="row form-group">
-    <div class="col-sm-4">
+  <div class="col-xs-12 col-md-6">
+    <div class="form-group">
       <label class="control-label" for="step3-location-region">Continent</label>
       <select id="step3-location-region" class="form-control"
         name="region"
         ng-model="attributes.regionCode"
         ng-options="region.code as region.name for region in geoData.regions"></select>
     </div>
-    <div class="col-sm-4">
+    <div class="form-group">
       <label class="control-label" for="step3-location-country">Country</label>
       <select id="step3-location-country" class="form-control"
         ng-disabled="!attributes.regionCode"
@@ -34,34 +32,35 @@
         ng-model="attributes.countryCode"
         ng-options="country.code as country.name for country in geoData.countries"></select>
     </div>
-    <div class="col-sm-4">
+    <div class="form-group">
       <label class="control-label" for="step3-location-city">City</label>
       <input type="text" id="step3-location-city" class="form-control"
         ng-disabled="!(attributes.regionCode && attributes.countryCode)"
         name="city" ng-model="attributes.cityCode">
     </div>
+
+    <div class="row form-group">
+      <div class="col-xs-12">
+        <label class="control-label" for="step3-period-from">Period</label>
+      </div>
+      <div class="col-xs-6" ng-class="{'has-error': metadata.periodFrom.$dirty && !metadata.periodFrom.$valid}">
+        <input type="text" class="form-control" id="step3-period-from"
+          placeholder="YYYY-MM-DD"
+          ng-model="period.start" name="periodFrom"
+          ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
+      </div>
+      <div class="col-xs-6" ng-class="{'has-error': metadata.periodTo.$dirty && !metadata.periodTo.$valid}">
+        <input type="text" class="form-control" id="step3-period-to"
+          placeholder="YYYY-MM-DD"
+          ng-model="period.end" name="periodTo"
+          ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
+      </div>
+    </div>
   </div>
 
-  <div class="row form-group">
-    <div class="col-xs-12">
-      <label class="control-label" for="step3-period-from">Period</label>
-    </div>
-    <div class="col-sm-4" ng-class="{'has-error': metadata.periodFrom.$dirty && !metadata.periodFrom.$valid}">
-      <input type="text" class="form-control" id="step3-period-from"
-        ng-model="period.start" name="periodFrom"
-        ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
-      <p class="help-block">Format: YYYY-MM-DD</p>
-    </div>
-    <div class="col-sm-4" ng-class="{'has-error': metadata.periodTo.$dirty && !metadata.periodTo.$valid}">
-      <input type="text" class="form-control" id="step3-period-to"
-        ng-model="period.end" name="periodTo"
-        ng-pattern="'[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])'">
-      <p class="help-block">Format: YYYY-MM-DD</p>
-    </div>
-  </div>
   </form>
 
-  <div ng-if="!metadata.title.$dirty && !state.status.state" class="alert alert-info">
+  <div ng-if="!metadata.title.$dirty && !state.status.state" class="alert alert-default">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Please, provide some additional info about your Data Package.
   </div>
@@ -73,7 +72,7 @@
 
   <div ng-if="metadata.$valid" ng-init="onValidatePackage()" class="row form-group">
     <div class="col-xs-12">
-      <div ng-if="(state.status.state == 'checking')" class="alert alert-warning">
+      <div ng-if="(state.status.state == 'checking')" class="alert alert-default">
         <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
         Validating structure of your Data Package...
       </div>
@@ -92,7 +91,7 @@
         </div>
 
         <div ng-if="!state.status.errors">
-          <button id="step3-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+          <button id="step3-button-next" ng-click="goToNextStep()" type="button" class="btn btn-inverse btn-lg">
             Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
           </button>
         </div>

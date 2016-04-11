@@ -260,7 +260,9 @@ describe('Application services', function() {
       var options = {
         name: 'test.csv',
         owner: '__tests',
+        // jscs:disable
         permission_token: 'testing-token'
+        // jscs:enable
       };
       dataStore.prepareForUpload(file, options)
         .then(function() {

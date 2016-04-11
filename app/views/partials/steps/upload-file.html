@@ -1,11 +1,10 @@
 {% raw %}
 <section id="step1-wrapper">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
   <div class="row form-group">
     <div ng-hide="isUrlSelected" ng-class="{'col-sm-5': !isUrlSelected && !isFileSelected, 'col-xs-12': isFileSelected}">
       <div class="input-group">
         <span class="input-group-btn">
-          <label class="btn btn-primary" for="step1-upload-file">Upload a file</label>
+          <label class="btn btn-inverse" for="step1-upload-file">Upload a file</label>
         </span>
         <input id="step1-input-file" ng-value="file" type="text" class="form-control" placeholder="No file selected" readonly="on">
         <span class="input-group-btn" ng-if="isFileSelected">
@@ -28,12 +27,12 @@
     </div>
   </div>
 
-  <div ng-if="!state.isFile && !state.isUrl" class="alert alert-info">
+  <div ng-if="!state.isFile && !state.isUrl" class="alert alert-default">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Waiting for file or URL...
   </div>
 
-  <div ng-if="(state.status.state == 'reading') || (state.status.state == 'checking')" class="alert alert-warning">
+  <div ng-if="(state.status.state == 'reading') || (state.status.state == 'checking')" class="alert alert-default">
     <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
     <span ng-if="state.status.state == 'reading'">
       <span ng-if="state.isFile">Reading {{ state.file.name }} / type: {{ state.file.type }},
@@ -62,7 +61,7 @@
   <div class="row form-group"
     ng-if="(state.status.state == 'completed') && !state.status.errors">
     <div class="col-xs-12">
-      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-primary btn-lg">
+      <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-inverse btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
       </button>
     </div>

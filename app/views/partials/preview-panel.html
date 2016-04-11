@@ -1,25 +1,30 @@
 {% raw %}
 <div ng-controller="PreviewDataController" id="preview-data-panel">
-  <h3>Using this data</h3>
-  <p>
-    Based on the current model selections, you could build the following
-    views on this data.
-  </p>
+  <div class="text-right"><strong>OSViewer</strong> compatibility</div>
 
-  <div>
-    <button ng-repeat="possibility in possibilities" type="button"
-      ng-disabled="!possibility.isAvailable"
-      ng-class="{'btn-default': possibility.id != state.selectedPossibility, 'btn-success': possibility.id == state.selectedPossibility}"
-      ng-click="onSelectPossibility(possibility)"
-      class="btn btn-block">{{ possibility.name }}</button>
+  <div class="text-right">
+    <div ng-repeat="possibility in possibilities" class="x-possibility-icon"
+      ng-class="{disabled: !possibility.isAvailable}">
+      <div ng-if="possibility.isAvailable" tabindex="-1"
+        popover="#preview-graph-{{ possibility.graph }}">
+        <i class="{{ possibility.icon }}"></i>
+      </div>
+      <div ng-if="!possibility.isAvailable">
+        <i class="{{ possibility.icon }}"></i>
+      </div>
+    </div>
   </div>
 
-  <div ng-if="!!state.selectedPossibility">
-    <h3>Preview</h3>
+  <script type="text/template" id="preview-graph-treemap" class="hidden">
+    <treemap data="previewData" class="x-preview-chart treemap"></treemap>
+  </script>
 
-    <treemap ng-if="state.graph == 'treemap'" data="previewData" class="aspect-ratio aspect-ratio-3-4 treemap"></treemap>
-    <line-chart ng-if="state.graph == 'lines'" data="previewData" type="spline" class="aspect-ratio aspect-ratio-square lines"></line-chart>
-    <pie-chart ng-if="state.graph == 'pie'" data="previewData" class="aspect-ratio aspect-ratio-3-2"></pie-chart>
-  </div>
+  <script type="text/template" id="preview-graph-lines" class="hidden">
+    <line-chart data="previewData" type="spline" class="x-preview-chart"></line-chart>
+  </script>
+
+  <script type="text/template" id="preview-graph-pie" class="hidden">
+    <pie-chart data="previewData" class="x-preview-chart"></pie-chart>
+  </script>
 </div>
 {% endraw %}

@@ -17,9 +17,10 @@ describe('Wizard UI', function() {
 
   it('Should open app page', function(done) {
     var browser = utils.app.browser;
-    browser.visit('/', function() {
+    browser.visit('/provide-data', function() {
+      assert.ok(browser.success);
       browser.waitForDigest('#step1-wrapper').then(function() {
-        assert.ok(browser.success);
+        assert(browser.query('#step1-wrapper'), 'It should be step #1');
         done();
       });
     });
@@ -50,20 +51,21 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step2-wrapper'), 'It should be step #2');
 
-    browser.evaluate('$("#step2-concept-0")' +
+    browser.evaluate('$("#step2-wrapper .x-field-info-concept:eq(0)")' +
       '.val("string:dimensions.datetime").change();');
-    browser.evaluate('$("#step2-concept-1")' +
+    browser.evaluate('$("#step2-wrapper .x-field-info-concept:eq(1)")' +
       '.val("string:measures.amount").change();');
 
     browser.waitForDigest('#step2-button-next').then(function() {
       assert(browser.query('#step2-button-next'),
         'Next button should be available');
 
-      assert(browser.query('#preview-data-panel button:not(disabled)'),
+      assert(
+        browser.query('#preview-data-panel .x-possibility-icon:not(.disabled)'),
         'Some previews should be available');
 
       browser.click('#step2-button-next');
-      browser.waitForDigest().then(function() {
+      browser.waitForDigest('#step3-wrapper').then(function() {
         assert(browser.query('#step3-wrapper'), 'It should be step #3');
         done();
       });
@@ -77,7 +79,7 @@ describe('Wizard UI', function() {
     browser.waitForDigest('#step3-location-country[disabled]')
       .then(function() {
         // Initially Region is enabled and Country and City is disabled
-        assert(!browser.query('#step3-location-region[disabled]'),
+        assert(browser.query('#step3-location-region:not([disabled])'),
           'Region input should be enabled');
         assert(browser.query('#step3-location-country[disabled]'),
           'Country input should be disabled');
@@ -87,14 +89,14 @@ describe('Wizard UI', function() {
         // Fill Region
         browser.evaluate('$("#step3-location-region")' +
           '.val("string:eu").change();');
-        return browser.waitForDigest('#step3-location-city[disabled]');
+        return browser.waitForDigest('#step3-location-country:not([disabled])');
       })
       .then(function() {
         // When region is filled in, Country should be enabled and City
         // should still disabled
-        assert(!browser.query('#step3-location-region[disabled]'),
+        assert(browser.query('#step3-location-region:not([disabled])'),
           'Region input should be enabled');
-        assert(!browser.query('#step3-location-country[disabled]'),
+        assert(browser.query('#step3-location-country:not([disabled])'),
           'Country input should be enabled');
         assert(browser.query('#step3-location-city[disabled]'),
           'City input should be disabled');
@@ -102,7 +104,8 @@ describe('Wizard UI', function() {
         // Fill Country
         browser.evaluate('$("#step3-location-country")' +
           '.val("string:GB").change();');
-        return browser.waitForDigest('#step3-location-region[disabled]');
+
+        return browser.waitForDigest('#step3-location-city:not([disabled])');
       })
       .then(function() {
         // And when Region and Country are filled in, all three fields should
@@ -150,7 +153,8 @@ describe('Wizard UI', function() {
   it('Should go to first step', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
-    browser.evaluate('$("#steps-nav li a:eq(0)").click();');
+    // Link #0 is a Restart Flow button
+    browser.evaluate('$(".x-steps-container a:eq(1)").click();');
     browser.waitForDigest('#step1-wrapper').then(function() {
       assert(browser.query('#step1-wrapper'), 'It should be step #1');
       done();

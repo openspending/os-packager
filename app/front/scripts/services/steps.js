@@ -24,7 +24,10 @@
             currentStep = _.first(steps);
           }
           result.updateStepsState(currentStep);
-          $location.path(currentStep.route);
+
+          if (Configuration.isWizard) {
+            $location.path(currentStep.route);
+          }
 
           ApplicationState.steps = steps;
         });

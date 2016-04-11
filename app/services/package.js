@@ -46,8 +46,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
             field.concept = (field.concept || '') + '';
             field.inferredType = field.type;
             field.title = utils.convertToTitle(field.name);
-            field.allowedTypes = utils.getAllowedTypesForValues(
-              dataColumns[index], field.inferredType);
+            field.allowedTypes = utils.availableDataTypes;
             field.allowedConcepts = utils.getAllowedConcepts(
               field.allowedTypes);
             return field;
@@ -133,7 +132,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (resource.source.url) {
       result.url = resource.source.url;
     } else {
-      result.path = resource.name+'.csv';
+      result.path = resource.name + '.csv';
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;
@@ -193,9 +192,9 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   };
 
   var allConcepts = function() {
-    return _.keys(result.model.dimensions).concat(_.keys(result.model.measures));
-  }
-
+    return _.keys(result.model.dimensions)
+      .concat(_.keys(result.model.measures));
+  };
 
   var mappingName = null;
   _.each(groups, function(fields, concept) {
@@ -212,7 +211,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (!concept || !concept.dimensionType) {
       return;
     }
-    var conceptName = concept.dimensionType + ' ' + (optionalAttributes.classificationType || '');
+    var conceptName = concept.dimensionType + ' ' +
+      (optionalAttributes.classificationType || '');
     switch (concept.group) {
       case 'measure': {
         _.each(fields, function(field) {

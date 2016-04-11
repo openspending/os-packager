@@ -72,8 +72,9 @@ module.exports.convertToTitle = function(string) {
 };
 
 module.exports.convertToSlug = function(string) {
-  var ret=inflector.parameterize(inflector.transliterate('' + (string || '')));
-  if ( ret === '' ) {
+  var ret = inflector.parameterize(
+    inflector.transliterate('' + (string || '')));
+  if (ret === '') {
     return 'slug';
   }
   return ret;
@@ -85,6 +86,7 @@ module.exports.getCsvSchema = function(urlOrFile) {
       download: true,
       preview: 1000,
       skipEmptyLines: true,
+      encoding: urlOrFile.encoding,
       complete: function(results) {
         if (results.errors.length) {
           reject(results.errors);
@@ -94,12 +96,13 @@ module.exports.getCsvSchema = function(urlOrFile) {
         var schema = jts.infer(headers, rows);
         var delimiter = results.meta.delimiter;
         var linebreak = results.meta.linebreak;
+        var raw = csv.unparse(results.data, {
+          quotes: true,
+          delimiter: ',',
+          newline: '\r\n'
+        });
         resolve({
-          raw: csv.unparse(results.data, {
-            quotes: true,
-            delimiter: ',',
-            newline: '\r\n'
-          }),
+          raw: raw,
           headers: headers,
           rows: rows,
           schema: schema,
@@ -114,23 +117,33 @@ module.exports.getCsvSchema = function(urlOrFile) {
   });
 };
 
-module.exports.validateData = function(data, schema, userEndpointURL) {
+module.exports.validateData = function(data, dataUrl, schema,
+  userEndpointURL) {
   var goodTables = new GoodTables({
-    'method': 'post',
-    'report_type': 'grouped'
+    method: 'post',
+    // jscs:disable
+    report_type: 'grouped'
+    // jscs:enable
   }, userEndpointURL);
-  return goodTables.run(data, !!schema ? JSON.stringify(schema) : undefined)
+
+  return goodTables.run(
+    data, !!schema ? JSON.stringify(schema) : undefined, dataUrl)
     .then(function(results) {
       if (!results) {
         return false;
       }
-      var groupped = results.getGroupedByRows();
+      var grouped = results.getGroupedByRows();
       var headers = results.getHeaders();
-      return _.map(groupped, function(item) {
-        return _.extend(_.values(item)[0], {
-          headers: headers
-        });
-      });
+      var encoding = results.getEncoding();
+      return {
+        headers: headers,
+        encoding: encoding,
+        errors: _.map(grouped, function(item) {
+          return _.extend(_.values(item)[0], {
+            headers: headers
+          });
+        })
+      };
     });
 };
 
@@ -304,6 +317,7 @@ module.exports.availablePossibilities = (function() {
       isAvailable: false,
       concepts: ['measures.amount'],
       graph: 'pie',
+      icon: 'os-icon os-icon-piechart',
       update: updateByConcepts
     },
     {
@@ -311,6 +325,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Time series',
       isAvailable: false,
       graph: 'lines',
+      icon: 'os-icon os-icon-linechart',
       concepts: ['measures.amount', 'dimensions.datetime'],
       update: updateByConcepts
     },
@@ -319,6 +334,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Treemap',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-treemap',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -327,6 +343,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Classification explorer',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-table',
       concepts: ['measures.amount', 'dimensions.classification'],
       update: updateByConcepts
     },
@@ -335,6 +352,7 @@ module.exports.availablePossibilities = (function() {
       name: 'Multiple dimension agg',
       isAvailable: false,
       graph: 'treemap',
+      icon: 'os-icon os-icon-layers',
       concepts: ['measures.amount'],
       update: function(resources) {
         updateByConcepts.call(this, resources);
@@ -535,7 +553,7 @@ module.exports.blobToFileDescriptor = function(blob) {
     reader.addEventListener('error', function() {
       reject(reader.error);
     });
-    reader.readAsText(blob);
+    reader.readAsArrayBuffer(blob);
   });
 };
 
@@ -546,6 +564,7 @@ module.exports.fileDescriptorToBlob = function(descriptor) {
       type: descriptor.type
     });
     result.name = descriptor.name;
+    result.encoding = descriptor.encoding;
   }
   return Promise.resolve(result);
 };

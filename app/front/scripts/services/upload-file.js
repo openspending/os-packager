@@ -24,7 +24,7 @@
         var onResetCallback = null;
         result.onReset = function(cbk) {
           onResetCallback = cbk;
-        }
+        };
 
         result.resetState = function() {
           state = {};
@@ -38,24 +38,21 @@
             state: 'reading'
           };
 
-          PackageService.createResource(source)
+          PackageService.createResource(source, state)
             .then(function(resource) {
-              var status = ValidationService.validateResource(resource);
+              var status = state.status;
               status.sampleSize = resource.data.rows.length;
               if (resource.data.headers) {
                 status.sampleSize += 1;
               }
-              state.status = status;
 
-              status.$promise.then(function(data) {
-                if (!status.errors) {
-                  PackageService.removeAllResources();
-                  if (resource) {
-                    PackageService.addResource(resource);
-                  }
-                  return data;
+              if (!status.errors) {
+                PackageService.removeAllResources();
+                if (resource) {
+                  PackageService.addResource(resource);
                 }
-              });
+                return resource;
+              }
             })
             .catch(function(error) {
               state.status = null;

@@ -67,7 +67,7 @@
             }
             var result = [];
             result.$promise = $q(function(resolve, reject) {
-              Services.cosmopolitan.getCurrencies(true)
+              Services.cosmopolitan.getCurrencies(false)
                 .then(resolve)
                 .catch(reject);
             });
@@ -90,7 +90,7 @@
             }
             var result = [];
             result.$promise = $q(function(resolve, reject) {
-              Services.cosmopolitan.getContinents(true)
+              Services.cosmopolitan.getContinents(false)
                 .then(resolve)
                 .catch(reject);
             });
@@ -128,7 +128,7 @@
                 }).catch(reject);
               } else {
                 // If continent is not available, just load all countries
-                Services.cosmopolitan.getCountries(true)
+                Services.cosmopolitan.getCountries(false)
                   .then(resolve)
                   .catch(reject);
               }

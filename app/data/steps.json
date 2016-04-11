@@ -3,7 +3,7 @@
     "id": "upload-file",
     "order": 1,
     "title": "Provide your data",
-    "route": "/",
+    "route": "/provide-data",
     "controller": "UploadFileController",
     "templateUrl": "templates/steps/upload-file.html"
   },

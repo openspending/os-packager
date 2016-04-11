@@ -19,7 +19,8 @@
       collection: 'appstate',
       key: 'default'
     },
-    steps: services.data.steps
+    steps: services.data.steps,
+    isWizard: window.isWizard
   };
 
   angular.module('Application')

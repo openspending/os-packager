@@ -4,10 +4,8 @@
     .factory('DescribeDataService', [
       '_', 'PackageService', 'UtilsService', 'ValidationService',
       'PreviewDataService', 'ApplicationState', 'ApplicationLoader',
-      'StepsService',
       function(_, PackageService, UtilsService, ValidationService,
-        PreviewDataService, ApplicationState, ApplicationLoader,
-        StepsService) {
+        PreviewDataService, ApplicationState, ApplicationLoader) {
         var result = {};
 
         var state = null;
@@ -17,6 +15,7 @@
             state = ApplicationState.describeData;
           }
           ApplicationState.describeData = state;
+          PreviewDataService.update();
         });
 
         result.resetState = function() {
@@ -79,6 +78,7 @@
               _.pluck(field.allowedTypes, 'id')));
           } else {
             field.type = field.inferredType;
+            field.additionalOptions = [];
             field.options = {};
           }
           state.status = ValidationService.validateResourcesConcepts(

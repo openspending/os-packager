@@ -1,55 +1,46 @@
 {% raw %}
 <section id="step4-wrapper">
-  <h2>Step {{ currentStep.order }}. {{ currentStep.title }}</h2>
-
   <div class="step4-package-info">
-    <div class="row">
-      <h3 class="col-xs-12">Basic Information</h3>
-
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.title">
-        <p><b>Package Title</b></p>
-        <p>{{ fiscalDataPackage.title }}</p>
+    <div class="well">
+      <div class="row" ng-if="!!fiscalDataPackage.title">
+        <div class="x-icon"><i class="os-icon os-icon-box"></i></div>
+        <h3>
+          {{ fiscalDataPackage.title }}
+          <small class="text-muted" ng-if="!!fiscalDataPackage.name">({{ fiscalDataPackage.name }})</small>
+        </h3>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.name">
-        <p><b>Package Name</b></p>
-        <p>{{ fiscalDataPackage.name }}</p>
+      <div class="row">
+        <div class="x-icon"><i class="os-icon os-icon-file"></i></div>
+        <p ng-repeat="resource in fiscalDataPackage.resources track by $index">
+          <span>{{ resource.title || resource.name }}</span>
+          <span ng-if="!!resource.path || !!resource.url" class="text-muted">({{ resource.path || resource.url }})</span>
+        </p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.author">
-        <p><b>Package Owner</b></p>
+      <div class="row" ng-if="!!fiscalDataPackage.author">
+        <div class="x-icon"><i class="os-icon os-icon-user"></i></div>
         <p>{{ fiscalDataPackage.author }}</p>
       </div>
 
-      <div class="col-sm-3" ng-if="!!fiscalDataPackage.fiscalPeriod">
-        <p><b>Fiscal Period</b></p>
+      <div class="row" ng-if="!!fiscalDataPackage.fiscalPeriod">
+        <div class="x-icon"><i class="os-icon os-icon-table"></i></div>
         <p>{{ fiscalDataPackage.fiscalPeriod }}</p>
       </div>
 
-      <div class="col-sm-3"
-        ng-if="!!fiscalDataPackage.regionCode || !!fiscalDataPackage.countryCode || !!fiscalDataPackage.cityCode">
-        <p><b>Location</b></p>
+      <div class="row" ng-if="!!fiscalDataPackage.regionCode || !!fiscalDataPackage.countryCode || !!fiscalDataPackage.cityCode">
+        <div class="x-icon"><i class="os-icon os-icon-location"></i></div>
         <p>{{ [fiscalDataPackage.regionCode, fiscalDataPackage.countryCode, fiscalDataPackage.cityCode] | join }}</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-12">
-        <p><b>Files</b></p>
-        <p ng-repeat="resource in fiscalDataPackage.resources track by $index">
-          <span>{{ resource.title || resource.name }}</span>
-          <i ng-if="!!resource.path || !!resource.url" class="text-muted">({{ resource.path || resource.url }})</i>
-        </p>
       </div>
     </div>
   </div>
 
-  <div class="step4-package-info">
+  <div class="step4-package-mappings">
     <div class="row">
-      <h3 class="col-xs-12">Column Mapping</h3>
+      <h4 class="col-xs-12 text-muted">Column Mapping</h4>
 
       <div ng-repeat="mapping in mappings track by $index" class="col-sm-3">
-        <p><b>{{ mapping.name }}</b></p>
+        <p><b>{{ mapping.name }}:</b></p>
         <p ng-repeat="source in mapping.sources track by $index">
           <span>{{ source.fileName }}</span>&nbsp;/&nbsp;<span>{{ source.fieldName }}</span>
         </p>
@@ -57,28 +48,20 @@
     </div>
   </div>
 
-  <div class="row form-group">
-    <div class="col-xs-12 col-sm-6">
-      <form action="{{ 'download/' + fileName }}" method="post">
-        <input type="hidden" name="name" value="{{ fileName }}">
-        <input type="hidden" name="mime" value="application/octet-stream">
-        <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
-        <button id="step4-button-download" type="submit" class="btn btn-primary btn-lg">
-          <i class="fa fa-download"></i>&nbsp;&nbsp;Download
-        </button>
-      </form>
-    </div>
-
-    <div class="col-xs-12 col-sm-6 text-right"
-         ng-attr-title="{{ login.logged_in ? undefined : 'You need to login in order to upload packages' }}"
-    >
-      <button ng-click="publishDataPackage()"
-              ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
-        type="button" class="btn btn-primary btn-lg" id="step4-button-publish">
-        <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
-      </button>
-    </div>
-  </div>
+  <form action="{{ 'download/' + fileName }}" method="post">
+    <input type="hidden" name="name" value="{{ fileName }}">
+    <input type="hidden" name="mime" value="application/octet-stream">
+    <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
+    <button id="step4-button-download" type="submit" class="btn btn-success btn-lg">
+      <i class="fa fa-download"></i>&nbsp;&nbsp;Download
+    </button>
+    <button ng-click="publishDataPackage()"
+      ng-attr-title="{{ login.logged_in ? undefined : 'You need to login in order to upload packages' }}"
+      ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
+      type="button" class="btn btn-primary btn-lg margin-left-16" id="step4-button-publish">
+      <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
+    </button>
+  </form>
 
   <div ng-if="state.uploads.length">
     <h4>Publishing status:</h4>

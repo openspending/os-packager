@@ -12,7 +12,7 @@ module.exports = function() {
     router.get(step.route, pages.main);
   });
 
-  router.get('/about', pages.about);
+  router.get('/', pages.landing);
   router.get('/templates/*', pages.templates);
 
   return router;

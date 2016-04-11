@@ -90,7 +90,7 @@
 
         result.validatePackage = function() {
           $timeout(function() {
-            state.status = ValidationService.validateFiscalDataPackage();
+            state.status = PackageService.validateFiscalDataPackage();
           });
           return state;
         };

@@ -4,8 +4,10 @@
     .factory('PackageService', [
       '$q', '$timeout', '_', 'Services', 'UtilsService', 'Configuration',
       'ApplicationState', 'ApplicationLoader', 'LoginService',
+      'ValidationService',
       function($q, $timeout, _, Services, UtilsService, Configuration,
-        ApplicationState, ApplicationLoader, LoginService) {
+        ApplicationState, ApplicationLoader, LoginService,
+        ValidationService) {
         var attributes = {};
         var resources = [];
         var schema = null;
@@ -52,12 +54,21 @@
           recreatePackage: function() {
             createNewDataPackage();
           },
-          createResource: function(fileOrUrl) {
+          createResource: function(fileOrUrl, state) {
             return $q(function(resolve, reject) {
               var fileDescriptor = null;
               utils.blobToFileDescriptor(fileOrUrl)
                 .then(function(fileOrUrl) {
-                  fileDescriptor = fileOrUrl;
+                  var status = ValidationService.validateResource(fileOrUrl);
+                  state.status = status;
+                  return $q(function(resolve, reject) {
+                    status.$promise.then(function(results) {
+                      fileOrUrl.encoding = results.encoding;
+                      resolve(fileOrUrl);
+                    }).catch(reject);
+                  });
+                })
+                .then(function(fileOrUrl) {
                   return utils.fileDescriptorToBlob(fileOrUrl);
                 })
                 .then(function(fileOrUrl) {
@@ -65,6 +76,7 @@
                   if (_.isString(url)) {
                     url = UtilsService.decorateProxyUrl(url);
                   }
+                  fileDescriptor = fileOrUrl;
                   return fiscalDataPackage.createResourceFromSource(url);
                 })
                 .then(function(resource) {
@@ -89,12 +101,30 @@
             resources.splice(0, resources.length);
           },
           validateFiscalDataPackage: function() {
+            var validationResult = {
+              state: 'checking'
+            };
             var dataPackage = this.createFiscalDataPackage();
-            return $q(function(resolve, reject) {
+            validationResult.$promise = $q(function(resolve, reject) {
               return fiscalDataPackage.validateDataPackage(dataPackage, schema)
-                .then(resolve)
-                .catch(reject);
+                  .then(resolve)
+                  .catch(reject);
             });
+
+            validationResult.$promise
+                .then(function(results) {
+                  validationResult.state = 'completed';
+                  if (results && !results.valid) {
+                    validationResult.errors = results.errors;
+                  }
+                  return results;
+                })
+                .catch(function(error) {
+                  validationResult.state = null;
+                  Configuration.defaultErrorHandler(error);
+                });
+
+            return validationResult;
           },
           createFiscalDataPackage: function() {
             return fiscalDataPackage.createFiscalDataPackage(attributes,
@@ -124,8 +154,9 @@
             });
             var dataPackage = fiscalDataPackage.createFiscalDataPackage(
               attributes, modifiedResources);
-            dataPackage.owner = LoginService.userid;
-            dataPackage.author = LoginService.name + ' <' + LoginService.email + '>';
+            dataPackage.owner = LoginService.userId;
+            dataPackage.author = LoginService.name +
+              ' <' + LoginService.email + '>';
 
             // Create and prepend datapackage.json
             var packageFile = {
@@ -149,7 +180,9 @@
                 Services.datastore.readContents(file)
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {
-                      permission_token: LoginService.permission_token,
+                      // jscs:disable
+                      permission_token: LoginService.permissionToken,
+                      // jscs:enable
                       name: dataPackage.name,
                       owner: dataPackage.owner
                     });

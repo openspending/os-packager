@@ -22,7 +22,7 @@
       <select id="step3-location-region" class="form-control"
         name="region"
         ng-model="attributes.regionCode"
-        ng-options="region.code as region.name for region in geoData.regions"></select>
+        ng-options="region.code as region.name for region in (geoData.regions | orderBy:'name')"></select>
     </div>
     <div class="form-group">
       <label class="control-label" for="step3-location-country">Country</label>
@@ -30,7 +30,7 @@
         ng-disabled="!attributes.regionCode"
         name="country"
         ng-model="attributes.countryCode"
-        ng-options="country.code as country.name for country in geoData.countries"></select>
+        ng-options="country.code as country.name for country in (geoData.countries | orderBy:'name')"></select>
     </div>
     <div class="form-group">
       <label class="control-label" for="step3-location-city">City</label>

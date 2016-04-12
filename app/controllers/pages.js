@@ -35,7 +35,7 @@ module.exports.landing = function(req, res) {
     conductor: config.get('conductor'),
     basePath: basePath,
     title: 'OS Packager',
-    getStartedUrl: (basePath ? '/' + basePath : '') + firstStep.route
+    getStartedUrl: basePath + firstStep.route
   });
 };
 

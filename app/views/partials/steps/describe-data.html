@@ -41,7 +41,7 @@
               </div>
               <div ng-if="option.values">
                 <select ng-model="field.options[option.name]" class="form-control"
-                  ng-options="item.value as item.name for item in option.values"></select>
+                  ng-options="item.value as item.name for item in (option.values | orderBy:'name')"></select>
               </div>
               <div ng-if="!option.values">
                 <input type="text" ng-model="field.options[option.name]" class="form-control">

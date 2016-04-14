@@ -103,10 +103,10 @@ gulp.task('app.styles', function() {
 gulp.task('vendor.scripts', function() {
   var files = [
     path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
-    path.join(nodeModulesDir, '/bootstrap/dist/js/bootstrap.min.js'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/js/bootstrap.min.js'),
     path.join(nodeModulesDir, '/angular/angular.min.js'),
     path.join(nodeModulesDir, '/angular-animate/angular-animate.min.js'),
-    path.join(nodeModulesDir, '/angular-route/angular-route.min.js'),
+    path.join(nodeModulesDir, '/angular-route/angular-route.min.js')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.js'))
@@ -116,7 +116,7 @@ gulp.task('vendor.scripts', function() {
 gulp.task('vendor.styles', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
-    path.join(nodeModulesDir, '/bootstrap/dist/css/bootstrap.min.css'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/css/bootstrap.min.css'),
     path.join(nodeModulesDir, '/angular/angular-csp.css'),
     path.join(nodeModulesDir, '/c3/c3.min.css')
   ];
@@ -128,7 +128,7 @@ gulp.task('vendor.styles', function() {
 gulp.task('vendor.fonts', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/fonts/*'),
-    path.join(nodeModulesDir, '/bootstrap/dist/fonts/*')
+    path.join(nodeModulesDir, '/os-bootstrap/dist/fonts/*')
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicFontsDir));
@@ -137,9 +137,9 @@ gulp.task('vendor.fonts', function() {
 gulp.task('app.assets', function() {
   var files = [
     path.join(frontAssetsDir, '/**/*'),
-    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/os.svg'),
-    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
-    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/vector/light/ospackager.svg'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/os.svg'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/ospackager.svg'),
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicAssetsDir));
@@ -147,7 +147,7 @@ gulp.task('app.assets', function() {
 
 gulp.task('app.favicon', function() {
   var files = [
-    path.join(nodeModulesDir, '/bootstrap/dist/assets/os-branding/packager-favicon.ico')
+    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/packager-favicon.ico')
   ];
   return gulp.src(files)
     .pipe(rename('favicon.ico'))

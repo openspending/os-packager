@@ -4,10 +4,8 @@
     .factory('ProvideMetadataService', [
       '$timeout', '_', 'PackageService', 'UtilsService',
       'ValidationService', 'ApplicationState', 'ApplicationLoader',
-      'StepsService',
       function($timeout, _, PackageService, UtilsService,
-        ValidationService, ApplicationState, ApplicationLoader,
-        StepsService) {
+        ValidationService, ApplicationState, ApplicationLoader) {
         var result = {};
 
         var geoData = {};
@@ -88,9 +86,13 @@
           });
         };
 
-        result.validatePackage = function() {
+        result.validatePackage = function(form) {
+          var result = ValidationService.validateAttributesForm(form);
+          if (result === true) {
+            result = PackageService.validateFiscalDataPackage();
+          }
           $timeout(function() {
-            state.status = PackageService.validateFiscalDataPackage();
+            state.status = result;
           });
           return state;
         };

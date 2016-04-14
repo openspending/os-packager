@@ -1,6 +1,7 @@
 {% raw %}
 <section id="step3-wrapper">
   <form class="row" novalidate="novalidate" name="metadata" onsubmit="return false;">
+  <div ng-init="forms.metadata = metadata"></div>
   <div class="col-xs-12 col-md-6">
     <div class="form-group" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
       <label class="control-label required" for="step3-package-name">Name your Data Package</label>
@@ -60,18 +61,18 @@
 
   </form>
 
-  <div ng-if="!metadata.title.$dirty && !state.status.state" class="alert alert-default">
+  <div ng-if="!state.status" class="alert alert-default">
     <i class="fa fa-2x fa-info-circle vertical-align-middle margin-right-4"></i>
     Please, provide some additional info about your Data Package.
   </div>
 
-  <div ng-if="metadata.title.$dirty && !metadata.$valid" class="alert alert-danger">
-    <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
-    Please, provide data for all required fields.
-  </div>
-
-  <div ng-if="metadata.$valid" ng-init="onValidatePackage()" class="row form-group">
+  <div class="row form-group" ng-if="!!state.status">
     <div class="col-xs-12">
+      <div ng-if="(state.status.state == 'invalid')" class="alert alert-danger">
+        <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
+        Please, provide data for all required fields.
+      </div>
+
       <div ng-if="(state.status.state == 'checking')" class="alert alert-default">
         <i class="fa fa-2x fa-spinner fa-pulse vertical-align-middle margin-right-4"></i>
         Validating structure of your Data Package...

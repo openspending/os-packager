@@ -62,7 +62,7 @@
   "devDependencies": {
     "angular": "^1.4.7",
     "angular-animate": "^1.5.3",
-    "bootstrap": "git+https://github.com/kravets-levko/bootstrap.git#feature/openspending",
+    "os-bootstrap": "git+https://github.com/openspending/os-bootstrap.git",
     "browserify": "^12.0.1",
     "chai": "^3.4.0",
     "gulp": "^3.9.0",

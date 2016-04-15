@@ -63,6 +63,17 @@
 
             // There should not be `false` values
             return !_.contains(requiredConcepts, false);
+          },
+          validateAttributesForm: function(form) {
+            if (!form) {
+              return;
+            }
+            if (!form.$valid) {
+              return {
+                state: 'invalid'
+              };
+            }
+            return true;
           }
         };
       }

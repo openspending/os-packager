@@ -65,7 +65,7 @@
             return !_.contains(requiredConcepts, false);
           },
           validateAttributesForm: function(form) {
-            if (!form) {
+            if (!form || !form.$dirty) {
               return;
             }
             if (!form.$valid) {

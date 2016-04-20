@@ -100,7 +100,17 @@
             }).then(function() {}); // Force execute
           },
           saveApplicationState: function() {
-            var state = deepCloneValue(prepareValueForSaving(ApplicationState));
+            var state = ApplicationState;
+
+            // Check file size. If file is too large, do not store state
+            if (state.uploadFile && state.uploadFile.file) {
+              var size = state.uploadFile.file.size;
+              if (size > Configuration.maxFileSizeToStore) {
+                state = null;
+              }
+            }
+
+            state = deepCloneValue(prepareValueForSaving(state));
             return result.set(Configuration.storage.key, state);
           },
           clearApplicationState: function() {

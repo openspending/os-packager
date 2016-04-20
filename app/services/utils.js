@@ -535,9 +535,13 @@ module.exports.getDataForPreview = function(resources, maxCount) {
   });
 };
 
-module.exports.blobToFileDescriptor = function(blob) {
+module.exports.blobToFileDescriptor = function(blob, maxAllowedSize) {
   if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
     !(blob instanceof Blob)) {
+    return Promise.resolve(blob);
+  }
+  if (!!maxAllowedSize && (maxAllowedSize > 0) &&
+    (blob.size > maxAllowedSize)) {
     return Promise.resolve(blob);
   }
   return new Promise(function(resolve, reject) {
@@ -560,11 +564,15 @@ module.exports.blobToFileDescriptor = function(blob) {
 module.exports.fileDescriptorToBlob = function(descriptor) {
   var result = descriptor;
   if (_.isObject(descriptor) && _.isFunction(Blob)) {
-    result = new Blob([descriptor.data], {
-      type: descriptor.type
-    });
-    result.name = descriptor.name;
-    result.encoding = descriptor.encoding;
+    if (descriptor instanceof Blob) {
+      result = descriptor;
+    } else {
+      result = new Blob([descriptor.data], {
+        type: descriptor.type
+      });
+      result.name = descriptor.name;
+      result.encoding = descriptor.encoding;
+    }
   }
   return Promise.resolve(result);
 };

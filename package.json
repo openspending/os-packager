@@ -34,7 +34,6 @@
   "bugs": "https://github.com/openspending/fiscal-data-packager/issues",
   "homepage": "https://github.com/openspending/fiscal-data-packager#readme",
   "dependencies": {
-    "angular-route": "^1.4.8",
     "base64-js": "1.1.1",
     "bluebird": "^3.0.5",
     "body-parser": "^1.14.1",
@@ -60,8 +59,9 @@
     "validator": "^4.2.1"
   },
   "devDependencies": {
-    "angular": "^1.4.7",
-    "angular-animate": "^1.5.3",
+    "angular": "^1.5.5",
+    "angular-animate": "^1.5.5",
+    "angular-route": "^1.5.5",
     "os-bootstrap": "git+https://github.com/openspending/os-bootstrap.git",
     "browserify": "^12.0.1",
     "chai": "^3.4.0",

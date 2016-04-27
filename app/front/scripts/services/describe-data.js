@@ -1,3 +1,5 @@
+var OSTypes = require('os-types');
+
 ;(function(angular) {
 
   angular.module('Application')
@@ -27,36 +29,12 @@
           return state;
         };
 
-        result.getSelectedConcepts = function(group) {
+        result.getSelectedConcepts = function(conceptType) {
           var mapped = [];
           var resources = PackageService.getResources();
           _.each(resources, function(resource) {
             _.each(resource.fields, function(field) {
-              var concept = UtilsService.findConcept(field.concept);
-              if (concept && concept.group == group) {
-                field = _.clone(field);
-                field.concept = concept;
-                field.options = _.chain(field.options)
-                  .map(function(value, key) {
-                    var option = _.findWhere(concept.options, {name: key});
-                    if (option.values) {
-                      var temp = _.findWhere(option.values, {value: value});
-                      if (_.isObject(temp)) {
-                        value = temp.name;
-                      }
-                    }
-                    var isEmptyValue = _.isUndefined(value) ||
-                      _.isNull(value) || (value == '');
-                    if (isEmptyValue) {
-                      return false;
-                    }
-                    return {
-                      name: option.title,
-                      value: value
-                    };
-                  })
-                  .filter()
-                  .value();
+              if (field.conceptType == conceptType) {
                 mapped.push(field);
               }
             });
@@ -68,20 +46,52 @@
           if (!field) {
             return;
           }
-          if (field.concept) {
-            var concept = UtilsService.findConcept(field.concept);
-            field.additionalOptions = concept.options;
-            field.options = _.object(_.map(concept.options, function(item) {
-              return [item.name, item.defaultValue];
-            }));
-            field.type = _.first(_.intersection(concept.allowedTypes,
-              _.pluck(field.allowedTypes, 'id')));
+          var fields = PackageService.getResources()[0].fields;
+          //TODO: Support more than 1 resource when OSTypes supports it
+          _.forEach(fields, function(field) {
+            delete field.errors;
+            delete field.additionalOptions;
+            delete field.slug;
+          });
+          var fdp = new OSTypes().fieldsToModel(fields);
+          if (fdp.errors) {
+            _.forEach(fields, function(field) {
+              var fieldErrors = fdp.errors.perField[field.title];
+              if (fieldErrors) {
+                field.errors = fieldErrors;
+              }
+            });
           } else {
-            field.type = field.inferredType;
-            field.additionalOptions = [];
-            field.options = {};
+            _.forEach(fields, function(field) {
+              var schemaField = fdp.schema.fields[field.title];
+              if (schemaField) {
+                field.additionalOptions = schemaField.options;
+                if (!field.options) {
+                  field.options = {};
+                }
+                _.forEach(field.additionalOptions, function(option) {
+                  if (option.name == 'currency') {
+                    option.values = _.map(UtilsService.getCurrencies(),
+                      function(item) {
+                        return {
+                          name: item.code + ' ' + item.name,
+                          value: item.code
+                        };
+                      });
+                    option.defaultValue =
+                      UtilsService.getDefaultCurrency().code;
+                  }
+                  if (_.has(option,'defaultValue')) {
+                    field.options[option.name] = option.defaultValue;
+                  }
+                });
+              } else {
+                field.additionalOptions = [];
+                field.options = {};
+              }
+            });
           }
-          state.status = ValidationService.validateResourcesConcepts(
+          state.status = ValidationService.validateRequiredConcepts(
             PackageService.getResources());
 
           PreviewDataService.update();

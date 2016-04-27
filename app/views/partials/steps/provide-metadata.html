@@ -4,9 +4,15 @@
   <div ng-init="forms.metadata = metadata"></div>
   <div class="col-xs-12 col-md-6">
     <div class="form-group" ng-class="{'has-error': metadata.title.$dirty && !metadata.title.$valid}">
-      <label class="control-label required" for="step3-package-name">Name your Data Package</label>
+      <label class="control-label required" for="step3-package-title">Provide a Human readable name for your Data Package</label>
       <input ng-model="attributes.title" required="required" name="title"
-        type="text" class="form-control" id="step3-package-name">
+        type="text" class="form-control" id="step3-package-title">
+    </div>
+
+    <div class="form-group" ng-class="{'has-error': metadata.name.$dirty && !metadata.name.$valid}">
+      <label class="control-label required" for="step3-package-name">And a short English name for your Data Package</label>
+      <input ng-model="attributes.name" required="required" name="name"
+             type="text" class="form-control" id="step3-package-name">
     </div>
 
     <div class="form-group">

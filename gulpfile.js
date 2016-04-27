@@ -13,6 +13,7 @@ var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var resolve = require('resolve');
 var less = require('gulp-less');
+var watch = require('gulp-watch');
 var _ = require('underscore');
 
 var frontSrcDir = path.join(__dirname, '/app/front');
@@ -26,6 +27,9 @@ var publicStylesDir = path.join(publicDir, '/styles');
 var publicFontsDir = path.join(publicDir, '/fonts');
 var publicAssetsDir = path.join(publicDir, '/assets');
 
+var viewsDir = path.join(__dirname, '/app/views');
+var servicesDir = path.join(__dirname, '/app/services');
+
 var nodeModulesDir = path.join(__dirname, '/node_modules');
 
 var modules = [
@@ -37,7 +41,9 @@ var modules = [
   'treo',
   'treo/plugins/treo-promise',
   'treo/plugins/treo-websql',
-  'isomorphic-fetch/fetch-npm-browserify'
+  'isomorphic-fetch/fetch-npm-browserify',
+  'os-types',
+  'lodash'
 ];
 
 var appModules = {
@@ -54,6 +60,18 @@ gulp.task('default', [
   'vendor.fonts',
   'app.favicon'
 ]);
+
+gulp.task('watch', ['default'], function () {
+  var files = [
+    path.join(frontScriptsDir, '/**/*.js'),
+    path.join(servicesDir, '/**/*.js'),
+    path.join(frontStylesDir, '/**/*.less'),
+    path.join(viewsDir, '/**/*.html')
+  ];
+  watch(files, {usePolling: true}, function (events) {
+    gulp.start('default');
+  });
+});
 
 gulp.task('app.scripts', function() {
   var files = [
@@ -106,7 +124,8 @@ gulp.task('vendor.scripts', function() {
     path.join(nodeModulesDir, '/os-bootstrap/dist/js/bootstrap.min.js'),
     path.join(nodeModulesDir, '/angular/angular.min.js'),
     path.join(nodeModulesDir, '/angular-animate/angular-animate.min.js'),
-    path.join(nodeModulesDir, '/angular-route/angular-route.min.js')
+    path.join(nodeModulesDir, '/angular-route/angular-route.min.js'),
+    path.join(nodeModulesDir, '/typeahead.js/dist/typeahead.jquery.js')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.js'))
@@ -118,7 +137,8 @@ gulp.task('vendor.styles', function() {
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
     path.join(nodeModulesDir, '/os-bootstrap/dist/css/bootstrap.min.css'),
     path.join(nodeModulesDir, '/angular/angular-csp.css'),
-    path.join(nodeModulesDir, '/c3/c3.min.css')
+    path.join(nodeModulesDir, '/c3/c3.min.css'),
+    path.join(nodeModulesDir, '/typeahead.js-bootstrap-css/typeaheadjs.css')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.css'))

@@ -28,10 +28,10 @@
           return possibilities;
         };
 
-        result.getPreviewData = function() {
-          return Services.utils.getDataForPreview(
-            PackageService.getResources(), 10);
-        };
+        //result.getPreviewData = function() {
+        //  return Services.utils.getDataForPreview(
+        //    PackageService.getResources(), 10);
+        //};
 
         result.update = function() {
           var resources = PackageService.getResources();

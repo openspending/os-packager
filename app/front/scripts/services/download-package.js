@@ -45,7 +45,7 @@
               name: name,
               sources: [{
                 fileName: resource.title || resource.name,
-                fieldName: measure.source
+                fieldName: measure.title
               }]
             });
           });
@@ -54,11 +54,11 @@
           _.each(fiscalDataPackage.model.dimensions,
             function(dimension, name) {
               var sources = [];
-              _.each(dimension.attributes, function(dimension) {
-                var resource = getResource(dimension.resource);
+              _.each(dimension.attributes, function(attribute) {
+                var resource = getResource(attribute.resource);
                 sources.push({
                   fileName: resource.title || resource.name,
-                  fieldName: dimension.source
+                  fieldName: attribute.title
                 });
               });
               result.push({

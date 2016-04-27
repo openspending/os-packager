@@ -4,6 +4,7 @@ var _ = require('underscore');
 var Promise = require('bluebird');
 var datapackageValidate = require('datapackage-validate').validate;
 var registry = require('datapackage-registry');
+var OSTypes = require('os-types');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
@@ -29,7 +30,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
 
         var resource = {
           name: resourceName,
-          title: utils.convertToTitle(resourceName),
+          title: resourceName,
           source: source,
           data: {
             headers: data.headers,
@@ -42,17 +43,16 @@ module.exports.createResourceFromSource = function(urlOrFile) {
             lineTerminator: data.dialect.linebreak
           },
           fields: _.map(data.schema.fields, function(field, index) {
-            field = _.clone(field);
-            field.concept = (field.concept || '') + '';
-            field.inferredType = field.type;
-            field.title = utils.convertToTitle(field.name);
-            field.allowedTypes = utils.availableDataTypes;
-            field.allowedConcepts = utils.getAllowedConcepts(
-              field.allowedTypes);
-            return field;
+            var _field = {};
+            _field.type = '';
+            _field.name = field.name;
+            _field.title = field.name;
+            _field.data =
+              _.map(_.first(data.rows, 3),
+                    function(row) { return row[index]; });
+            return _field;
           })
         };
-
         resolve(resource);
         return data;
       })
@@ -61,55 +61,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
 };
 
 module.exports.getFiscalDataPackageSchema = function(useProxy) {
-  return module.exports.getDataPackageSchema('fiscal', useProxy);
-};
-
-module.exports.getDataPackageSchema = function(schemaId, useProxy) {
-  return new Promise(function(resolve, reject) {
-    var options = {
-      backend: dataPackageRegistryUrl
-    };
-    if (_.isUndefined(useProxy) || !!useProxy) {
-      options = {
-        backend: 'proxy?url=' + encodeURIComponent(dataPackageRegistryUrl)
-      };
-    }
-    registry.get(options).then(function(result) {
-      var profile = _.findWhere(result, {id: schemaId});
-
-      if (!profile) {
-        reject('No profile found with id ' + schemaId);
-        return null;
-      }
-
-      var options = {
-        method: 'GET'
-      };
-
-      var url = profile.schema;
-      if (_.isUndefined(useProxy) || !!useProxy) {
-        url = 'proxy?url=' + encodeURIComponent(profile.schema);
-      }
-      fetch(url, options)
-        .then(function(res) {
-          if (res.status != 200) {
-            reject('Failed loading schema from ' + profile.schema);
-          }
-          return res.text();
-        })
-        .then(function(data) {
-          try {
-            var schema = JSON.parse(data);
-            resolve(schema);
-          } catch (e) {
-            reject('Failed parsing schema json from ' + profile.schema);
-          }
-        })
-        .catch(reject);
-    }, function() {
-      reject('Registry request failed');
-    });
-  });
+  return 'fiscal';
 };
 
 module.exports.validateDataPackage = function(dataPackage, schema) {
@@ -119,13 +71,21 @@ module.exports.validateDataPackage = function(dataPackage, schema) {
 };
 
 module.exports.createFiscalDataPackage = function(attributes, resources) {
-  var result = {};
+
+  // Use OSTypes to generate FDP
+  var fields = resources[0].fields; //TODO: Add support for more than one resource once OSTypes supports it
+  _.forEach(fields, function(field) {
+    delete field.errors;
+    delete field.additionalOptions;
+    delete field.slug;
+  });
+  var fdp = new OSTypes().fieldsToModel(fields);
 
   // Package metadata
-  _.extend(result, utils.removeEmptyAttributes(attributes));
+  _.extend(fdp, utils.removeEmptyAttributes(attributes));
 
   // Resources
-  result.resources = _.map(resources, function(resource) {
+  fdp.resources = _.map(resources, function(resource) {
     var result = {};
     result.name = resource.name;
     result.format = 'csv';
@@ -143,108 +103,16 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (resource.dialect) {
       result.dialect = _.clone(resource.dialect);
     }
-    result.schema = {
-      fields: _.map(resource.fields, function(field) {
-        field = _.clone(field);
-        delete field.concept;
-        delete field.inferredType;
-        delete field.allowedTypes;
-        delete field.allowedConcepts;
-        delete field.options;
-        delete field.additionalOptions;
-        return field;
-      })
-    };
+    result.schema = fdp.schema;
+    result.schema.fields = _.map(
+      _.values(result.schema.fields),
+      function(field) {
+        return _.omit(field, 'options');
+      }
+    );
+    delete fdp.schema;
     return result;
   });
 
-  // Model
-  result.model = {
-    measures: {},
-    dimensions: {}
-  };
-
-  var groups = {};
-  _.each(resources, function(resource) {
-    _.each(resource.fields, function(field) {
-      if (field.concept) {
-        var key = [field.concept];
-        if (_.isObject(field.options) && field.options.classificationType) {
-          key.push(field.options.classificationType);
-        }
-        key = JSON.stringify(key);
-        groups[key] = groups[key] || [];
-        groups[key].push(_.extend({
-          resource: resource.name
-        }, field));
-      }
-    });
-  });
-
-  var createMappingFromField = function(field) {
-    var options = _.isObject(field.options) ? field.options : {};
-    options = _.clone(options);
-    options.classificationType = '';
-    return _.extend(utils.removeEmptyAttributes(options), {
-      source: field.name,
-      resource: field.resource
-    });
-  };
-
-  var allConcepts = function() {
-    return _.keys(result.model.dimensions)
-      .concat(_.keys(result.model.measures));
-  };
-
-  var mappingName = null;
-  _.each(groups, function(fields, concept) {
-    var optionalAttributes = {};
-    concept = JSON.parse(concept);
-    if (concept.length > 1) {
-      optionalAttributes.classificationType = concept[1];
-    }
-
-    concept = _.first(concept);
-    concept = _.find(utils.availableConcepts, function(item) {
-      return item.id == concept;
-    });
-    if (!concept || !concept.dimensionType) {
-      return;
-    }
-    var conceptName = concept.dimensionType + ' ' +
-      (optionalAttributes.classificationType || '');
-    switch (concept.group) {
-      case 'measure': {
-        _.each(fields, function(field) {
-          mappingName = utils.createUniqueName(
-            utils.convertToSlug(field.title || field.name),
-              allConcepts());
-          result.model.measures[mappingName] = createMappingFromField(field);
-        });
-        break;
-      }
-      case 'dimension': {
-        mappingName = utils.createUniqueName(
-          utils.convertToSlug(conceptName), allConcepts());
-        var attributes = [];
-        _.each(fields, function(field) {
-          attributes.push([
-            utils.createUniqueName(
-              utils.convertToSlug(field.title || field.name),
-              _.map(attributes, _.first)
-            ),
-            createMappingFromField(field)
-          ]);
-        });
-        result.model.dimensions[mappingName] = _.extend(optionalAttributes, {
-          dimensionType: concept.dimensionType,
-          primaryKey: _.map(attributes, _.first),
-          attributes: _.object(attributes)
-        });
-        break;
-      }
-    }
-  });
-
-  return result;
+  return fdp;
 };

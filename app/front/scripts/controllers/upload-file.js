@@ -2,8 +2,13 @@
 
   angular.module('Application')
     .controller('UploadFileController', [
-      '$scope', '_', 'UploadFileService', 'ApplicationLoader',
-      function($scope, _, UploadFileService, ApplicationLoader) {
+      '$scope', '_', 'UploadFileService', 'ApplicationLoader', 'LoginService',
+      'Configuration',
+      function($scope, _, UploadFileService, ApplicationLoader, LoginService,
+        Configuration) {
+        $scope.login = LoginService;
+        $scope.maxFileSizeToStore = Configuration.maxFileSizeToStore;
+
         ApplicationLoader.then(function() {
 
           function reloadState() {

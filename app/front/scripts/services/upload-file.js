@@ -4,10 +4,8 @@
     .factory('UploadFileService', [
       '_', 'PackageService', 'ValidationService', 'Configuration',
       'UtilsService', 'Services', 'ApplicationState', 'ApplicationLoader',
-      'StepsService',
       function(_, PackageService, ValidationService, Configuration,
-        UtilsService, Services, ApplicationState, ApplicationLoader,
-        StepsService) {
+        UtilsService, Services, ApplicationState, ApplicationLoader) {
         var utils = Services.utils;
 
         var result = {};

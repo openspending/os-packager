@@ -1,3 +1,5 @@
+var lodash = require('lodash');
+
 ;(function(angular) {
 
   var goodTablesUrl = 'http://goodtables.okfnlabs.org/api/run';
@@ -42,27 +44,15 @@
 
             return validationResult;
           },
-          validateResourcesConcepts: function(resources) {
-            var requiredConcepts = _.chain(utils.availableConcepts)
-              .filter(function(item) {
-                return !!item.required;
-              })
-              .map(function(item) {
-                return [item.id, false];
-              })
-              .object()
-              .value();
-
-            _.each(resources, function(resource) {
-              _.each(resource.fields, function(field) {
-                if (requiredConcepts.hasOwnProperty(field.concept)) {
-                  requiredConcepts[field.concept] = true;
-                }
+          validateRequiredConcepts: function(resources) {
+            var hasConcept = function(prefix) {
+              return _.some(resources, function(resource) {
+                return _.some(resource.fields, function(field) {
+                  return lodash.startsWith(field.type, prefix);
+                });
               });
-            });
-
-            // There should not be `false` values
-            return !_.contains(requiredConcepts, false);
+            };
+            return hasConcept('value') && hasConcept('date:');
           },
           validateAttributesForm: function(form) {
             if (!form || !form.$dirty) {

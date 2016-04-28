@@ -24,9 +24,11 @@
           };
 
           $scope.$watch('attributes.title', function() {
-            if ($scope.attributes) {
-              ProvideMetadataService.updatePackageName();
-            }
+            $scope.state = ProvideMetadataService.validatePackage(
+              $scope.forms.metadata);
+          });
+
+          $scope.$watch('attributes.name', function() {
             $scope.state = ProvideMetadataService.validatePackage(
               $scope.forms.metadata);
           });

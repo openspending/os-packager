@@ -32,11 +32,6 @@
           return geoData;
         };
 
-        result.updatePackageName = function() {
-          var attributes = PackageService.getAttributes();
-          attributes.name = UtilsService.slug(attributes.title);
-        };
-
         result.updateFiscalPeriod = function(period) {
           if (period) {
             var attributes = PackageService.getAttributes();

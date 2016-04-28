@@ -20,9 +20,9 @@
           undecorateProxyUrl: function(url) {
             return utils.undecorateProxyUrl(url);
           },
-          findConcept: function(conceptId) {
+          findConcept: function(osType) {
             return _.find(utils.availableConcepts, function(concept) {
-              return concept.id == conceptId;
+              return concept.osType == osType;
             });
           },
           getAvailableConcepts: function() {
@@ -76,12 +76,11 @@
               return items;
             });
             allCurrencies = result;
-
-            result.$promise.then(function(currencies) {
-              Services.utils.setAvailableCurrencies(currencies);
-              return currencies;
-            });
             return result;
+          },
+
+          getDefaultCurrency: function() {
+            return utils.getDefaultCurrency();
           },
 
           getContinents: function() {

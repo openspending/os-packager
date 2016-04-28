@@ -36,13 +36,9 @@
 
         var result = {
           loadSchema: function() {
-            return $q(function(resolve, reject) {
-              fiscalDataPackage.getFiscalDataPackageSchema()
-                .then(function(result) {
-                  schema = result;
-                })
-                .then(resolve)
-                .catch(reject);
+            return $q(function(resolve) {
+              schema = fiscalDataPackage.getFiscalDataPackageSchema();
+              resolve();
             });
           },
           getAttributes: function() {

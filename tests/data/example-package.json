@@ -9,26 +9,30 @@
       "schema": {
         "fields": [
           {
+            "title": "id",
             "name": "id",
-            "title": "Id",
-            "description": "",
-            "type": "string",
-            "format": "default"
+            "slug": "id",
+            "type": "number",
+            "format": "default",
+            "osType": "value",
+            "conceptType": "value",
+            "decimalChar": ".",
+            "groupChar": ",",
+            "resource": "valid"
           },
           {
+            "title": "name",
             "name": "name",
-            "title": "Name",
-            "description": "",
-            "type": "string",
-            "format": "default"
-          },
-          {
-            "name": "slug",
-            "title": "Slug",
-            "description": "",
-            "type": "string",
-            "format": "default"
+            "slug": "name",
+            "type": "date",
+            "format": "%Y-%m-%d",
+            "osType": "date:generic",
+            "conceptType": "date",
+            "resource": "valid"
           }
+        ],
+        "primaryKey": [
+          "name"
         ]
       },
       "dialect": {
@@ -42,11 +46,12 @@
     "measures": {
       "id": {
         "source": "id",
+        "title": "id",
         "resource": "valid"
       }
     },
     "dimensions": {
-      "datetime": {
+      "date": {
         "dimensionType": "datetime",
         "primaryKey": [
           "name"
@@ -54,6 +59,7 @@
         "attributes": {
           "name": {
             "source": "name",
+            "title": "name",
             "resource": "valid"
           }
         }

@@ -13,27 +13,31 @@
       <div class="panel-heading">
         <a ng-click="fieldState.editDescription = !fieldState.editDescription"
           href="javascript:void(0)" class="pull-right" title="Add/Edit Description"><i class="fa fa-sticky-note-o"></i></a>
-        <h3 class="panel-title">{{ resource.data.headers[fieldState.index] }}</h3>
+        <h3 class="panel-title">{{ field.name }}</h3>
       </div>
       <div class="panel-body">
         <div class="x-data-sample">
-          <div ng-repeat="row in resource.data.rows | limitTo:3 track by $index">{{ row[fieldState.index] }}</div>
+          <div ng-repeat="datum in field.data track by $index">{{ datum }}</div>
         </div>
         <div class="x-field-info">
           <div>
             <label class="control-label">Title</label>
             <input ng-model="field.title" type="text" class="form-control">
           </div>
+          <os-datatype data-field="field" data-on-changed="onConceptChanged(field)"></os-datatype>
+          <p ng-repeat="error in field.errors" class="error">
+            <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;{{ error }}
+          </p>
+          <!--<div>-->
+            <!--<label class="control-label">Data type</label>-->
+            <!--<select ng-model="field.type" class="form-control"-->
+              <!--ng-options="item.id as item.name for item in (field | fieldTypes)"></select>-->
+          <!--</div>-->
           <div>
-            <label class="control-label">Data type</label>
-            <select ng-model="field.type" class="form-control"
-              ng-options="item.id as item.name for item in (field | fieldTypes)"></select>
-          </div>
-          <div>
-            <label class="control-label">Concept</label>
-            <select ng-model="field.concept" class="form-control x-field-info-concept"
-              ng-change="onConceptChanged(field)"
-              ng-options="item.id as item.name for item in field.allowedConcepts"></select>
+            <!--<label class="control-label">Concept</label>-->
+            <!--<select ng-model="field.concept" class="form-control x-field-info-concept"-->
+              <!--ng-change="onConceptChanged(field)"-->
+              <!--ng-options="item.id as item.name for item in field.allowedConcepts"></select>-->
 
             <div ng-repeat="option in field.additionalOptions" class="margin-top-8">
               <div>
@@ -44,7 +48,7 @@
                   ng-options="item.value as item.name for item in (option.values | orderBy:'name')"></select>
               </div>
               <div ng-if="!option.values">
-                <input type="text" ng-model="field.options[option.name]" class="form-control">
+                <input type="{{option.type || text}}" ng-model="field.options[option.name]" class="form-control">
               </div>
             </div>
           </div>

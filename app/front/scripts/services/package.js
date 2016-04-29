@@ -56,7 +56,14 @@
               utils.blobToFileDescriptor(fileOrUrl,
                 Configuration.maxFileSizeToStore)
                 .then(function(fileOrUrl) {
-                  return utils.fileDescriptorToBlob(fileOrUrl);
+                  var status = ValidationService.validateResource(fileOrUrl);
+                  state.status = status;
+                  return $q(function(resolve, reject) {
+                    status.$promise.then(function(results) {
+                      fileOrUrl.encoding = results.encoding;
+                      resolve(utils.fileDescriptorToBlob(fileOrUrl));
+                    }).catch(reject);
+                  });
                 })
                 .then(function(fileOrUrl) {
                   var url = fileOrUrl;
@@ -76,20 +83,6 @@
                     resource.source.url = fileOrUrl;
                   }
                   return resource;
-                })
-                .then(function(resource) {
-                  var fileOrUrl = resource.blob || resource.source.url;
-                  if (_.isObject(fileOrUrl)) {
-                    fileOrUrl.data = fileOrUrl.data || resource.data.raw;
-                  }
-                  var status = ValidationService.validateResource(fileOrUrl);
-                  state.status = status;
-                  return $q(function(resolve, reject) {
-                    status.$promise.then(function(results) {
-                      fileOrUrl.encoding = results.encoding;
-                      resolve(resource);
-                    }).catch(reject);
-                  });
                 })
                 .then(resolve)
                 .catch(reject);

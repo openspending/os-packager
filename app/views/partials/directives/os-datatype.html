@@ -1,5 +1,8 @@
+{% raw %}
 <div>
     <label class="control-label">DataType</label>
     <textarea type="text" class="form-control typeahead" rows="2" readonly/>
-    <a href="#" class="clear" ng-show="ctrl.sugg != ''"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Clear {{ctrl.sugg}}</a>
+    <a href="#" class="clear" ng-show="ctrl.getSugg() != ''"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Clear</a>
+    <span class="warning" ng-show="ctrl.isIncomplete()"><span class="glyphicon glyphicon-warning-sign"></span>&nbsp;Incomplete Type</span>
 </div>
+{% endraw %}

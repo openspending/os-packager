@@ -12,8 +12,18 @@ var _ = require('lodash');
           replace: true,
           controller: ['$scope',
             function($scope) {
+              var sugg = '';
               return {
-                sugg: '',
+                setSugg: function(_sugg) {
+                  sugg = _sugg;
+                  $scope.$applyAsync();
+                },
+                getSugg: function() {
+                  return sugg;
+                },
+                isIncomplete: function() {
+                  return _.endsWith(sugg, ':');
+                },
                 setVal: function(val, clear) {
                   this.field.type = val;
                   if (clear) {
@@ -67,12 +77,12 @@ var _ = require('lodash');
               }
             });
             if (ctrl.field.type) {
-              ctrl.sugg = ctrl.field.type;
+              ctrl.setSugg(ctrl.field.type);
               $(input).typeahead('val', ctrl.field.type.replace(/:/g,sep));
               ctrl.setVal(ctrl.field.type, false);
             }
             $(input).bind('typeahead:select', function(ev, sugg) {
-              ctrl.sugg = sugg.val;
+              ctrl.setSugg(sugg.val);
               if (!sugg.leaf) {
                 window.setTimeout(function() {
                   $(input).typeahead('val', sugg.text + sep);
@@ -81,11 +91,12 @@ var _ = require('lodash');
                 $scope.$applyAsync();
               } else {
                 ctrl.setVal(sugg.val, true);
+                $scope.$applyAsync();
               }
             });
             $(clear).bind('click', function() {
               $(input).typeahead('val','');
-              ctrl.sugg = '';
+              ctrl.setSugg('');
               ctrl.setVal('', true);
             });
           }

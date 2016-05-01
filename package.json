@@ -39,7 +39,7 @@
     "body-parser": "^1.14.1",
     "c3": "git+https://github.com/masayuki0812/c3.git",
     "d3": "^3.5.12",
-    "datapackage-registry": "git+https://github.com/okfn/datapackage-registry-js.git",
+    "datapackage-registry": "^0.2.1",
     "datapackage-validate": "git+https://github.com/akariv/datapackage-validate-js.git",
     "express": "^4.13.3",
     "font-awesome": "^4.4.0",

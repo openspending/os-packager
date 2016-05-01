@@ -200,6 +200,7 @@ function uploadFile(descriptor, options) {
     }),
     body: descriptor.data,
     mode: 'cors',
+    redirect: 'follow',
     credentials: 'omit'
   });
 

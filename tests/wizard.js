@@ -19,7 +19,7 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     browser.visit('/provide-data', function() {
       assert.ok(browser.success);
-      browser.waitForDigest('#step1-wrapper').then(function() {
+      browser.waitForDigest('#step1-wrapper', 100).then(function() {
         assert(browser.query('#step1-wrapper'), 'It should be step #1');
         done();
       });

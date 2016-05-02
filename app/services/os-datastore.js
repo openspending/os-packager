@@ -11,19 +11,36 @@ var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR + '/datastore/',
   publishUrl: OS_CONDUCTOR + '/hooks/load/api/',
-  pollInterval: 3000
+  pollInterval: 1000
 };
 module.exports.defaultOptions = defaultOptions;
 
 var ProcessingStatus = {
-  DOWNLOADING: 'downloading',
-  READING: 'reading',
-  PREPARING: 'preparing',
-  UPLOADING: 'uploading',
-  PUBLISHING: 'publishing',
-  READY: 'ready',
-  FAILED: 'failed'
+  DOWNLOADING: 'Downloading',
+  READING: 'Reading',
+  PREPARING: 'Preparing',
+  UPLOADING: 'Uploading',
+  PUBLISHING: 'Publishing',
+  READY: 'Ready',
+  FAILED: 'Failed'
 };
+
+var RemoteProcessingStatus = {
+  'queued': 'Waiting in queue for an available processor',
+  'initializing': 'Getting ready to load the package',
+  'loading-datapackage': 'Reading the Fiscal Data Package',
+  'validating-datapackage': 'Validagin Data Package correctness',
+  'loading-resource': 'Loading Resource data',
+  'deleting-table': 'Clearing previous rows for this dataset from the database',
+  'creating-table': 'Preparing space for rows in the database',
+  'loading-data-ready': 'Starting to load rows to database',
+  'loading-data': 'Loading data into the database',
+  'creating-babbage-model': 'Converting the Data Package into an API model',
+  'saving-metadata': 'Saving package metadata',
+  'done': 'Done',
+  'fail': 'Failed'
+};
+
 module.exports.ProcessingStatus = ProcessingStatus;
 
 function requestViaFetch(url, options) {
@@ -379,8 +396,8 @@ module.exports.publish = function(descriptor, options) {
           if (!_.isObject(response)) {
             throw 'Response should be an object';
           }
-          switch (('' + response.status).toLowerCase()) {
-            case 'success':
+          var responseStatus = ('' + response.status).toLowerCase();
+          switch (responseStatus) {
             case 'done':
               descriptor.progress = 1.0;
               resolve(descriptor);
@@ -390,6 +407,7 @@ module.exports.publish = function(descriptor, options) {
               break;
             default:
               // response.progress is count of processed lines
+              descriptor.status = RemoteProcessingStatus[responseStatus] || responseStatus;
               var progress = parseFloat(response.progress);
               if (isFinite(progress) && (descriptor.countOfLines >= progress)) {
                 descriptor.progress = progress / descriptor.countOfLines;

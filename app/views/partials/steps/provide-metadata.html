@@ -10,7 +10,8 @@
     </div>
 
     <div class="form-group" ng-class="{'has-error': metadata.name.$dirty && !metadata.name.$valid}">
-      <label class="control-label required" for="step3-package-name">And a short English name for your Data Package</label>
+      <label class="control-label required" for="step3-package-name">And a short English name for your Data Package
+        <small>(lowercase letters, numbers and -/_/. only. no spaces allowed!)</small></label>
       <input ng-model="attributes.name" required="required" name="name"
              type="text" class="form-control" id="step3-package-name">
     </div>

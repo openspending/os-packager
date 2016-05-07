@@ -80,9 +80,14 @@
 
   <div ng-if="!!state.packagePublicUrl">
     <h4>Publishing status:</h4>
-    <p>
-      Visualize and explore your data with <a ng-href="{{ state.packagePublicUrl }}">OpenSpending Viewer</a>
-    </p>
+    <div class="alert alert-success">
+      <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+      <strong>File successfully published!</strong> You can now visualize it and explore it with <strong>OpenSpending Viewer</strong>!
+    </div>
+    <a class="btn btn-primary" ng-href="{{ state.packagePublicUrl }}">
+      <i class="fa fa-2x fa-bar-chart vertical-align-middle margin-right-4"></i>
+      Explore and visualize your data now!
+    </a>
   </div>
 </section>
 {% endraw %}

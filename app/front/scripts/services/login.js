@@ -2,9 +2,17 @@
 
   angular.module('Application')
     .factory('LoginService', [
-      'authenticate', 'authorize', '$window',
-      function(authenticate, authorize, $window) {
+      '_', 'authenticate', 'authorize', '$window', '$location',
+      function(_, authenticate, authorize, $window, $location) {
         var that = this;
+
+        $window.addEventListener('message', function(event) {
+          if (_.isObject(event.data)) {
+            if (event.data.message == 'OSLoginWindow.LoginFinished') {
+              that.check();
+            }
+          }
+        }, false);
 
         this.reset = function() {
           that.isLoggedIn = false;
@@ -23,7 +31,14 @@
         var href = null;
 
         this.check = function() {
-          var next = $window.location.href;
+          var protocol = $location.protocol() + '://';
+          var host = $location.host();
+          var port = $location.port() == '80' ? '' :
+            ':' + $location.port();
+          var url = '/logged-in';
+
+          var next = protocol + host + port + url;
+
           var check = authenticate.check(next);
           check.then(function(response) {
             attempting = false;
@@ -61,7 +76,7 @@
             return true;
           }
           attempting = true;
-          authenticate.login(href, '_self');
+          authenticate.login(href, 'OS_Login');
         };
 
         this.logout = function() {

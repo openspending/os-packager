@@ -13,6 +13,7 @@ module.exports = function() {
   });
 
   router.get('/', pages.landing);
+  router.get('/logged-in', pages.loggedIn);
   router.get('/templates/*', pages.templates);
 
   return router;

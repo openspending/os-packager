@@ -39,6 +39,17 @@ module.exports.landing = function(req, res) {
   });
 };
 
+module.exports.loggedIn = function(req, res) {
+  var config = req.app.get('config');
+  var basePath = getBasePath(config);
+
+  res.render('pages/logged-in.html', {
+    conductor: config.get('conductor'),
+    basePath: basePath,
+    title: 'OS Packager'
+  });
+};
+
 module.exports.templates = function(req, res) {
   var path = req.params[0];
   res.render('partials/' + path);

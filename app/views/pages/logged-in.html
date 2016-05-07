@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OS Packager</title>
+</head>
+<body>
+
+<script type="text/javascript">
+  (function(window) {
+    if (window.opener && window.opener.postMessage) {
+      window.opener.postMessage({
+        message: 'OSLoginWindow.LoginFinished'
+      }, '*');
+    }
+    window.close();
+  })(window);
+</script>
+
+</body>
+</html>

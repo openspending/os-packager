@@ -32,6 +32,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
           name: resourceName,
           title: resourceName,
           source: source,
+          encoding: urlOrFile.encoding,
           data: {
             headers: data.headers,
             rows: data.rows,
@@ -102,6 +103,9 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     }
     if (resource.dialect) {
       result.dialect = _.clone(resource.dialect);
+    }
+    if (resource.encoding) {
+      result.encoding = resource.encoding;
     }
     result.schema = fdp.schema;
     result.schema.fields = _.map(

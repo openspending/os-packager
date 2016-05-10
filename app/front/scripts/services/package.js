@@ -51,42 +51,44 @@
             createNewDataPackage();
           },
           createResource: function(fileOrUrl, state) {
+            var fileDescriptor = null;
             return $q(function(resolve, reject) {
-              var fileDescriptor = null;
-              utils.blobToFileDescriptor(fileOrUrl,
-                Configuration.maxFileSizeToStore)
-                .then(function(fileOrUrl) {
-                  var status = ValidationService.validateResource(fileOrUrl);
-                  state.status = status;
-                  return $q(function(resolve, reject) {
-                    status.$promise.then(function(results) {
-                      fileOrUrl.encoding = results.encoding;
-                      resolve(utils.fileDescriptorToBlob(fileOrUrl));
-                    }).catch(reject);
-                  });
-                })
-                .then(function(fileOrUrl) {
-                  var url = fileOrUrl;
-                  if (_.isString(url)) {
-                    url = UtilsService.decorateProxyUrl(url);
-                  }
-                  fileDescriptor = fileOrUrl;
-                  return fiscalDataPackage.createResourceFromSource(url);
-                })
-                .then(function(resource) {
-                  // Save file object - it will be needed when publishing
-                  // data package
-                  if (_.isObject(fileDescriptor)) {
-                    resource.blob = fileDescriptor;
-                  }
-                  if (_.isString(fileOrUrl)) {
-                    resource.source.url = fileOrUrl;
-                  }
-                  return resource;
-                })
+              utils.blobToFileDescriptor(fileOrUrl)
                 .then(resolve)
                 .catch(reject);
-            });
+            })
+              .then(function(fileOrUrl) {
+                var status = ValidationService.validateResource(fileOrUrl);
+                state.status = status;
+
+                return status.$promise.then(function(results) {
+                  fileOrUrl.encoding = results.encoding;
+                  return fileOrUrl;
+                });
+              })
+              .then(function(fileOrUrl) {
+                var url = fileOrUrl;
+                if (_.isString(url)) {
+                  url = UtilsService.decorateProxyUrl(url);
+                }
+                fileDescriptor = fileOrUrl;
+                return $q(function(resolve, reject) {
+                  fiscalDataPackage.createResourceFromSource(url)
+                    .then(resolve)
+                    .catch(reject);
+                }).then(_.identity);
+              })
+              .then(function(resource) {
+                // Save file object - it will be needed when publishing
+                // data package
+                if (_.isObject(fileDescriptor)) {
+                  resource.blob = fileDescriptor;
+                }
+                if (_.isString(fileOrUrl)) {
+                  resource.source.url = fileOrUrl;
+                }
+                return resource;
+              });
           },
           addResource: function(resource) {
             utils.addItemWithUniqueName(resources, resource);

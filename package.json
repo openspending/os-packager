@@ -48,7 +48,7 @@
     "isomorphic-fetch": "^2.2.0",
     "js-md5": "git+https://github.com/akariv/js-md5.git",
     "js-polyfills": "^0.1.12",
-    "json-table-schema": "git+https://github.com/okfn/jsontableschema-js.git",
+    "jsontableschema": "0.1.0",
     "lodash": "^4.11.1",
     "marked": "^0.3.5",
     "nconf": "^0.8.2",

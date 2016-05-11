@@ -82,7 +82,7 @@
                 // Save file object - it will be needed when publishing
                 // data package
                 if (_.isObject(fileDescriptor)) {
-                  resource.blob = fileDescriptor;
+                  resource.descriptor = fileDescriptor;
                 }
                 if (_.isString(fileOrUrl)) {
                   resource.source.url = fileOrUrl;
@@ -134,9 +134,8 @@
               }
               return {
                 name: resource.name + '.csv',
-                data: resource.data.raw,
                 url: url,
-                file: resource.blob
+                blob: resource.descriptor.blob
               };
             });
             var modifiedResources = _.map(resources, function(resource) {
@@ -174,6 +173,9 @@
               file.$promise = $q(function(resolve, reject) {
                 triggerDigest(true);
                 Services.datastore.readContents(file)
+                  .then(function() {
+                    return Services.datastore.calculateMD5(file);
+                  })
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {
                       // jscs:disable

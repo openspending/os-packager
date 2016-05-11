@@ -1,8 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-var md5 = require('js-md5');
-var base64 = require('base64-js');
+var md5 = require('./md5');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
@@ -18,6 +17,7 @@ module.exports.defaultOptions = defaultOptions;
 var ProcessingStatus = {
   DOWNLOADING: 'Downloading',
   READING: 'Reading',
+  CALCULATE_HASH: 'Calculating file hash',
   PREPARING: 'Preparing',
   UPLOADING: 'Uploading',
   PUBLISHING: 'Publishing',
@@ -66,7 +66,7 @@ function requestViaFetch(url, options) {
     if (_.isFunction(options.onDownloadProgress)) {
       options.onDownloadProgress(0.0); // normalized to range 0.0 .. 1.0
     }
-    return response.text();
+    return response.blob();
   })
   .then(function(data) {
     if (_.isFunction(options.onDownloadProgress)) {
@@ -135,7 +135,7 @@ function requestViaXhr(url, options) {
         // normalized to range 0.0 .. 1.0
         options.onDownloadProgress(1.0);
       }
-      resolve(xhr.responseText);
+      resolve(xhr.response);
     };
     xhr.onerror = function(event) {
       reject('An error occurred while transferring the file.');
@@ -153,6 +153,8 @@ function requestViaXhr(url, options) {
       }
       xhr.setRequestHeader(key, value);
     });
+
+    xhr.responseType = 'blob';
 
     xhr.send(options.body);
   });
@@ -174,48 +176,69 @@ function requestAutoDetect(url, options) {
 function readFileBytes(fileOrBlob, options) {
   options = _.isObject(options) ? options : {};
   return new Promise(function(resolve, reject) {
-    var reader = new FileReader();
-
-    reader.addEventListener('progress', function(event) {
-      if (event.lengthComputable) {
-        if (_.isFunction(options.onDownloadProgress)) {
-          // normalized to range 0.0 .. 1.0
-          options.onDownloadProgress(event.loaded / event.total);
-        }
-      }
-    });
-    reader.addEventListener('load', function(event) {
-      if (_.isFunction(options.onDownloadProgress)) {
-        // normalized to range 0.0 .. 1.0
-        options.onDownloadProgress(1.0);
-      }
-      resolve(new Uint8Array(reader.result));
-    });
-    reader.addEventListener('error', function(event) {
-      reject('An error occurred while reading the file.');
-    });
-    reader.addEventListener('abort', function(event) {
-      reject('Reading has been canceled by the user.');
-    });
-
-    reader.readAsArrayBuffer(fileOrBlob);
+    if (_.isFunction(options.onDownloadProgress)) {
+      // normalized to range 0.0 .. 1.0
+      options.onDownloadProgress(1.0);
+    }
+    resolve(fileOrBlob);
   });
 }
 
-function calculateMD5(data) {
-  var hash = md5.update(data);
-  return base64.fromByteArray(hash.array());
+function calculateBlobMD5(blob, options) {
+  options = _.extend({}, options);
+  var onProgress = _.isFunction(options.onProgress) ? options.onProgress : null;
+
+  return new Promise(function(resolve, reject) {
+    var blobSize = blob.size;
+    var chunkSize = 1024 * 1024;
+    var chunkCount = Math.ceil(blobSize / chunkSize);
+
+    var hash = new md5();
+
+    var reader = new FileReader();
+    var currentChunk = -1;
+
+    var slice = blob.slice || blob.webkitSlice || blob.mozSlice;
+
+    function readNextChunk() {
+      currentChunk += 1;
+      if (currentChunk < chunkCount) {
+        var start = currentChunk * chunkSize;
+        var end = start + chunkSize;
+        var input = slice.call(blob, start, end);
+        reader.readAsArrayBuffer(input);
+        if (onProgress) {
+          onProgress(start / blobSize);
+        }
+      } else {
+        resolve(hash.base64());
+        if (onProgress) {
+          onProgress(1.0);
+        }
+      }
+    }
+
+    reader.addEventListener('load', function(event) {
+      hash.update(event.target.result);
+      readNextChunk();
+    });
+    reader.addEventListener('error', function(event) {
+      reject(event.target.error);
+    });
+
+    readNextChunk();
+  });
 }
 
 function uploadFile(descriptor, options) {
   var requestOptions = _.extend({}, options, {
     method: 'PUT',
     headers: _.extend({}, options.headers, {
-      'Content-Length': descriptor.data.length,
-      'Content-MD5': calculateMD5(descriptor.data),
+      'Content-Length': descriptor.blob.size,
+      'Content-MD5': descriptor.md5,
       'Content-Type': 'application/octet-stream'
     }),
-    body: descriptor.data,
+    body: descriptor.blob,
     mode: 'cors',
     redirect: 'follow',
     credentials: 'omit'
@@ -245,9 +268,9 @@ function prepareFilesForUpload(files, options) {
         return [
           item.name,
           {
-            md5: calculateMD5(item.data),
+            md5: item.md5,
             name: item.name,
-            length: item.data.length,
+            length: item.blob.size,
             type: 'application/octet-stream'
           }
         ];
@@ -318,33 +341,39 @@ module.exports.readContents = function(descriptor, options) {
     options.headers = options.header || {};
     result = requestAutoDetect(descriptor.url, options);
   } else
-  if (_.isObject(descriptor.file) && (descriptor.file instanceof Blob)) {
+  if (_.isObject(descriptor.blob) && (descriptor.blob instanceof Blob)) {
     descriptor.status = ProcessingStatus.READING;
-    result = readFileBytes(descriptor.file, options);
+    result = readFileBytes(descriptor.blob, options);
   } else {
     var data = descriptor.data || '';
-    if (_.isObject(descriptor.file) &&
-      !(descriptor.file.data instanceof ArrayBuffer)) {
-      data = descriptor.file.data || '';
-    }
     if (!_.isString(data) && _.isObject(data)) {
       data = JSON.stringify(data, null, 2);
     }
-    result = Promise.resolve(data);
+    result = Promise.resolve(new Blob([data], {
+      type: 'application/octet-stream'
+    }));
   }
 
   return result
-    .then(function(data) {
+    .then(function(blob) {
       descriptor.progress = 1.0;
-      descriptor.data = data;
-      descriptor.countOfLines = 0;
-      for (var i = 0; i < data.length; i++) {
-        if (data[i] == '\n' || data[i] == 10) {
-          descriptor.countOfLines ++;
-        }
-      }
+      descriptor.blob = blob;
       return descriptor;
     });
+};
+
+module.exports.calculateMD5 = function(descriptor) {
+  descriptor.status = ProcessingStatus.CALCULATE_HASH;
+  descriptor.progress = 0.0;
+  return calculateBlobMD5(descriptor.blob, {
+    onProgress: function(value) {
+      descriptor.progress = value;
+    }
+  }).then(function(md5) {
+    descriptor.md5 = md5;
+    descriptor.progress = 1.0;
+    return descriptor;
+  });
 };
 
 module.exports.prepareForUpload = function(descriptor, options) {
@@ -409,9 +438,6 @@ module.exports.publish = function(descriptor, options) {
               // response.progress is count of processed lines
               descriptor.status = RemoteProcessingStatus[responseStatus] || responseStatus;
               var progress = parseFloat(response.progress);
-              if (isFinite(progress) && (descriptor.countOfLines >= progress)) {
-                descriptor.progress = progress / descriptor.countOfLines;
-              }
               setTimeout(poll, options.pollInterval);
           }
         })

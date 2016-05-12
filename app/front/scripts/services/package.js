@@ -135,7 +135,7 @@
               return {
                 name: resource.name + '.csv',
                 url: url,
-                blob: resource.descriptor.blob
+                blob: resource.descriptor ? resource.descriptor.blob : null
               };
             });
             var modifiedResources = _.map(resources, function(resource) {
@@ -174,7 +174,7 @@
                 triggerDigest(true);
                 Services.datastore.readContents(file)
                   .then(function() {
-                    return Services.datastore.calculateMD5(file);
+                    return Services.datastore.calculateMetrics(file);
                   })
                   .then(function() {
                     return Services.datastore.prepareForUpload(file, {

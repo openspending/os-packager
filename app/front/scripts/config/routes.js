@@ -25,6 +25,6 @@
         // Capture initial $locationChangeStart event; otherwise ngView will
         // not work (f*cking "known" issue since `angular-route@1.5.5`)
       }
-    ])
+    ]);
 
 })(angular);

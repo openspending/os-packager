@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-var md5 = require('./md5');
+var MD5 = require('./md5');
 var Promise = require('bluebird');
 require('isomorphic-fetch');
 
@@ -184,7 +184,7 @@ function readFileBytes(fileOrBlob, options) {
   });
 }
 
-function calculateBlobMD5(blob, options) {
+function calculateBlobMetrics(blob, options) {
   options = _.extend({}, options);
   var onProgress = _.isFunction(options.onProgress) ? options.onProgress : null;
 
@@ -193,7 +193,11 @@ function calculateBlobMD5(blob, options) {
     var chunkSize = 1024 * 1024;
     var chunkCount = Math.ceil(blobSize / chunkSize);
 
-    var hash = new md5();
+    // This value is approximate; assume that non-empty file
+    // has at least one line
+    var countOfLines = blobSize > 0 ? 1 : 0;
+
+    var hash = new MD5();
 
     var reader = new FileReader();
     var currentChunk = -1;
@@ -211,15 +215,25 @@ function calculateBlobMD5(blob, options) {
           onProgress(start / blobSize);
         }
       } else {
-        resolve(hash.base64());
         if (onProgress) {
           onProgress(1.0);
         }
+        resolve({
+          md5: hash.base64(),
+          countOfLines: countOfLines
+        });
       }
     }
 
     reader.addEventListener('load', function(event) {
       hash.update(event.target.result);
+      // Update count of lines
+      var bytes = new Uint8Array(event.target.result);
+      for (var i = 0; i < bytes.length; i++) {
+        if (bytes[i] == 10) {
+          countOfLines += 1;
+        }
+      }
       readNextChunk();
     });
     reader.addEventListener('error', function(event) {
@@ -362,15 +376,22 @@ module.exports.readContents = function(descriptor, options) {
     });
 };
 
-module.exports.calculateMD5 = function(descriptor) {
+module.exports.calculateMetrics = function(descriptor) {
+  // If metrics already calculated - do nothing; assume that
+  // file didn't change
+  if (descriptor.md5) {
+    return Promise.resolve(descriptor);
+  }
+
   descriptor.status = ProcessingStatus.CALCULATE_HASH;
   descriptor.progress = 0.0;
-  return calculateBlobMD5(descriptor.blob, {
+  return calculateBlobMetrics(descriptor.blob, {
     onProgress: function(value) {
       descriptor.progress = value;
     }
-  }).then(function(md5) {
-    descriptor.md5 = md5;
+  }).then(function(metrics) {
+    descriptor.md5 = metrics.md5;
+    descriptor.countOfLines = metrics.countOfLines;
     descriptor.progress = 1.0;
     return descriptor;
   });
@@ -436,8 +457,12 @@ module.exports.publish = function(descriptor, options) {
               break;
             default:
               // response.progress is count of processed lines
-              descriptor.status = RemoteProcessingStatus[responseStatus] || responseStatus;
+              descriptor.status = RemoteProcessingStatus[responseStatus] ||
+                responseStatus;
               var progress = parseFloat(response.progress);
+              if (isFinite(progress) && (descriptor.countOfLines >= progress)) {
+                descriptor.progress = progress / descriptor.countOfLines;
+              }
               setTimeout(poll, options.pollInterval);
           }
         })

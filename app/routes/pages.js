@@ -12,9 +12,7 @@ module.exports = function() {
   var restSteps = _.rest(steps);
   router.get(firstStep.route, pages.main);
   _.each(restSteps, function(step) {
-    router.get(step.route, function(req, res) {
-      res.redirect(302, firstStep.route);
-    });
+    router.get(step.route, pages.redirectToMain);
   });
 
   router.get('/', pages.landing);

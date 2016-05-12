@@ -156,7 +156,7 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
     // Link #0 is a Restart Flow button
-    browser.evaluate('$(".x-steps-container a:eq(1)").click();');
+    browser.evaluate('$(".x-steps-container a:eq(0)").click();');
     browser.waitForDigest('#step1-wrapper').then(function() {
       assert(browser.query('#step1-wrapper'), 'It should be step #1');
       done();

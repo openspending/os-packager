@@ -10,7 +10,8 @@
   (function(window) {
     if (window.opener && window.opener.postMessage) {
       window.opener.postMessage({
-        message: 'OSLoginWindow.LoginFinished'
+        message: 'OSLoginWindow.LoginFinished',
+        query: window.location.search.substring(1)
       }, '*');
     }
     window.close();

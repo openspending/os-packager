@@ -9,6 +9,8 @@
         $window.addEventListener('message', function(event) {
           if (_.isObject(event.data)) {
             if (event.data.message == 'OSLoginWindow.LoginFinished') {
+              var query = event.data.query;
+              $location.search(query);
               that.check();
             }
           }
@@ -33,9 +35,12 @@
         this.check = function() {
           var protocol = $location.protocol() + '://';
           var host = $location.host();
-          var port = $location.port() == '80' ? '' :
-            ':' + $location.port();
-          var url = '/logged-in';
+          var port =
+            $location.port() == '80' ? '' : ':' + $location.port();
+          var path = window.location.pathname;
+          var urlParts = path.split('/');
+          urlParts[urlParts.length - 1] = 'logged-in';
+          var url = urlParts.join('/');
 
           var next = protocol + host + port + url;
 
@@ -83,6 +88,9 @@
           if (that.isLoggedIn) {
             that.reset();
             authenticate.logout();
+            if (href===null) {
+              that.check();
+            }
           }
         };
 

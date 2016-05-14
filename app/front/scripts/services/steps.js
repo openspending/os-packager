@@ -3,9 +3,9 @@
   angular.module('Application')
     .factory('StepsService', [
       '$q', '$location', '_', 'Configuration', 'ApplicationState',
-      'ApplicationLoader', 'StorageService',
+      'ApplicationLoader',
       function($q, $location, _, Configuration, ApplicationState,
-        ApplicationLoader, StorageService) {
+        ApplicationLoader) {
         var currentStep = null;
         var steps = [];
 
@@ -42,7 +42,6 @@
                 currentStep = step;
                 result.updateStepsState(step);
                 $location.path(step.route);
-                StorageService.saveApplicationState();
               } else {
                 $location.path('/');
               }
@@ -98,7 +97,6 @@
               if (updateCurrentStep && found) {
                 result.goToStep(found);
               }
-              StorageService.saveApplicationState();
             }
           },
           updateStepsState: function(step) {

@@ -1,18 +1,5 @@
 {% raw %}
 <section id="step1-wrapper">
-  <div ng-if="state.isFile && (state.file.size > maxFileSizeToStore)">
-    <div class="alert alert-warning">
-      <i class="fa fa-2x fa-exclamation-circle vertical-align-middle margin-right-4"></i>
-      Uploaded file is very large, so it will not be stored in memory. This means that
-      you may lose progress if you reload this page.
-    </div>
-    <div ng-if="!login.isLoggedIn" class="alert alert-warning">
-      <i class="fa fa-2x fa-exclamation-circle vertical-align-middle margin-right-4"></i>
-      You are not logged in. Please <a href="javascript:void(0)" ng-click="login.login()">login now</a>
-      if you would like to publish your dataset using this wizard.
-    </div>
-  </div>
-
   <div class="row form-group">
     <div ng-hide="isUrlSelected" ng-class="{'col-sm-5': !isUrlSelected && !isFileSelected, 'col-xs-12': isFileSelected}">
       <div class="input-group">

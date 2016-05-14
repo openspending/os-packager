@@ -20,8 +20,7 @@
       key: 'default'
     },
     steps: services.data.steps,
-    isWizard: window.isWizard,
-    maxFileSizeToStore: 100 * 1024 * 1024 // 100Mb
+    isWizard: window.isWizard
   };
 
   angular.module('Application')

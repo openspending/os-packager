@@ -40,39 +40,54 @@ module.exports.convertToSlug = function(string) {
 };
 
 module.exports.getCsvSchema = function(urlOrFile) {
+  var data = [];
+  var meta = null;
+  var errors = [];
   return new Promise(function(resolve, reject) {
     var config = {
       download: true,
       preview: 1000,
       skipEmptyLines: true,
       encoding: urlOrFile.encoding,
+      chunk: function(results) {
+        meta = results.meta;
+        [].push.apply(data, results.data);
+        [].push.apply(errors, results.errors);
+      },
       complete: function(results) {
-        if (results.errors.length) {
+        results = {
+          data: data,
+          errors: errors,
+          meta: meta
+        };
+        if (results.errors.length > 0) {
           reject(results.errors);
+        } else {
+          var records = results.data;
+          var headers = _.first(records);
+          var rows = _.rest(records);
+          var schema = jts.infer(headers, rows);
+          var delimiter = results.meta.delimiter;
+          var linebreak = results.meta.linebreak;
+          var raw = csv.unparse(records, {
+            quotes: true,
+            delimiter: ',',
+            newline: '\r\n'
+          });
+          resolve({
+            raw: raw,
+            headers: headers,
+            rows: rows,
+            schema: schema,
+            dialect: {
+              delimiter: delimiter,
+              linebreak: linebreak
+            }
+          });
         }
-        var headers = _.first(results.data);
-        var rows = _.rest(results.data);
-        var schema = jts.infer(headers, rows);
-        var delimiter = results.meta.delimiter;
-        var linebreak = results.meta.linebreak;
-        var raw = csv.unparse(results.data, {
-          quotes: true,
-          delimiter: ',',
-          newline: '\r\n'
-        });
-        resolve({
-          raw: raw,
-          headers: headers,
-          rows: rows,
-          schema: schema,
-          dialect: {
-            delimiter: delimiter,
-            linebreak: linebreak
-          }
-        });
       }
     };
-    csv.parse(urlOrFile, config);
+    csv.parse(_.isObject(urlOrFile) ? urlOrFile.blob : urlOrFile, config);
   });
 };
 
@@ -373,44 +388,27 @@ module.exports.removeEmptyAttributes = function(object) {
 //  });
 //};
 
-module.exports.blobToFileDescriptor = function(blob, maxAllowedSize) {
+module.exports.blobToFileDescriptor = function(blob) {
   if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
     !(blob instanceof Blob)) {
     return Promise.resolve(blob);
   }
-  if (!!maxAllowedSize && (maxAllowedSize > 0) &&
-    (blob.size > maxAllowedSize)) {
-    return Promise.resolve(blob);
-  }
+
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
-    reader.addEventListener('loadend', function() {
+    reader.addEventListener('load', function(event) {
       resolve({
         name: blob.name,
         type: blob.type,
-        size: reader.result.length,
-        data: reader.result
+        size: blob.size,
+        data: reader.result,
+        blob: blob
       });
     });
     reader.addEventListener('error', function() {
       reject(reader.error);
     });
-    reader.readAsArrayBuffer(blob);
+    var slice = blob.slice || blob.webkitSlice || blob.mozSlice;
+    reader.readAsArrayBuffer(slice.call(blob, 0, 1024 * 1024));
   });
-};
-
-module.exports.fileDescriptorToBlob = function(descriptor) {
-  var result = descriptor;
-  if (_.isObject(descriptor) && _.isFunction(Blob)) {
-    if (descriptor instanceof Blob) {
-      result = descriptor;
-    } else {
-      result = new Blob([descriptor.data], {
-        type: descriptor.type
-      });
-      result.name = descriptor.name;
-      result.encoding = descriptor.encoding;
-    }
-  }
-  return Promise.resolve(result);
 };

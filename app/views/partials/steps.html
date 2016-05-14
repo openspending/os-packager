@@ -1,10 +1,5 @@
 {% raw %}
 <div class="x-steps-container">
-  <div class="pull-left active margin-right-20">
-    <a href="javascript:void(0)" ng-click="restartFlow()">
-      <i class="fa fa-refresh"></i>
-    </a>
-  </div>
   <div ng-repeat="step in steps" class="pull-left"
     ng-class="{active: step.id == currentStep.id, passed: step.isCurrent || step.isPassed}">
     <span ng-if="$index > 0"></span>

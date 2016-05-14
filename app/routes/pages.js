@@ -8,11 +8,15 @@ module.exports = function() {
   var router = express.Router();
 
   var steps = require('../services').data.steps;
-  _.each(steps, function(step) {
-    router.get(step.route, pages.main);
+  var firstStep = _.first(steps);
+  var restSteps = _.rest(steps);
+  router.get(firstStep.route, pages.main);
+  _.each(restSteps, function(step) {
+    router.get(step.route, pages.redirectToMain);
   });
 
   router.get('/', pages.landing);
+  router.get('/logged-in', pages.loggedIn);
   router.get('/templates/*', pages.templates);
 
   return router;

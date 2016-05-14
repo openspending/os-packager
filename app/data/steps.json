@@ -3,6 +3,7 @@
     "id": "upload-file",
     "order": 1,
     "title": "Provide your data",
+    "subtitle": "Provide a CSV file containing fiscal data",
     "route": "/provide-data",
     "controller": "UploadFileController",
     "templateUrl": "templates/steps/upload-file.html"
@@ -11,6 +12,7 @@
     "id": "describe-data",
     "order": 2,
     "title": "Describe your data",
+    "subtitle": "Map as accurately as possible columns of your file to data types",
     "route": "/describe-data",
     "controller": "DescribeDataController",
     "templateUrl": "templates/steps/describe-data.html"
@@ -19,6 +21,7 @@
     "id": "metadata",
     "order": 3,
     "title": "Provide metadata",
+    "subtitle": "Name your data-set and provide metadata for better indexing",
     "route": "/provide-metadata",
     "controller": "ProvideMetadataController",
     "templateUrl": "templates/steps/provide-metadata.html"
@@ -26,7 +29,8 @@
   {
     "id": "download",
     "order": 4,
-    "title": "Confirm and download",
+    "title": "Confirm and Publish",
+    "subtitle": "Publish your data for in-depth visualizations and analysis",
     "route": "/download-package",
     "controller": "DownloadPackageController",
     "templateUrl": "templates/steps/download-package.html"

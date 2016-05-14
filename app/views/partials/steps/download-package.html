@@ -56,11 +56,20 @@
     <button id="step4-button-download" type="submit" class="btn btn-success btn-lg">
       <i class="fa fa-download"></i>&nbsp;&nbsp;Download
     </button>
-    <button ng-click="publishDataPackage()"
-      ng-attr-title="{{ login.logged_in ? undefined : 'You need to login in order to upload packages' }}"
-      ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
-      type="button" class="btn btn-primary btn-lg margin-left-16" id="step4-button-publish">
-      <i class="fa fa-cloud-upload"></i>&nbsp;&nbsp;Publish this Data Package
+    <button ng-if="login.isLoggedIn"
+        ng-click="publishDataPackage()"
+        ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
+        type="button"
+        class="btn btn-primary btn-lg margin-left-16" id="step4-button-publish">
+      <i class="fa fa-cloud-upload"></i>
+      &nbsp;&nbsp;Publish this Data Package
+    </button>
+    <button ng-if="!login.isLoggedIn"
+        ng-click="login.login()"
+        type="button"
+        class="btn btn-primary btn-lg margin-left-16" id="step4-button-cant-publish">
+      <i class="fa fa-cloud-upload"></i>
+      &nbsp;&nbsp;Log in to Publish
     </button>
   </form>
 

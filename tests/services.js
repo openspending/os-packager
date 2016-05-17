@@ -9,8 +9,8 @@ var dataStore = require('../app/services/os-datastore');
 // Make PapaParse working (do not remove this line!)
 var testUtils = require('./utils');
 
-var exampleResourceUrl = 'https://raw.githubusercontent.com/okfn/goodtables/' +
-  'master/examples/valid.csv';
+var exampleResourceUrl = 'https://raw.githubusercontent.com/openspending/os-packager/' +
+  'master/tests/data/example-resource.csv';
 
 describe('Application services', function() {
   this.timeout(20000);
@@ -136,8 +136,8 @@ describe('Application services', function() {
     it('Should create resource from URL', function(done) {
       dataPackage.createResourceFromSource(exampleResourceUrl)
         .then(function(resource) {
-          assert.equal(resource.name, 'valid');
-          assert.equal(resource.title, 'valid');
+          assert.equal(resource.name, 'example-resource');
+          assert.equal(resource.title, 'example-resource');
 
           assert.property(resource, 'source');
           assert.equal(resource.source.url, exampleResourceUrl);
@@ -162,15 +162,17 @@ describe('Application services', function() {
       };
       dataPackage.createResourceFromSource(exampleResourceUrl)
         .then(function(resource) {
-          resource.fields[0].type = 'value';
-          resource.fields[1].type = 'date:generic';
-          resource.fields[0].resource = 'valid';
-          resource.fields[1].resource = 'valid';
+          console.log(resource.fields);
+          resource.fields[0].type = 'date:generic';
+          resource.fields[1].type = 'value';
+          resource.fields[0].resource = 'example-resource';
+          resource.fields[1].resource = 'example-resource';
           utils.addItemWithUniqueName(resources, resource);
 
           var fiscalPackage = dataPackage.createFiscalDataPackage(attributes,
             resources);
 
+          console.log(JSON.stringify(fiscalPackage,null,2));
           assert.deepEqual(fiscalPackage,
             require('./data/example-package.json'));
 

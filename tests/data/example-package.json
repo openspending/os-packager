@@ -1,69 +1,69 @@
 {
-  "name": "example",
-  "title": "Example Data Package",
-  "resources": [
-    {
-      "name": "valid",
-      "format": "csv",
-      "url": "https://raw.githubusercontent.com/okfn/goodtables/master/examples/valid.csv",
-      "schema": {
-        "fields": [
-          {
-            "title": "id",
-            "name": "id",
-            "slug": "id",
-            "type": "number",
-            "format": "default",
-            "osType": "value",
-            "conceptType": "value",
-            "decimalChar": ".",
-            "groupChar": ",",
-            "resource": "valid"
-          },
-          {
-            "title": "name",
-            "name": "name",
-            "slug": "name",
-            "type": "date",
-            "format": "%Y-%m-%d",
-            "osType": "date:generic",
-            "conceptType": "date",
-            "resource": "valid"
-          }
-        ],
-        "primaryKey": [
-          "name"
-        ]
-      },
-      "dialect": {
-        "csvddfVersion": 1,
-        "delimiter": ",",
-        "lineTerminator": "\n"
-      }
-    }
-  ],
   "model": {
-    "measures": {
-      "id": {
-        "source": "id",
-        "title": "id",
-        "resource": "valid"
-      }
-    },
     "dimensions": {
       "date": {
         "dimensionType": "datetime",
         "primaryKey": [
-          "name"
+          "date"
         ],
         "attributes": {
-          "name": {
-            "source": "name",
-            "title": "name",
-            "resource": "valid"
+          "date": {
+            "source": "date",
+            "title": "date",
+            "resource": "example-resource"
           }
         }
       }
+    },
+    "measures": {
+      "money": {
+        "source": "money",
+        "title": "money",
+        "resource": "example-resource"
+      }
     }
-  }
+  },
+  "name": "example",
+  "title": "Example Data Package",
+  "resources": [
+    {
+      "name": "example-resource",
+      "format": "csv",
+      "url": "https://raw.githubusercontent.com/openspending/os-packager/master/tests/data/example-resource.csv",
+      "dialect": {
+        "csvddfVersion": 1,
+        "delimiter": ",",
+        "lineTerminator": "\n"
+      },
+      "schema": {
+        "fields": [
+          {
+            "title": "date",
+            "name": "date",
+            "slug": "date",
+            "type": "date",
+            "format": "fmt:%Y-%m-%d",
+            "osType": "date:generic",
+            "conceptType": "date",
+            "resource": "example-resource"
+          },
+          {
+            "title": "money",
+            "name": "money",
+            "slug": "money",
+            "type": "number",
+            "format": "default",
+            "osType": "value",
+            "conceptType": "value",
+            "resource": "example-resource",
+            "decimalChar": ".",
+            "groupChar": ","
+          }
+        ],
+        "primaryKey": [
+          "date"
+        ]
+      }
+    }
+  ]
 }

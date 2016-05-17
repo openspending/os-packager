@@ -165,7 +165,7 @@ td.x-strong-highlight {
     padding: 0;
   }
 
-  .os-icon-arrow-drop-down {
+    .os-icon-arrow-drop-down {
     font-size: 130%;
   }
 
@@ -375,6 +375,12 @@ td.x-strong-highlight {
 
 #step2-wrapper {
 
+  .x-column-mapping-card {
+    display: inline-block;
+    float:none;
+    vertical-align: top;
+  }
+
   .panel-heading {
     h3 {
       font-weight: bold;
@@ -457,14 +463,90 @@ td.x-strong-highlight {
 
   span.twitter-typeahead {
     display: block !important;
+
+    .tt-menu {
+      width: 400px;
+    }
+
+    .tt-suggestion {
+      white-space: inherit;
+      max-height:26px;
+
+      &.grouped {
+        max-height:40px;
+      }
+
+      .group {
+        font-size: 70%;
+        text-indent: -1em;
+      }
+
+      .suggestion-tooltip {
+        opacity:0;
+        display: block;
+        position: relative;
+        left:50px;
+        transition-property: left, opacity;
+        transition-duration: 250ms;
+        padding:10px;
+        border-radius: 10px;
+        pointer-events: none;
+      }
+
+      &:hover, &.tt-cursor {
+        .suggestion-tooltip {
+          opacity: 1;
+          top: 10px;
+          left: 0px;
+          background: #000000;
+          border: 1px solid #888888;
+
+          &:after, &:before {
+            bottom: 100%;
+            left: 10%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+          }
+
+          &:after {
+            border-color: rgba(0, 0, 0, 0);
+            border-bottom-color: #000000;
+            border-width: 9px;
+            margin-left: -9px;
+          }
+
+          &:before {
+            border-color: rgba(0, 0, 0, 0);
+            border-bottom-color: #888888;
+            border-width: 10px;
+            margin-left: -10px;
+          }
+        }
+
+      }
+    }
   }
 
   a.clear {
     float:right;
   }
-  span.warning {
+  span.message {
     float:left;
-    color: darkorange;
+    text-indent: -20px;
+    padding-left: 20px;
+    i {
+      text-indent: 0px;
+    }
+    &.warning {
+      color: darkorange;
+    }
+    &.error {
+      color: darkred;
+    }
   }
 
 }

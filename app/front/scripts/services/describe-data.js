@@ -1,4 +1,5 @@
 var OSTypes = require('os-types');
+var lodash = require('lodash');
 
 ;(function(angular) {
 
@@ -61,8 +62,8 @@ var OSTypes = require('os-types');
                 field.errors = fieldErrors;
               }
             });
-          } else {
-            _.forEach(fields, function(field) {
+          }
+          _.forEach(fields, function(field) {
               var schemaField = fdp.schema.fields[field.title];
               if (schemaField) {
                 field.additionalOptions = schemaField.options;
@@ -70,27 +71,30 @@ var OSTypes = require('os-types');
                   field.options = {};
                 }
                 _.forEach(field.additionalOptions, function(option) {
-                  if (option.name == 'currency') {
-                    option.values = _.map(UtilsService.getCurrencies(),
-                      function(item) {
-                        return {
-                          name: item.code + ' ' + item.name,
-                          value: item.code
-                        };
-                      });
-                    option.defaultValue =
-                      UtilsService.getDefaultCurrency().code;
-                  }
-                  if (_.has(option,'defaultValue')) {
-                    field.options[option.name] = option.defaultValue;
+                  var existing = field.options[option.name];
+                  if (lodash.isUndefined(existing)) {
+                    if (option.name == 'currency') {
+                      option.values = _.map(UtilsService.getCurrencies(),
+                        function(item) {
+                          return {
+                            name: item.code + ' ' + item.name,
+                            value: item.code
+                          };
+                        });
+                      option.defaultValue =
+                        UtilsService.getDefaultCurrency().code;
+                    }
+                    if (_.has(option,'defaultValue')) {
+                      field.options[option.name] = option.defaultValue;
+                    }
                   }
                 });
               } else {
                 field.additionalOptions = [];
                 field.options = {};
               }
-            });
-          }
+          });
+
           state.status = ValidationService.validateRequiredConcepts(
             PackageService.getResources());
 

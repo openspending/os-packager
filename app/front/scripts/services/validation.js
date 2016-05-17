@@ -52,7 +52,16 @@ var lodash = require('lodash');
                 });
               });
             };
-            return hasConcept('value') && hasConcept('date:');
+            var noErrors = function() {
+              return _.every(resources, function(resource) {
+                return _.every(resource.fields, function(field) {
+                  return !field.errors || field.errors.length == [];
+                });
+              });
+            };
+            return hasConcept('value') &&
+              hasConcept('date:') &&
+              noErrors();
           },
           validateAttributesForm: function(form) {
             if (!form || !form.$dirty) {

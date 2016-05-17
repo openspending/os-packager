@@ -7,7 +7,7 @@
     </a>
   </div>
 
-  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-repeat="field in resource.fields track by $index"
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 x-column-mapping-card" ng-repeat="field in resource.fields track by $index"
     ng-init="fieldState = {index: $index}">
     <div class="panel panel-inverse">
       <div class="panel-heading">
@@ -25,30 +25,24 @@
             <input ng-model="field.title" type="text" class="form-control">
           </div>
           <os-datatype data-field="field" data-on-changed="onConceptChanged(field)"></os-datatype>
-          <p ng-repeat="error in field.errors" class="error">
+          <span ng-repeat="error in field.errors" class="error message">
             <i class="glyphicon glyphicon-warning-sign"></i>&nbsp;{{ error }}
-          </p>
-          <!--<div>-->
-            <!--<label class="control-label">Data type</label>-->
-            <!--<select ng-model="field.type" class="form-control"-->
-              <!--ng-options="item.id as item.name for item in (field | fieldTypes)"></select>-->
-          <!--</div>-->
+          </span>
           <div>
-            <!--<label class="control-label">Concept</label>-->
-            <!--<select ng-model="field.concept" class="form-control x-field-info-concept"-->
-              <!--ng-change="onConceptChanged(field)"-->
-              <!--ng-options="item.id as item.name for item in field.allowedConcepts"></select>-->
-
             <div ng-repeat="option in field.additionalOptions" class="margin-top-8">
               <div>
                 <label class="control-label">{{ option.title }}</label>
               </div>
               <div ng-if="option.values">
-                <select ng-model="field.options[option.name]" class="form-control"
+                <select ng-model="field.options[option.name]" class="form-control" ng-change="onCon ceptChanged(field)"
                   ng-options="item.value as item.name for item in (option.values | orderBy:'name')"></select>
               </div>
               <div ng-if="!option.values">
-                <input type="{{option.type || text}}" ng-model="field.options[option.name]" class="form-control">
+                <input type="{{option.type || 'text'}}"
+                       ng-trim="{{ option.trim || 'true' }}"
+                       ng-model="field.options[option.name]"
+                       class="form-control"
+                       ng-change="onConceptChanged(field)">
               </div>
             </div>
           </div>

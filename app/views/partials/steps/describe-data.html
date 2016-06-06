@@ -34,7 +34,7 @@
                 <label class="control-label">{{ option.title }}</label>
               </div>
               <div ng-if="option.values">
-                <select ng-model="field.options[option.name]" class="form-control" ng-change="onCon ceptChanged(field)"
+                <select ng-model="field.options[option.name]" class="form-control" ng-change="onConceptChanged(field)"
                   ng-options="item.value as item.name for item in (option.values | orderBy:'name')"></select>
               </div>
               <div ng-if="!option.values">

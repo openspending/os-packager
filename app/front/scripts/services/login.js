@@ -32,6 +32,10 @@
         var attempting = false;
         var href = null;
 
+        this.getToken = function() {
+          return that.token;
+        };
+
         this.check = function() {
           var protocol = $location.protocol() + '://';
           var host = $location.host();

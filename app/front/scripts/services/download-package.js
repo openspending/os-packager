@@ -72,6 +72,7 @@
 
         result.publishDataPackage = function() {
           state.packagePublicUrl = null;
+          state.dataminePublicUrl = null;
           state.isUploading = true;
           var files = PackageService.publish();
           state.uploads = files;
@@ -80,6 +81,8 @@
               var packageName = PackageService.getAttributes().name;
               var owner = LoginService.userId;
               state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
+              state.dataminePublicUrl =
+                  PackageService.getDataMineUrl(owner, packageName, LoginService.getToken());
               state.uploads = null;
             })
             .finally(function() {

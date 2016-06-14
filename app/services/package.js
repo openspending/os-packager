@@ -111,5 +111,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     return result;
   });
 
+  // JSON-LD
+  fdp['@context'] = 'http://schemas.frictionlessdata.io/fiscal-data-package.jsonld';
+
   return fdp;
 };

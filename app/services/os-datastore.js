@@ -9,7 +9,8 @@ var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
   'http://next.openspending.org';
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR + '/datastore/',
-  publishUrl: OS_CONDUCTOR + '/hooks/load/api/',
+  publishUrl: OS_CONDUCTOR + '/package/upload',
+  statusUrl: OS_CONDUCTOR + '/package/status',
   pollInterval: 1000
 };
 module.exports.defaultOptions = defaultOptions;
@@ -431,7 +432,10 @@ module.exports.publish = function(descriptor, options) {
     descriptor.status = ProcessingStatus.PUBLISHING;
     descriptor.progress = 0.0;
 
-    var pollUrl = options.publishUrl +
+    var publishUrl = options.publishUrl +
+      '?datapackage=' + encodeURIComponent(descriptor.uploadUrl) +
+      '&jwt=' + encodeURIComponent(options.permission_token);
+    var pollUrl = options.statusUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl);
 
     var poll = function() {
@@ -478,7 +482,7 @@ module.exports.publish = function(descriptor, options) {
       mode: 'cors',
       credentials: 'omit'
     };
-    fetch(pollUrl, requestOptions)
+    fetch(publishUrl, requestOptions)
       .then(function() {
         poll();
       })

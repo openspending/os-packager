@@ -214,7 +214,11 @@
                       packageFile.countOfLines += file.countOfLines;
                     }
                   });
-                  Services.datastore.publish(packageFile)
+                  Services.datastore.publish(packageFile, {
+                      // jscs:disable
+                      permission_token: LoginService.permissionToken,
+                      // jscs:enable
+                    })
                     .then(function() {
                       triggerDigest = null;
                       packageFile.status =

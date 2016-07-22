@@ -38,6 +38,9 @@
           var port =
             $location.port() == '80' ? '' : ':' + $location.port();
           var path = window.location.pathname;
+          if (path[path.length-1] == '/') {
+            path = path.slice(0, -1);
+          }
           var urlParts = path.split('/');
           urlParts[urlParts.length - 1] = 'logged-in';
           var url = urlParts.join('/');

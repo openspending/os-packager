@@ -118,7 +118,7 @@ gulp.task('app.styles', function() {
 gulp.task('vendor.scripts', function() {
   var files = [
     path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/js/bootstrap.min.js'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/js/os-bootstrap.min.js'),
     path.join(nodeModulesDir, '/angular/angular.min.js'),
     path.join(nodeModulesDir, '/angular-animate/angular-animate.min.js'),
     path.join(nodeModulesDir, '/angular-route/angular-route.min.js'),
@@ -132,7 +132,7 @@ gulp.task('vendor.scripts', function() {
 gulp.task('vendor.styles', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/css/bootstrap.min.css'),
+    path.join(nodeModulesDir, '/os-bootstrap/dist/css/os-bootstrap.min.css'),
     path.join(nodeModulesDir, '/angular/angular-csp.css'),
     path.join(nodeModulesDir, '/c3/c3.min.css'),
     path.join(nodeModulesDir, '/typeahead.js-bootstrap-css/typeaheadjs.css')

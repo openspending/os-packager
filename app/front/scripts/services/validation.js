@@ -44,7 +44,7 @@ var lodash = require('lodash');
 
             return validationResult;
           },
-          validateRequiredConcepts: function(resources) {
+          validateRequiredConcepts: function(errors, resources) {
             var hasConcept = function(prefix) {
               return _.some(resources, function(resource) {
                 return _.some(resource.fields, function(field) {
@@ -52,16 +52,9 @@ var lodash = require('lodash');
                 });
               });
             };
-            var noErrors = function() {
-              return _.every(resources, function(resource) {
-                return _.every(resource.fields, function(field) {
-                  return !field.errors || field.errors.length == [];
-                });
-              });
-            };
             return hasConcept('value') &&
               hasConcept('date:') &&
-              noErrors();
+              !errors;
           },
           validateAttributesForm: function(form) {
             if (!form || !form.$dirty) {

@@ -64,8 +64,8 @@ var lodash = require('lodash');
             });
           }
           _.forEach(fields, function(field) {
-              var schemaField = fdp.schema.fields[field.title];
-              if (schemaField) {
+              if (fdp.schema && fdp.schema.fields && fdp.schema.fields[field.title]) {
+                var schemaField = fdp.schema.fields[field.title];
                 field.additionalOptions = schemaField.options;
                 if (!field.options) {
                   field.options = {};
@@ -95,7 +95,24 @@ var lodash = require('lodash');
               }
           });
 
+          state.errors = [];
+          if (fdp.errors) {
+            if (fdp.errors.general) {
+              _.every(fdp.errors.general, function (msg) {
+                state.errors.push({msg: msg});
+              });
+            }
+            if (fdp.errors.perField) {
+              _.forEach(fdp.errors.perField, function(msgs, field) {
+                _.every(msgs, function (msg) {
+                  state.errors.push({field: field, msg: msg});
+                });
+              });
+            }
+          }
+
           state.status = ValidationService.validateRequiredConcepts(
+            fdp.errors,
             PackageService.getResources());
 
           PreviewDataService.update();

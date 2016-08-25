@@ -14,7 +14,7 @@ var buffer = require('vinyl-buffer');
 var resolve = require('resolve');
 var less = require('gulp-less');
 var watch = require('gulp-watch');
-var _ = require('underscore');
+var stringify = require('stringify');
 
 var frontSrcDir = path.join(__dirname, '/app/front');
 var frontScriptsDir = path.join(frontSrcDir, '/scripts');
@@ -32,30 +32,10 @@ var servicesDir = path.join(__dirname, '/app/services');
 
 var nodeModulesDir = path.join(__dirname, '/node_modules');
 
-var modules = [
-  'jquery',
-  'underscore',
-  'bluebird',
-  'd3',
-  'c3',
-  'isomorphic-fetch/fetch-npm-browserify',
-  'os-types',
-  'lodash'
-];
-
-var appModules = {
-  'app/services': './app/services'
-};
-
 gulp.task('default', [
-  'app.scripts',
-  'app.modules',
-  'app.styles',
-  'app.assets',
-  'vendor.scripts',
-  'vendor.styles',
-  'vendor.fonts',
-  'app.favicon'
+  'scripts',
+  'styles',
+  'assets'
 ]);
 
 gulp.task('watch', ['default'], function () {
@@ -70,38 +50,40 @@ gulp.task('watch', ['default'], function () {
   });
 });
 
-gulp.task('app.scripts', function() {
-  var files = [
-    path.join(frontScriptsDir, '/application.js'),
-    path.join(frontScriptsDir, '/**/*.js')
-  ];
-  return gulp.src(files)
-    .pipe(sourcemaps.init())
-    .pipe(concat('app.js'))
-    //.pipe(uglify())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(publicScriptsDir));
-});
+// Scripts
 
-gulp.task('app.modules', function() {
-  var bundler = browserify({});
+gulp.task('scripts', [
+  'scripts.application'
+]);
 
-  _.forEach(modules, function (id) {
-    bundler.require(resolve.sync(id), {expose: id});
-  });
-  _.forEach(appModules, function (path, id) {
-    bundler.require(resolve.sync(path), {expose: id});
-  });
-  bundler.add(path.join(frontScriptsDir, '/modules.js')); // Init modules
+gulp.task('scripts.application', function() {
+  var bundler = browserify({
+    standalone: 'application'
+  })
+    .transform(stringify, {
+      appliesTo: {
+        includeExtensions: ['.html']
+      },
+      minify: false
+    });
+
+  bundler.require(resolve.sync(frontScriptsDir), {expose: 'application'});
 
   return bundler.bundle()
-    .pipe(source('modules.js'))
+    .pipe(source('app.js'))
     .pipe(buffer())
     //.pipe(uglify())
     .pipe(gulp.dest(publicScriptsDir));
 });
 
-gulp.task('app.styles', function() {
+// Styles
+
+gulp.task('styles', [
+  'styles.vendor',
+  'styles.application'
+]);
+
+gulp.task('styles.application', function() {
   var files = [
     path.join(frontStylesDir, '/styles.less')
   ];
@@ -115,21 +97,7 @@ gulp.task('app.styles', function() {
     .pipe(gulp.dest(publicStylesDir));
 });
 
-gulp.task('vendor.scripts', function() {
-  var files = [
-    path.join(nodeModulesDir, '/js-polyfills/xhr.js'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/js/os-bootstrap.min.js'),
-    path.join(nodeModulesDir, '/angular/angular.min.js'),
-    path.join(nodeModulesDir, '/angular-animate/angular-animate.min.js'),
-    path.join(nodeModulesDir, '/angular-route/angular-route.min.js'),
-    path.join(nodeModulesDir, '/typeahead.js/dist/typeahead.jquery.js')
-  ];
-  return gulp.src(files)
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest(publicScriptsDir));
-});
-
-gulp.task('vendor.styles', function() {
+gulp.task('styles.vendor', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/css/font-awesome.min.css'),
     path.join(nodeModulesDir, '/os-bootstrap/dist/css/os-bootstrap.min.css'),
@@ -142,7 +110,15 @@ gulp.task('vendor.styles', function() {
     .pipe(gulp.dest(publicStylesDir));
 });
 
-gulp.task('vendor.fonts', function() {
+// Assets
+
+gulp.task('assets', [
+  'assets.fonts',
+  'assets.images',
+  'assets.favicon'
+]);
+
+gulp.task('assets.fonts', function() {
   var files = [
     path.join(nodeModulesDir, '/font-awesome/fonts/*'),
     path.join(nodeModulesDir, '/os-bootstrap/dist/fonts/*')
@@ -151,7 +127,7 @@ gulp.task('vendor.fonts', function() {
     .pipe(gulp.dest(publicFontsDir));
 });
 
-gulp.task('app.assets', function() {
+gulp.task('assets.images', function() {
   var files = [
     path.join(frontAssetsDir, '/**/*'),
     path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/os.svg'),
@@ -162,7 +138,7 @@ gulp.task('app.assets', function() {
     .pipe(gulp.dest(publicAssetsDir));
 });
 
-gulp.task('app.favicon', function() {
+gulp.task('assets.favicon', function() {
   var files = [
     path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/packager-favicon.ico')
   ];

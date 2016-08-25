@@ -1,7 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
-var lodash = require('lodash');
+var _ = require('lodash');
 var GoodTables = require('goodtables');
 var Promise = require('bluebird');
 var csv  = require('papaparse');
@@ -65,7 +64,7 @@ module.exports.getCsvSchema = function(urlOrFile) {
         } else {
           var records = results.data;
           var headers = _.first(records);
-          var rows = _.rest(records);
+          var rows = _.slice(records, 1);
           var schema = jts.infer(headers, rows);
           var delimiter = results.meta.delimiter;
           var linebreak = results.meta.linebreak;
@@ -127,7 +126,9 @@ module.exports.getDefaultCurrency = function() {
   var currencies = module.exports.availableCurrencies;
   var defaultCurrencies = _.intersection(
     ['USD', 'EUR', _.first(currencies).code],
-    _.pluck(currencies, 'code'));
+    _.map(currencies, function(item) {
+      return item.code;
+    }));
   var defaultCurrencyCode = _.first(defaultCurrencies);
   return _.find(currencies, function(item) {
     return item.code == defaultCurrencyCode;
@@ -135,7 +136,9 @@ module.exports.getDefaultCurrency = function() {
 };
 
 module.exports.availableConcepts = (function() {
-  var allTypes = _.pluck(module.exports.availableDataTypes, 'id');
+  var allTypes = _.map(module.exports.availableDataTypes, function(item) {
+    return item.id;
+  });
   var idTypes = ['integer', 'number', 'string'];
   return [
     {
@@ -205,13 +208,18 @@ module.exports.availableConcepts = (function() {
 //    var self = this;
 //    _.each(resources, function(resource) {
 //      _.each(resource.fields, function(field) {
-//        if (_.contains(self.concepts, field.concept)) {
+//        var isItemFound = !!_.contains(self.concepts, function(item) {
+//          return item == field.concept;
+//        });
+//        if (isItemFound) {
 //          conceptsToCheck[field.concept] = true;
 //        }
 //      });
 //    });
 //
-//    this.isAvailable = !_.contains(conceptsToCheck, false);
+//    this.isAvailable = !_.find(conceptsToCheck, function(item) {
+//      return item == false;
+//    });
 //  };
 //
 //  return [
@@ -264,7 +272,7 @@ module.exports.availableConcepts = (function() {
 //          var countOfDimensions = 0;
 //          _.each(resources, function(resource) {
 //            _.each(resource.fields, function(field) {
-//              var concept = _.findWhere(module.exports.availableConcepts, {
+//              var concept = _.find(module.exports.availableConcepts, {
 //                id: field.concept
 //              });
 //              if (concept && (concept.group == 'dimension')) {
@@ -306,7 +314,10 @@ module.exports.createNameFromUrl = function(urlOfResource) {
 };
 
 module.exports.createUniqueName = function(desiredName, availableNames) {
-  if (!_.contains(availableNames, desiredName)) {
+  var isItemFound = !!_.find(availableNames, function(item) {
+    return item == desiredName;
+  });
+  if (!isItemFound) {
     return desiredName;
   }
   desiredName += '-';
@@ -325,12 +336,14 @@ module.exports.createUniqueName = function(desiredName, availableNames) {
 
 module.exports.addItemWithUniqueName = function(collection, item) {
   item.name = module.exports.createUniqueName(item.name,
-    _.pluck(collection, 'name'));
+    _.map(collection, function(item) {
+      return item.name;
+    }));
   collection.push(item);
 };
 
 module.exports.removeEmptyAttributes = function(object) {
-  return _.pick(object, function(value) {
+  return _.pickBy(object, function(value) {
     return !!value;
   });
 };

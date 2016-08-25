@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 var MD5 = require('./md5');
 var Promise = require('bluebird');
 require('isomorphic-fetch');

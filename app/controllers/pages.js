@@ -1,7 +1,7 @@
 'use strict';
 
 var services = require('../services');
-var _ = require('underscore');
+var _ = require('lodash');
 
 function getBasePath(config) {
   var result = config.get('basePath');

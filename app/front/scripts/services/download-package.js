@@ -1,95 +1,95 @@
-;(function(angular) {
+'use strict';
 
-  angular.module('Application')
-    .factory('DownloadPackageService', [
-      '$q', '_', 'PackageService', 'ApplicationState', 'ApplicationLoader',
-      'StepsService', 'LoginService',
-      function($q, _, PackageService, ApplicationState, ApplicationLoader,
-        StepsService, LoginService) {
-        var result = {};
+var _ = require('lodash');
 
-        var state = null;
-        ApplicationLoader.then(function() {
-          state = {};
-          if (_.isObject(ApplicationState.downloadPackage)) {
-            state = ApplicationState.downloadPackage;
+angular.module('Application')
+  .factory('DownloadPackageService', [
+    '$q', 'PackageService', 'ApplicationState', 'ApplicationLoader',
+    'StepsService', 'LoginService',
+    function($q, PackageService, ApplicationState, ApplicationLoader,
+      StepsService, LoginService) {
+      var result = {};
+
+      var state = null;
+      ApplicationLoader.then(function() {
+        state = {};
+        if (_.isObject(ApplicationState.downloadPackage)) {
+          state = ApplicationState.downloadPackage;
+        }
+        ApplicationState.downloadPackage = state;
+      });
+
+      result.resetState = function() {
+        state = {};
+        ApplicationState.downloadPackage = state;
+      };
+
+      result.getState = function() {
+        return state;
+      };
+
+      result.generateMappings = function(fiscalDataPackage) {
+        var result = [];
+
+        var getResource = function(name) {
+          if (!!name) {
+            return _.find(fiscalDataPackage.resources, function(resource) {
+              return resource.name == name;
+            });
           }
-          ApplicationState.downloadPackage = state;
+          return _.first(fiscalDataPackage.resources);
+        };
+
+        // Measures
+        _.each(fiscalDataPackage.model.measures, function(measure, name) {
+          var resource = getResource(measure.resource);
+          result.push({
+            name: name,
+            sources: [{
+              fileName: resource.title || resource.name,
+              fieldName: measure.title
+            }]
+          });
         });
 
-        result.resetState = function() {
-          state = {};
-          ApplicationState.downloadPackage = state;
-        };
-
-        result.getState = function() {
-          return state;
-        };
-
-        result.generateMappings = function(fiscalDataPackage) {
-          var result = [];
-
-          var getResource = function(name) {
-            if (!!name) {
-              return _.find(fiscalDataPackage.resources, function(resource) {
-                return resource.name == name;
+        // Dimensions
+        _.each(fiscalDataPackage.model.dimensions,
+          function(dimension, name) {
+            var sources = [];
+            _.each(dimension.attributes, function(attribute) {
+              var resource = getResource(attribute.resource);
+              sources.push({
+                fileName: resource.title || resource.name,
+                fieldName: attribute.title
               });
-            }
-            return _.first(fiscalDataPackage.resources);
-          };
-
-          // Measures
-          _.each(fiscalDataPackage.model.measures, function(measure, name) {
-            var resource = getResource(measure.resource);
+            });
             result.push({
               name: name,
-              sources: [{
-                fileName: resource.title || resource.name,
-                fieldName: measure.title
-              }]
+              sources: sources
             });
           });
 
-          // Dimensions
-          _.each(fiscalDataPackage.model.dimensions,
-            function(dimension, name) {
-              var sources = [];
-              _.each(dimension.attributes, function(attribute) {
-                var resource = getResource(attribute.resource);
-                sources.push({
-                  fileName: resource.title || resource.name,
-                  fieldName: attribute.title
-                });
-              });
-              result.push({
-                name: name,
-                sources: sources
-              });
-            });
-
-          return result;
-        };
-
-        result.publishDataPackage = function() {
-          state.packagePublicUrl = null;
-          state.isUploading = true;
-          var files = PackageService.publish();
-          state.uploads = files;
-          files.$promise
-            .then(function(dataPackage) {
-              var packageName = PackageService.getAttributes().name;
-              var owner = LoginService.userId;
-              state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
-              state.uploads = null;
-            })
-            .finally(function() {
-              state.isUploading = false;
-            });
-          return state;
-        };
-
         return result;
-      }
-    ]);
+      };
 
-})(angular);
+      result.publishDataPackage = function() {
+        state.packagePublicUrl = null;
+        state.isUploading = true;
+        var files = PackageService.publish();
+        state.uploads = files;
+        files.$promise
+          .then(function(dataPackage) {
+            var packageName = PackageService.getAttributes().name;
+            var owner = LoginService.userId;
+            state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
+            state.uploads = null;
+          })
+          .finally(function() {
+            state.isUploading = false;
+          });
+        return state;
+      };
+
+      return result;
+    }
+  ]);

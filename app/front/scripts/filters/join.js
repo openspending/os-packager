@@ -1,16 +1,15 @@
-;(function(angular) {
+'use strict';
 
-  angular.module('Application')
-    .filter('join', [
-      '_',
-      function(_) {
-        return function(input, separator) {
-          if (_.isArray(input)) {
-            return _.filter(input).join(separator || ', ');
-          }
-          return input;
-        };
-      }
-    ]);
+var _ = require('lodash');
 
-})(angular);
+angular.module('Application')
+  .filter('join', [
+    function() {
+      return function(input, separator) {
+        if (_.isArray(input)) {
+          return _.filter(input).join(separator || ', ');
+        }
+        return input;
+      };
+    }
+  ]);

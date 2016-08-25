@@ -1,60 +1,60 @@
-;(function(angular, undefined) {
+'use strict';
 
-  angular.module('Application')
-    .controller('ProvideMetadataController', [
-      '$scope', 'PackageService', 'ProvideMetadataService',
-      'ApplicationLoader', '_',
-      function($scope, PackageService, ProvideMetadataService,
-        ApplicationLoader, _) {
-        ApplicationLoader.then(function() {
-          $scope.forms = _.extend({}, $scope.forms);
+var _ = require('lodash');
 
-          $scope.geoData = ProvideMetadataService.getGeoData();
-          $scope.state = ProvideMetadataService.getState();
+angular.module('Application')
+  .controller('ProvideMetadataController', [
+    '$scope', 'PackageService', 'ProvideMetadataService',
+    'ApplicationLoader',
+    function($scope, PackageService, ProvideMetadataService,
+      ApplicationLoader) {
+      ApplicationLoader.then(function() {
+        $scope.forms = _.extend({}, $scope.forms);
 
-          $scope.attributes = PackageService.getAttributes();
+        $scope.geoData = ProvideMetadataService.getGeoData();
+        $scope.state = ProvideMetadataService.getState();
 
-          var fiscalPeriod = null;
-          if ($scope.attributes && $scope.attributes.fiscalPeriod) {
-            fiscalPeriod = $scope.attributes.fiscalPeriod;
-          }
-          $scope.period = {
-            start: fiscalPeriod ? fiscalPeriod.from : '',
-            end: fiscalPeriod ? fiscalPeriod.to : '',
-          };
+        $scope.attributes = PackageService.getAttributes();
 
-          $scope.$watch('attributes.title', function() {
-            $scope.state = ProvideMetadataService.validatePackage(
-              $scope.forms.metadata);
-          });
+        var fiscalPeriod = null;
+        if ($scope.attributes && $scope.attributes.fiscalPeriod) {
+          fiscalPeriod = $scope.attributes.fiscalPeriod;
+        }
+        $scope.period = {
+          start: fiscalPeriod ? fiscalPeriod.from : '',
+          end: fiscalPeriod ? fiscalPeriod.to : ''
+        };
 
-          $scope.$watch('attributes.name', function() {
-            $scope.state = ProvideMetadataService.validatePackage(
-              $scope.forms.metadata);
-          });
-
-          $scope.$watch('period', function(value) {
-            ProvideMetadataService.updateFiscalPeriod(value);
-            $scope.state = ProvideMetadataService.validatePackage(
-              $scope.forms.metadata);
-          }, true);
-
-          $scope.$watch('attributes.regionCode', function() {
-            ProvideMetadataService.updateCountries();
-            $scope.geoData = ProvideMetadataService.getGeoData();
-            $scope.state = ProvideMetadataService.validatePackage(
-              $scope.forms.metadata);
-          });
-
-          $scope.$watch('attributes', function(newValue, oldValue) {
-            if ((newValue === oldValue)) {
-              return;
-            }
-            $scope.state = ProvideMetadataService.validatePackage(
-              $scope.forms.metadata);
-          }, true);
+        $scope.$watch('attributes.title', function() {
+          $scope.state = ProvideMetadataService.validatePackage(
+            $scope.forms.metadata);
         });
-      }
-    ]);
 
-})(angular);
+        $scope.$watch('attributes.name', function() {
+          $scope.state = ProvideMetadataService.validatePackage(
+            $scope.forms.metadata);
+        });
+
+        $scope.$watch('period', function(value) {
+          ProvideMetadataService.updateFiscalPeriod(value);
+          $scope.state = ProvideMetadataService.validatePackage(
+            $scope.forms.metadata);
+        }, true);
+
+        $scope.$watch('attributes.regionCode', function() {
+          ProvideMetadataService.updateCountries();
+          $scope.geoData = ProvideMetadataService.getGeoData();
+          $scope.state = ProvideMetadataService.validatePackage(
+            $scope.forms.metadata);
+        });
+
+        $scope.$watch('attributes', function(newValue, oldValue) {
+          if ((newValue === oldValue)) {
+            return;
+          }
+          $scope.state = ProvideMetadataService.validatePackage(
+            $scope.forms.metadata);
+        }, true);
+      });
+    }
+  ]);

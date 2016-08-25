@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 var express = require('express');
 var pages = require('../controllers/pages');
 
@@ -9,7 +9,7 @@ module.exports = function() {
 
   var steps = require('../services').data.steps;
   var firstStep = _.first(steps);
-  var restSteps = _.rest(steps);
+  var restSteps = _.slice(steps, 1);
   router.get(firstStep.route, pages.main);
   _.each(restSteps, function(step) {
     router.get(step.route, pages.redirectToMain);

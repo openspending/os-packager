@@ -1,8 +1,7 @@
-;(function(angular) {
+'use strict';
 
-  var app = angular.module('Application');
-
-  app.directive('popover', [
+angular.module('Application')
+  .directive('popover', [
     '$compile',
     function($compile) {
       return {
@@ -31,4 +30,3 @@
       };
     }
   ]);
-})(angular);

@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 var Promise = require('bluebird');
 var datapackageValidate = require('datapackage-validate').validate;
 var registry = require('datapackage-registry');
@@ -44,9 +44,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
         _field.type = '';
         _field.name = field.name;
         _field.title = field.name;
-        _field.data =
-          _.map(_.first(data.rows, 3),
-                function(row) { return row[index]; });
+        _field.data = _.slice(dataColumns[index], 0, 3)
         return _field;
       })
     };
@@ -65,7 +63,6 @@ module.exports.validateDataPackage = function(dataPackage, schema) {
 };
 
 module.exports.createFiscalDataPackage = function(attributes, resources) {
-
   // Use OSTypes to generate FDP
   var fields = resources[0].fields; //TODO: Add support for more than one resource once OSTypes supports it
   _.forEach(fields, function(field) {

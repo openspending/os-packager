@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 require('isomorphic-fetch');
 
 var cosmopolitanApiUrl = 'http://cosmopolitan.openspending.org/?format=json';

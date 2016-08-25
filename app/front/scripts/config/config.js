@@ -1,41 +1,42 @@
-;(function(angular) {
+'use strict';
 
-  var _ = require('underscore');
-  var services = require('app/services');
+var _ = require('lodash');
+var osDataStore = require('../../../services/os-datastore');
 
-  angular.module('Application')
-    .constant('_', _)
-    .constant('Services', services)
-    .value('ApplicationState', {})
-    .config([
-      '$httpProvider', '$compileProvider', '$logProvider',
-      function($httpProvider, $compileProvider, $logProvider) {
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript):/);
-        $httpProvider.defaults.useXDomain = true;
-        $httpProvider.defaults.withCredentials = true;
-        $logProvider.debugEnabled(true);
-      }
-    ])
-    .run([
-      '$rootScope', 'Services', 'ApplicationLoader',
-      'StepsService', 'UploadFileService', 'DescribeDataService',
-      'ProvideMetadataService', 'DownloadPackageService',
-      function($rootScope, Services, ApplicationLoader,
-        StepsService, UploadFileService, DescribeDataService,
-        ProvideMetadataService, DownloadPackageService) {
-        $rootScope.ProcessingStatus = Services.datastore.ProcessingStatus;
+// See also `gulpfile.js` and `app/views/layouts/base.html`
+var externalConfig = (window || this)['ExternalConfig'];
 
-        StepsService.setStepResetCallbacks({
-          'upload-file': UploadFileService.resetState,
-          'describe-data': DescribeDataService.resetState,
-          'metadata': ProvideMetadataService.resetState,
-          'download': DownloadPackageService.resetState
-        });
+_.extend(osDataStore.defaultOptions, externalConfig);
 
-        ApplicationLoader.then(function() {
-          $rootScope.applicationLoaded = true;
-        });
-      }
-    ]);
+angular.module('Application')
+  .value('ApplicationState', {})
+  .config([
+    '$httpProvider', '$compileProvider', '$logProvider',
+    function($httpProvider, $compileProvider, $logProvider) {
+      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript):/);
+      $httpProvider.defaults.useXDomain = true;
+      $httpProvider.defaults.withCredentials = true;
+      $logProvider.debugEnabled(true);
+    }
+  ])
+  .run([
+    '$rootScope', 'ApplicationLoader',
+    'StepsService', 'UploadFileService', 'DescribeDataService',
+    'ProvideMetadataService', 'DownloadPackageService',
+    function($rootScope, ApplicationLoader,
+      StepsService, UploadFileService, DescribeDataService,
+      ProvideMetadataService, DownloadPackageService) {
+      $rootScope.ProcessingStatus = osDataStore.ProcessingStatus;
 
-})(angular);
+      StepsService.setStepResetCallbacks({
+        'upload-file': UploadFileService.resetState,
+        'describe-data': DescribeDataService.resetState,
+        'metadata': ProvideMetadataService.resetState,
+        'download': DownloadPackageService.resetState
+      });
+
+      ApplicationLoader.then(function() {
+        $rootScope.applicationLoaded = true;
+      });
+    }
+  ]);

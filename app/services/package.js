@@ -131,26 +131,30 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
       result.source.fileName = resource.path;
       result.source.mimeType = resource.mediatype;
       result.source.size = resource.bytes;
-      _.each(result.fields, function(field, index) {
-        var originalField = resource.schema.fields[index];
-        field.name = originalField.name;
-        field.title = originalField.title;
-        field.slug = originalField.slug;
-        field.type = originalField.osType;
-        var measure = _.find(dataPackage.model.measures, function(item) {
-          return item.source == field.name;
+      _.each(result.fields, function(field) {
+        var originalField = _.find(resource.schema.fields, {
+          name: field.name
         });
-        if (measure) {
-          var excludeFields = ['resource', 'source', 'title'];
-          field.options = _.chain(measure)
-            .map(function(value, key) {
-              if (excludeFields.indexOf(key) == -1) {
-                return [key, value];
-              }
-            })
-            .filter()
-            .fromPairs()
-            .value();
+        if (originalField) {
+          field.name = originalField.name;
+          field.title = originalField.title;
+          field.slug = originalField.slug;
+          field.type = originalField.osType;
+          var measure = _.find(dataPackage.model.measures, function(item) {
+            return item.source == field.name;
+          });
+          if (measure) {
+            var excludeFields = ['resource', 'source', 'title'];
+            field.options = _.chain(measure)
+              .map(function(value, key) {
+                if (excludeFields.indexOf(key) == -1) {
+                  return [key, value];
+                }
+              })
+              .filter()
+              .fromPairs()
+              .value();
+          }
         }
       });
       return result;

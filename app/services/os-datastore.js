@@ -508,8 +508,10 @@ module.exports.isDataStoreUrl = function(urlToCheck) {
     return false;
   }
 
-  var checkHost = parsed.hostname == 's3.amazonaws.com';
-  var checkPath = parsed.pathname.indexOf('/datastore.openspending.org/') == 0;
+  var checkHost1 = parsed.hostname == 's3.amazonaws.com';
+  var checkPath1 = parsed.pathname.indexOf('/datastore.openspending.org/') == 0;
 
-  return checkHost && checkPath;
+  var checkHost2 = parsed.hostname == 'datastore.openspending.org';
+
+  return (checkHost1 && checkPath1) || checkHost2;
 };

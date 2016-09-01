@@ -56,48 +56,49 @@ angular.module('Application')
           });
         }
         _.forEach(fields, function(field) {
-            if (fdp.schema && fdp.schema.fields && fdp.schema.fields[field.title]) {
-              var schemaField = fdp.schema.fields[field.title];
-              field.additionalOptions = schemaField.options;
-              if (!field.options) {
-                field.options = {};
-              }
-              _.forEach(field.additionalOptions, function(option) {
-                if (option.name == 'currency') {
-                  option.values = _.map(UtilsService.getCurrencies(),
-                    function(item) {
-                      return {
-                        name: item.code + ' ' + item.name,
-                        value: item.code
-                      };
-                    });
-                  option.defaultValue =
-                    UtilsService.getDefaultCurrency().code;
-                }
-
-                var existing = field.options[option.name];
-                if (_.isUndefined(existing)) {
-                  if (_.has(option, 'defaultValue')) {
-                    field.options[option.name] = option.defaultValue;
-                  }
-                }
-              });
-            } else {
-              field.additionalOptions = [];
+          if (fdp.schema && fdp.schema.fields &&
+            fdp.schema.fields[field.title]) {
+            var schemaField = fdp.schema.fields[field.title];
+            field.additionalOptions = schemaField.options;
+            if (!field.options) {
               field.options = {};
             }
+            _.forEach(field.additionalOptions, function(option) {
+              if (option.name == 'currency') {
+                option.values = _.map(UtilsService.getCurrencies(),
+                  function(item) {
+                    return {
+                      name: item.code + ' ' + item.name,
+                      value: item.code
+                    };
+                  });
+                option.defaultValue =
+                  UtilsService.getDefaultCurrency().code;
+              }
+
+              var existing = field.options[option.name];
+              if (_.isUndefined(existing)) {
+                if (_.has(option, 'defaultValue')) {
+                  field.options[option.name] = option.defaultValue;
+                }
+              }
+            });
+          } else {
+            field.additionalOptions = [];
+            field.options = {};
+          }
         });
 
         state.errors = [];
         if (fdp.errors) {
           if (fdp.errors.general) {
-            _.every(fdp.errors.general, function (msg) {
+            _.every(fdp.errors.general, function(msg) {
               state.errors.push({msg: msg});
             });
           }
           if (fdp.errors.perField) {
             _.forEach(fdp.errors.perField, function(msgs, field) {
-              _.every(msgs, function (msg) {
+              _.every(msgs, function(msg) {
                 state.errors.push({field: field, msg: msg});
               });
             });

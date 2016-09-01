@@ -4,7 +4,7 @@ var _ = require('lodash');
 var osDataStore = require('../../../services/os-datastore');
 
 // See also `gulpfile.js` and `app/views/layouts/base.html`
-var externalConfig = (window || this)['ExternalConfig'];
+var externalConfig = (window || this).ExternalConfig;
 
 _.extend(osDataStore.defaultOptions, externalConfig);
 

@@ -18,7 +18,7 @@ angular.module('Application')
 
         // Remove first step when editing external package and mark
         // all other steps as passed
-        if (PackageService.isExternalDataPackage) {
+        if (PackageService.isExternalDataPackage()) {
           steps = steps.slice(1, steps.length);
           _.each(steps, function(step) {
             step.isPassed = true;

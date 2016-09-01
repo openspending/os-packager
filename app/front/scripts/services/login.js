@@ -40,7 +40,7 @@ angular.module('Application')
         var port =
           $location.port() == '80' ? '' : ':' + $location.port();
         var path = window.location.pathname;
-        if (path[path.length-1] == '/') {
+        if (path[path.length - 1] == '/') {
           path = path.slice(0, -1);
         }
         var urlParts = path.split('/');
@@ -93,7 +93,7 @@ angular.module('Application')
         if (that.isLoggedIn) {
           that.reset();
           authenticate.logout();
-          if (href===null) {
+          if (href === null) {
             that.check();
           }
         }

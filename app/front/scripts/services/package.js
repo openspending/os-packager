@@ -48,13 +48,14 @@ angular.module('Application')
           return $q(function(resolve, reject) {
             fiscalDataPackage.loadFiscalDataPackage(url)
               .then(function(data) {
-                console.log(data);
-                attributes = data.attributes;
-                attributes.regionCode = '';
-                attributes.countryCode = '';
-                attributes.cityCode = '';
-                resources = data.resources;
-                isExternalDataPackage = true;
+                if (_.isObject(data)) {
+                  attributes = data.attributes;
+                  attributes.regionCode = '';
+                  attributes.countryCode = '';
+                  attributes.cityCode = '';
+                  resources = data.resources;
+                  isExternalDataPackage = true;
+                }
                 resolve();
               })
               .catch(reject);
@@ -137,17 +138,23 @@ angular.module('Application')
             resources);
         },
         publish: function() {
-          var files = _.map(resources, function(resource) {
-            var url = resource.source.url;
-            if (_.isString(url) && (url.length > 0)) {
-              url = 'proxy?url=' + encodeURIComponent(url);
-            }
-            return {
-              name: resource.name + '.csv',
-              url: url,
-              blob: resource.descriptor ? resource.descriptor.blob : null
-            };
-          });
+          var files = _.chain(resources)
+            .map(function(resource) {
+              if (resource.isFromDataStore) {
+                return;
+              }
+              var url = resource.source.url;
+              if (_.isString(url) && (url.length > 0)) {
+                url = 'proxy?url=' + encodeURIComponent(url);
+              }
+              return {
+                name: resource.name + '.csv',
+                url: url,
+                blob: resource.descriptor ? resource.descriptor.blob : null
+              };
+            })
+            .filter()
+            .value();
           var modifiedResources = _.map(resources, function(resource) {
             if (resource.source.url) {
               resource = _.clone(resource);

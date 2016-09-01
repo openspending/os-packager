@@ -7,6 +7,7 @@ var registry = require('datapackage-registry');
 var OSTypes = require('os-types');
 var utils = require('./utils');
 var url = require('url');
+var datastore = require('./os-datastore');
 require('isomorphic-fetch');
 
 module.exports.createResourceFromSource = function(urlOrFile) {
@@ -25,7 +26,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
 
     var dataColumns = _.unzip(data.rows || []);
 
-    var resource = {
+    return {
       name: resourceName,
       title: resourceName,
       source: source,
@@ -45,11 +46,11 @@ module.exports.createResourceFromSource = function(urlOrFile) {
         _field.type = '';
         _field.name = field.name;
         _field.title = field.name;
-        _field.data = _.slice(dataColumns[index], 0, 3)
+        _field.data = _.slice(dataColumns[index], 0, 3);
         return _field;
-      })
+      }),
+      isFromDataStore: datastore.isDataStoreUrl(urlOrFile)
     };
-    return resource;
   });
 };
 
@@ -65,7 +66,8 @@ module.exports.validateDataPackage = function(dataPackage, schema) {
 
 module.exports.createFiscalDataPackage = function(attributes, resources) {
   // Use OSTypes to generate FDP
-  var fields = resources[0].fields; //TODO: Add support for more than one resource once OSTypes supports it
+  //TODO: Add support for more than one resource once OSTypes supports it
+  var fields = resources[0].fields;
   _.forEach(fields, function(field) {
     delete field.errors;
     delete field.additionalOptions;
@@ -110,7 +112,8 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   });
 
   // JSON-LD
-  fdp['@context'] = 'http://schemas.frictionlessdata.io/fiscal-data-package.jsonld';
+  fdp['@context'] = 'http://schemas.frictionlessdata.io/' +
+    'fiscal-data-package.jsonld';
 
   return fdp;
 };
@@ -155,6 +158,9 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
 }
 
 module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
+  if (!utils.isUrl(dataPackageUrl)) {
+    return Promise.resolve(null);
+  }
   var result = {
     attributes: {},
     resources: []
@@ -167,7 +173,6 @@ module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
       return response.json();
     })
     .then(function(dataPackage) {
-      console.log(dataPackage);
       // TODO: Check `dataPackage.owner` - user can edit only own files
       var exceptFields = ['resources', 'model', '@context'];
       _.each(dataPackage, function(value, key) {
@@ -185,5 +190,5 @@ module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
     })
     .then(function() {
       return result;
-    })
+    });
 };

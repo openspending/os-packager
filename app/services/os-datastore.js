@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var MD5 = require('./md5');
 var Promise = require('bluebird');
+var url = require('url');
 require('isomorphic-fetch');
 
 var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
@@ -432,9 +433,13 @@ module.exports.publish = function(descriptor, options) {
     descriptor.status = ProcessingStatus.PUBLISHING;
     descriptor.progress = 0.0;
 
+    // jscs:disable
+    var permissionToken = options.permission_token;
+    // jscs:enable
+
     var publishUrl = options.publishUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl) +
-      '&jwt=' + encodeURIComponent(options.permission_token);
+      '&jwt=' + encodeURIComponent(permissionToken);
     var pollUrl = options.statusUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl);
 
@@ -492,4 +497,19 @@ module.exports.publish = function(descriptor, options) {
         reject(error);
       });
   });
+};
+
+module.exports.isDataStoreUrl = function(urlToCheck) {
+  if (!_.isString(urlToCheck)) {
+    return false;
+  }
+  var parsed = url.parse(urlToCheck);
+  if (!_.isObject(parsed)) {
+    return false;
+  }
+
+  var checkHost = parsed.hostname == 's3.amazonaws.com';
+  var checkPath = parsed.pathname.indexOf('/datastore.openspending.org/') == 0;
+
+  return checkHost && checkPath;
 };

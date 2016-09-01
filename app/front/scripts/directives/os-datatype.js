@@ -13,8 +13,8 @@ angular.module('Application')
           displayName: completion.displayName,
           description: completion.description,
           group: completion.group,
-          text: completion.displayName + ' ('+_.trimEnd(completion.type, ':')
-            .replace(/:/g,sep)+')',
+          text: completion.displayName + ' (' + _.trimEnd(completion.type, ':')
+            .replace(/:/g,sep) + ')',
           leaf: _.last(completion.type) != ':'
         };
       };
@@ -77,9 +77,9 @@ angular.module('Application')
                 }
                 var ret = sugg.displayName + suffix;
                 var group = !sugg.group ? '' :
-                  '<div class="group">'+sugg.group.substring(4)+'</div>';
+                  '<div class="group">' + sugg.group.substring(4) + '</div>';
                 var groupClass = sugg.group ? 'grouped' : '';
-                return '<div class="suggestion-content '+ groupClass +'">' +
+                return '<div class="suggestion-content ' + groupClass + '">' +
                   '<div>' + group + ret + '</div>' +
                   '<div class="suggestion-tooltip">' + sugg.description +
                   '</div>' +

@@ -5,25 +5,17 @@ var _ = require('lodash');
 angular.module('Application')
   .factory('ProvideMetadataService', [
     '$timeout', 'PackageService', 'UtilsService',
-    'ValidationService', 'ApplicationState', 'ApplicationLoader',
+    'ValidationService',
     function($timeout, PackageService, UtilsService,
-      ValidationService, ApplicationState, ApplicationLoader) {
+      ValidationService) {
       var result = {};
 
       var geoData = {};
 
-      var state = null;
-      ApplicationLoader.then(function() {
-        state = {};
-        if (_.isObject(ApplicationState.provideMetadata)) {
-          state = ApplicationState.provideMetadata;
-        }
-        ApplicationState.provideMetadata = state;
-      });
+      var state = {};
 
       result.resetState = function() {
         state = {};
-        ApplicationState.provideMetadata = state;
       };
 
       result.getState = function() {

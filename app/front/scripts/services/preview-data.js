@@ -5,19 +5,12 @@ var utils = require('../../../services/utils');
 
 angular.module('Application')
   .factory('PreviewDataService', [
-    'PackageService', 'ApplicationState', 'ApplicationLoader',
-    function(PackageService, ApplicationState, ApplicationLoader) {
+    'PackageService',
+    function(PackageService) {
       var result = {};
 
-      var state = null;
-      ApplicationLoader.then(function() {
-        state = {};
-        if (_.isObject(ApplicationState.previewData)) {
-          state = ApplicationState.previewData;
-        }
-        state.selectedPossibility = null;
-        ApplicationState.previewData = state;
-      });
+      var state = {};
+      state.selectedPossibility = null;
 
       var possibilities = utils.availablePossibilities;
 

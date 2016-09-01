@@ -6,24 +6,16 @@ var _ = require('lodash');
 angular.module('Application')
   .factory('DescribeDataService', [
     'PackageService', 'UtilsService', 'ValidationService',
-    'PreviewDataService', 'ApplicationState', 'ApplicationLoader',
+    'PreviewDataService',
     function(PackageService, UtilsService, ValidationService,
-      PreviewDataService, ApplicationState, ApplicationLoader) {
+      PreviewDataService) {
       var result = {};
 
-      var state = null;
-      ApplicationLoader.then(function() {
-        state = {};
-        if (_.isObject(ApplicationState.describeData)) {
-          state = ApplicationState.describeData;
-        }
-        ApplicationState.describeData = state;
-        PreviewDataService.update();
-      });
+      var state = {};
+      PreviewDataService.update();
 
       result.resetState = function() {
         state = {};
-        ApplicationState.describeData = state;
       };
 
       result.getState = function() {
@@ -71,19 +63,20 @@ angular.module('Application')
                 field.options = {};
               }
               _.forEach(field.additionalOptions, function(option) {
+                if (option.name == 'currency') {
+                  option.values = _.map(UtilsService.getCurrencies(),
+                    function(item) {
+                      return {
+                        name: item.code + ' ' + item.name,
+                        value: item.code
+                      };
+                    });
+                  option.defaultValue =
+                    UtilsService.getDefaultCurrency().code;
+                }
+
                 var existing = field.options[option.name];
                 if (_.isUndefined(existing)) {
-                  if (option.name == 'currency') {
-                    option.values = _.map(UtilsService.getCurrencies(),
-                      function(item) {
-                        return {
-                          name: item.code + ' ' + item.name,
-                          value: item.code
-                        };
-                      });
-                    option.defaultValue =
-                      UtilsService.getDefaultCurrency().code;
-                  }
                   if (_.has(option, 'defaultValue')) {
                     field.options[option.name] = option.defaultValue;
                   }

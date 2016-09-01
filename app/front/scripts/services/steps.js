@@ -4,34 +4,32 @@ var _ = require('lodash');
 
 angular.module('Application')
   .factory('StepsService', [
-    '$q', '$location', 'Configuration', 'ApplicationState',
-    'ApplicationLoader',
-    function($q, $location, Configuration, ApplicationState,
-      ApplicationLoader) {
+    '$q', '$location', 'Configuration', 'ApplicationLoader', 'PackageService',
+    function($q, $location, Configuration, ApplicationLoader, PackageService) {
       var currentStep = null;
       var steps = [];
 
       var resetCallbacks = {};
 
       ApplicationLoader.then(function() {
-        if (_.isArray(ApplicationState.steps)) {
-          steps = _.filter(ApplicationState.steps, _.isObject);
-        }
         if (steps.length == 0) {
           steps = Configuration.steps;
         }
 
-        currentStep = _.find(steps, 'isCurrent');
-        if (!currentStep) {
-          currentStep = _.first(steps);
+        // Remove first step when editing external package and mark
+        // all other steps as passed
+        if (PackageService.isExternalDataPackage) {
+          steps = steps.slice(1, steps.length);
+          _.each(steps, function(step) {
+            step.isPassed = true;
+          });
         }
+        currentStep = _.first(steps);
         result.updateStepsState(currentStep);
 
         if (Configuration.isWizard) {
           $location.path(currentStep.route);
         }
-
-        ApplicationState.steps = steps;
       });
 
       var result = {

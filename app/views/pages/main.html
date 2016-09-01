@@ -32,6 +32,13 @@
       {% include "partials/preview-panel.html" %}
     </div>
   </div>
+
+  <div class="container-fluid margin-top-16">
+    <div class="alert alert-warning" ng-if="isExternalDataPackage">
+      <i class="fa fa-2x fa-exclamation-circle vertical-align-middle margin-right-4"></i>
+      You are editing existing data package file, so some features will be unavailable.
+    </div>
+  </div>
   <div class="container-fluid x-steps-area-wrapper" ng-view></div>
 </div>
 </section>

@@ -8,26 +8,14 @@ var osDataStore = require('../../../services/os-datastore');
 
 angular.module('Application')
   .factory('PackageService', [
-    '$q', '$timeout', 'UtilsService', 'Configuration',
-    'ApplicationState', 'ApplicationLoader', 'LoginService',
+    '$q', '$timeout', 'UtilsService', 'Configuration', 'LoginService',
     'ValidationService',
-    function($q, $timeout, UtilsService, Configuration,
-      ApplicationState, ApplicationLoader, LoginService,
+    function($q, $timeout, UtilsService, Configuration, LoginService,
       ValidationService) {
+      var isExternalDataPackage = false;
       var attributes = {};
       var resources = [];
       var schema = null;
-
-      ApplicationLoader.then(function() {
-        if (_.isObject(ApplicationState.package)) {
-          attributes = ApplicationState.package.attributes;
-          resources = ApplicationState.package.resources;
-        }
-        ApplicationState.package = {
-          attributes: attributes,
-          resources: resources
-        };
-      });
 
       var createNewDataPackage = function() {
         attributes.regionCode = '';
@@ -44,6 +32,9 @@ angular.module('Application')
             resolve();
           });
         },
+        isExternalDataPackage: function() {
+          return isExternalDataPackage;
+        },
         getAttributes: function() {
           return attributes;
         },
@@ -52,6 +43,22 @@ angular.module('Application')
         },
         recreatePackage: function() {
           createNewDataPackage();
+        },
+        loadExternalDataPackage: function(url) {
+          return $q(function(resolve, reject) {
+            fiscalDataPackage.loadFiscalDataPackage(url)
+              .then(function(data) {
+                console.log(data);
+                attributes = data.attributes;
+                attributes.regionCode = '';
+                attributes.countryCode = '';
+                attributes.cityCode = '';
+                resources = data.resources;
+                isExternalDataPackage = true;
+                resolve();
+              })
+              .catch(reject);
+          });
         },
         createResource: function(fileOrUrl, state) {
           var fileDescriptor = null;

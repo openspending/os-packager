@@ -6,6 +6,7 @@ var datapackageValidate = require('datapackage-validate').validate;
 var registry = require('datapackage-registry');
 var OSTypes = require('os-types');
 var utils = require('./utils');
+var url = require('url');
 require('isomorphic-fetch');
 
 module.exports.createResourceFromSource = function(urlOrFile) {
@@ -83,7 +84,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     if (resource.source.url) {
       result.url = resource.source.url;
     } else {
-      result.path = resource.name + '.csv';
+      result.path = resource.source.fileName || resource.name + '.csv';
     }
     if (resource.source.mimeType) {
       result.mediatype = resource.source.mimeType;
@@ -112,4 +113,77 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   fdp['@context'] = 'http://schemas.frictionlessdata.io/fiscal-data-package.jsonld';
 
   return fdp;
+};
+
+function convertResource(resource, dataPackage, dataPackageUrl) {
+  var resourceUrl = resource.url || url.resolve(dataPackageUrl, resource.path);
+  return module.exports.createResourceFromSource(resourceUrl)
+    .then(function(result) {
+      // Copy some properties from original resource
+      // to keep them when re-assembling datapackage.json
+      result.name = resource.name;
+      result.dialect = resource.dialect;
+      result.encoding = resource.encoding;
+      result.source.url = resource.url;
+      result.source.fileName = resource.path;
+      result.source.mimeType = resource.mediatype;
+      result.source.size = resource.bytes;
+      _.each(result.fields, function(field, index) {
+        var originalField = resource.schema.fields[index];
+        field.name = originalField.name;
+        field.title = originalField.title;
+        field.slug = originalField.slug;
+        field.type = originalField.osType;
+        var measure = _.find(dataPackage.model.measures, function(item) {
+          return item.source == field.name;
+        });
+        if (measure) {
+          var excludeFields = ['resource', 'source', 'title'];
+          field.options = _.chain(measure)
+            .map(function(value, key) {
+              if (excludeFields.indexOf(key) == -1) {
+                return [key, value];
+              }
+            })
+            .filter()
+            .fromPairs()
+            .value();
+        }
+      });
+      return result;
+    });
+}
+
+module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
+  var result = {
+    attributes: {},
+    resources: []
+  };
+  return fetch(dataPackageUrl)
+    .then(function(response) {
+      if (response.status != 200) {
+        throw 'Failed to load data from ' + response.url;
+      }
+      return response.json();
+    })
+    .then(function(dataPackage) {
+      console.log(dataPackage);
+      // TODO: Check `dataPackage.owner` - user can edit only own files
+      var exceptFields = ['resources', 'model', '@context'];
+      _.each(dataPackage, function(value, key) {
+        if (exceptFields.indexOf(key) == -1) {
+          result.attributes[key] = value;
+        }
+      });
+      var promises = _.map(dataPackage.resources, function(resource) {
+        return convertResource(resource, dataPackage, dataPackageUrl);
+      });
+      return Promise.all(promises);
+    })
+    .then(function(resources) {
+      result.resources = resources;
+    })
+    .then(function() {
+      return result;
+    })
 };

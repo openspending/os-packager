@@ -6,19 +6,10 @@ var utils = require('../../../services/utils');
 angular.module('Application')
   .factory('UploadFileService', [
     'PackageService', 'ValidationService', 'Configuration',
-    'UtilsService', 'ApplicationState', 'ApplicationLoader',
-    function(PackageService, ValidationService, Configuration,
-      UtilsService, ApplicationState, ApplicationLoader) {
+    function(PackageService, ValidationService, Configuration) {
       var result = {};
 
-      var state = null;
-      ApplicationLoader.then(function() {
-        state = {};
-        if (_.isObject(ApplicationState.uploadFile)) {
-          state = ApplicationState.uploadFile;
-        }
-        ApplicationState.uploadFile = state;
-      });
+      var state = {};
 
       var onResetCallback = null;
       result.onReset = function(cbk) {
@@ -27,7 +18,6 @@ angular.module('Application')
 
       result.resetState = function() {
         state = {};
-        ApplicationState.uploadFile = state;
         PackageService.recreatePackage();
         onResetCallback && onResetCallback();
       };
@@ -81,7 +71,6 @@ angular.module('Application')
           return state;
         }
         state = {};
-        ApplicationState.uploadFile = state;
         PackageService.recreatePackage();
         return state;
       };

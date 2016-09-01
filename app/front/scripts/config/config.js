@@ -9,7 +9,6 @@ var externalConfig = (window || this)['ExternalConfig'];
 _.extend(osDataStore.defaultOptions, externalConfig);
 
 angular.module('Application')
-  .value('ApplicationState', {})
   .config([
     '$httpProvider', '$compileProvider', '$logProvider',
     function($httpProvider, $compileProvider, $logProvider) {

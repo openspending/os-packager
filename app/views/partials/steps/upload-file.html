@@ -1,5 +1,6 @@
 {% raw %}
 <section id="step1-wrapper">
+<div ng-if="!isExternalDataPackage">
   <div class="row form-group">
     <div ng-hide="isUrlSelected" ng-class="{'col-sm-5': !isUrlSelected && !isFileSelected, 'col-xs-12': isFileSelected}">
       <div class="input-group">
@@ -73,5 +74,6 @@
     {% include "partials/modals/validation-results.html" %}
   {% raw %}
   </div>
+</div>
 </section>
 {% endraw %}

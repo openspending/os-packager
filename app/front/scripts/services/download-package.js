@@ -4,24 +4,14 @@ var _ = require('lodash');
 
 angular.module('Application')
   .factory('DownloadPackageService', [
-    '$q', 'PackageService', 'ApplicationState', 'ApplicationLoader',
-    'StepsService', 'LoginService',
-    function($q, PackageService, ApplicationState, ApplicationLoader,
-      StepsService, LoginService) {
+    '$q', 'PackageService', 'StepsService', 'LoginService',
+    function($q, PackageService, StepsService, LoginService) {
       var result = {};
 
-      var state = null;
-      ApplicationLoader.then(function() {
-        state = {};
-        if (_.isObject(ApplicationState.downloadPackage)) {
-          state = ApplicationState.downloadPackage;
-        }
-        ApplicationState.downloadPackage = state;
-      });
+      var state = {};
 
       result.resetState = function() {
         state = {};
-        ApplicationState.downloadPackage = state;
       };
 
       result.getState = function() {

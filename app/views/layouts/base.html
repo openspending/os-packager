@@ -27,6 +27,7 @@
     (function(globals, conductor) {
       var options = globals.ExternalConfig = {};
       options.conductorUrl = conductor.url + '/datastore/';
+      options.conductorInfoUrl = conductor.url + '/datastore/info';
       options.publishUrl = conductor.url + '/package/upload';
       options.statusUrl = conductor.url + '/package/status';
       options.pollInterval = conductor.pollInterval;

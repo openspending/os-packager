@@ -4,12 +4,14 @@ var _ = require('lodash');
 var MD5 = require('./md5');
 var Promise = require('bluebird');
 var url = require('url');
+var utils = require('./utils');
 require('isomorphic-fetch');
 
 var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
   'http://next.openspending.org';
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR + '/datastore/',
+  conductorInfoUrl: OS_CONDUCTOR + '/datastore/info',
   publishUrl: OS_CONDUCTOR + '/package/upload',
   statusUrl: OS_CONDUCTOR + '/package/status',
   pollInterval: 1000
@@ -499,19 +501,26 @@ module.exports.publish = function(descriptor, options) {
   });
 };
 
-module.exports.isDataStoreUrl = function(urlToCheck) {
-  if (!_.isString(urlToCheck)) {
-    return false;
-  }
-  var parsed = url.parse(urlToCheck);
-  if (!_.isObject(parsed)) {
-    return false;
-  }
-
-  var checkHost1 = parsed.hostname == 's3.amazonaws.com';
-  var checkPath1 = parsed.pathname.indexOf('/datastore.openspending.org/') == 0;
-
-  var checkHost2 = parsed.hostname == 'datastore.openspending.org';
-
-  return (checkHost1 && checkPath1) || checkHost2;
+module.exports.isDataStoreUrl = function(urlToCheck, permissionToken) {
+  var infoUrl = defaultOptions.conductorInfoUrl +
+    '?jwt=' + encodeURIComponent(permissionToken);
+  return fetch(infoUrl)
+    .then(function(response) {
+      if (response.status != 200) {
+        return {}; // Silently return empty object
+      }
+      return response.json();
+    })
+    .then(function(info) {
+      var result = false;
+      if (utils.isUrl(urlToCheck) && _.isObject(info)) {
+        _.each(info.prefixes, function(prefix) {
+          if (urlToCheck.indexOf(prefix) == 0) {
+            result = true;
+            return false;
+          }
+        });
+      }
+      return result;
+    });
 };

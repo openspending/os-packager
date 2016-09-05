@@ -4,9 +4,10 @@ var _ = require('lodash');
 
 angular.module('Application')
   .factory('LoginService', [
-    'authenticate', 'authorize', '$window', '$location',
-    function(authenticate, authorize, $window, $location) {
+    'authenticate', 'authorize', '$window', '$location', '$q',
+    function(authenticate, authorize, $window, $location, $q) {
       var that = this;
+      var isFirstCheckDone = false;
 
       $window.addEventListener('message', function(event) {
         if (_.isObject(event.data)) {
@@ -17,6 +18,19 @@ angular.module('Application')
           }
         }
       }, false);
+
+      this.firstCheckAttempt = function() {
+        return $q(function(resolve) {
+          var check = function() {
+            if (isFirstCheckDone) {
+              resolve();
+            } else {
+              setTimeout(check, 20);
+            }
+          };
+          check();
+        });
+      };
 
       this.reset = function() {
         that.isLoggedIn = false;
@@ -63,11 +77,17 @@ angular.module('Application')
 
           authorize.check(token, 'os.datastore')
             .then(function(permissionData) {
+              isFirstCheckDone = true;
               that.permissionToken = permissionData.token;
               that.permissions = permissionData.permissions;
+            })
+            .catch(function(error) {
+              isFirstCheckDone = true;
+              return error;
             });
         })
         .catch(function(providers) {
+          isFirstCheckDone = true;
           if (!isEventRegistered) {
             $window.addEventListener('focus', function() {
               if (!that.isLoggedIn && attempting) {

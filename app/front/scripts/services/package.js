@@ -46,7 +46,9 @@ angular.module('Application')
         },
         loadExternalDataPackage: function(url) {
           return $q(function(resolve, reject) {
-            fiscalDataPackage.loadFiscalDataPackage(url)
+            var permissionToken = LoginService.permissionToken;
+            fiscalDataPackage.loadFiscalDataPackage(url, LoginService.userId,
+              permissionToken)
               .then(function(data) {
                 if (_.isObject(data)) {
                   attributes = data.attributes;
@@ -58,7 +60,10 @@ angular.module('Application')
                 }
                 resolve();
               })
-              .catch(reject);
+              .catch(function(error) {
+                isExternalDataPackage = true;
+                reject(error);
+              });
           });
         },
         createResource: function(fileOrUrl, state) {
@@ -85,7 +90,8 @@ angular.module('Application')
               }
               fileDescriptor = fileOrUrl;
               return $q(function(resolve, reject) {
-                fiscalDataPackage.createResourceFromSource(url)
+                var permissionToken = LoginService.permissionToken;
+                fiscalDataPackage.createResourceFromSource(url, permissionToken)
                   .then(resolve)
                   .catch(reject);
               }).then(_.identity);
@@ -116,22 +122,22 @@ angular.module('Application')
           var dataPackage = this.createFiscalDataPackage();
           validationResult.$promise = $q(function(resolve, reject) {
             return fiscalDataPackage.validateDataPackage(dataPackage, schema)
-                .then(resolve)
-                .catch(reject);
+              .then(resolve)
+              .catch(reject);
           });
 
           validationResult.$promise
-              .then(function(results) {
-                validationResult.state = 'completed';
-                if (results && !results.valid) {
-                  validationResult.errors = results.errors;
-                }
-                return results;
-              })
-              .catch(function(error) {
-                validationResult.state = null;
-                Configuration.defaultErrorHandler(error);
-              });
+            .then(function(results) {
+              validationResult.state = 'completed';
+              if (results && !results.valid) {
+                validationResult.errors = results.errors;
+              }
+              return results;
+            })
+            .catch(function(error) {
+              validationResult.state = null;
+              Configuration.defaultErrorHandler(error);
+            });
 
           return validationResult;
         },

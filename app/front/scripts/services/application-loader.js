@@ -5,30 +5,32 @@ var utils = require('../../../services/utils');
 angular.module('Application')
   .factory('ApplicationLoader', [
     '$q', '$location', '$rootScope', 'UtilsService', 'PackageService',
-    'Configuration',
+    'Configuration', 'LoginService',
     function($q, $location, $rootScope, UtilsService, PackageService,
-      Configuration) {
+      Configuration, LoginService) {
       var promises = [
         // Preload continents and countries
-        UtilsService.getCurrencies().$promise
-          .catch(Configuration.defaultErrorHandler),
-        UtilsService.getContinents().$promise
-          .catch(Configuration.defaultErrorHandler),
-        UtilsService.getCountries().$promise
-          .catch(Configuration.defaultErrorHandler)
+        UtilsService.getCurrencies().$promise,
+        UtilsService.getContinents().$promise,
+        UtilsService.getCountries().$promise,
+        LoginService.firstCheckAttempt()
       ];
 
-      var dataPackageUrl = $location.search().package;
-      if (utils.isUrl) {
-        promises.push(
-          PackageService.loadExternalDataPackage(dataPackageUrl)
-            .catch(Configuration.defaultErrorHandler)
-        );
-      }
-
-      return $q.all(promises).then(function() {
-        $rootScope.isExternalDataPackage =
-          PackageService.isExternalDataPackage();
-      }); // Force execute
+      return $q.all(promises)
+        .then(function() {
+          var dataPackageUrl = $location.search().package;
+          if (utils.isUrl) {
+            return PackageService.loadExternalDataPackage(dataPackageUrl)
+              .catch(function(error) {
+                $rootScope.externalDataPackageError = error.message ||
+                  ('' + error);
+              });
+          }
+        })
+        .then(function() {
+          $rootScope.isExternalDataPackage =
+            PackageService.isExternalDataPackage();
+        })
+        .catch(Configuration.defaultErrorHandler);
     }
   ]);

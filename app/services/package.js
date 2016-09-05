@@ -10,7 +10,7 @@ var url = require('url');
 var datastore = require('./os-datastore');
 require('isomorphic-fetch');
 
-module.exports.createResourceFromSource = function(urlOrFile) {
+module.exports.createResourceFromSource = function(urlOrFile, permissionToken) {
   return utils.getCsvSchema(urlOrFile).then(function(data) {
     var resourceName = null;
     var source = {};
@@ -26,7 +26,7 @@ module.exports.createResourceFromSource = function(urlOrFile) {
 
     var dataColumns = _.unzip(data.rows || []);
 
-    return {
+    var result = {
       name: resourceName,
       title: resourceName,
       source: source,
@@ -48,9 +48,14 @@ module.exports.createResourceFromSource = function(urlOrFile) {
         _field.title = field.name;
         _field.data = _.slice(dataColumns[index], 0, 3);
         return _field;
-      }),
-      isFromDataStore: datastore.isDataStoreUrl(urlOrFile)
+      })
     };
+
+    return datastore.isDataStoreUrl(urlOrFile, permissionToken)
+      .then(function(flag) {
+        result.isFromDataStore = !!flag;
+        return result;
+      });
   });
 };
 
@@ -118,9 +123,10 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
   return fdp;
 };
 
-function convertResource(resource, dataPackage, dataPackageUrl) {
+function convertResource(resource, dataPackage, dataPackageUrl,
+  permissionToken) {
   var resourceUrl = resource.url || url.resolve(dataPackageUrl, resource.path);
-  return module.exports.createResourceFromSource(resourceUrl)
+  return module.exports.createResourceFromSource(resourceUrl, permissionToken)
     .then(function(result) {
       // Copy some properties from original resource
       // to keep them when re-assembling datapackage.json
@@ -149,15 +155,15 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
           });
           if (measure) {
             var excludeFields = ['resource', 'source', 'title'];
-             _.extend(field.options, _.chain(measure)
-              .map(function(value, key) {
-                if (excludeFields.indexOf(key) == -1) {
-                  return [key, value];
-                }
-              })
-              .filter()
-              .fromPairs()
-              .value());
+            _.extend(field.options, _.chain(measure)
+            .map(function(value, key) {
+              if (excludeFields.indexOf(key) == -1) {
+                return [key, value];
+              }
+            })
+            .filter()
+            .fromPairs()
+            .value());
           }
 
           var allowedFields = ['format', 'decimalChar', 'groupChar'];
@@ -178,7 +184,8 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
     });
 }
 
-module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
+module.exports.loadFiscalDataPackage = function(dataPackageUrl, userId,
+  permissionToken) {
   if (!utils.isUrl(dataPackageUrl)) {
     return Promise.resolve(null);
   }
@@ -194,7 +201,12 @@ module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
       return response.json();
     })
     .then(function(dataPackage) {
-      // TODO: Check `dataPackage.owner` - user can edit only own files
+      // User can edit only own files
+      if (dataPackage.owner && (dataPackage.owner != userId)) {
+        throw new Error('Permission denied: you can edit ' +
+          'only own data packages.');
+      }
+
       var exceptFields = ['resources', 'model', '@context'];
       _.each(dataPackage, function(value, key) {
         if (exceptFields.indexOf(key) == -1) {
@@ -202,7 +214,8 @@ module.exports.loadFiscalDataPackage = function(dataPackageUrl) {
         }
       });
       var promises = _.map(dataPackage.resources, function(resource) {
-        return convertResource(resource, dataPackage, dataPackageUrl);
+        return convertResource(resource, dataPackage, dataPackageUrl,
+          permissionToken);
       });
       return Promise.all(promises);
     })

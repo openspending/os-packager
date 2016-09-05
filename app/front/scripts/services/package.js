@@ -50,9 +50,9 @@ angular.module('Application')
               .then(function(data) {
                 if (_.isObject(data)) {
                   attributes = data.attributes;
-                  attributes.regionCode = '';
-                  attributes.countryCode = '';
-                  attributes.cityCode = '';
+                  attributes.regionCode = attributes.regionCode || '';
+                  attributes.countryCode = attributes.countryCode || '';
+                  attributes.cityCode = attributes.cityCode || '';
                   resources = data.resources;
                   isExternalDataPackage = true;
                 }
@@ -63,6 +63,7 @@ angular.module('Application')
         },
         createResource: function(fileOrUrl, state) {
           var fileDescriptor = null;
+          var encoding;
           return $q(function(resolve, reject) {
             utils.blobToFileDescriptor(fileOrUrl)
               .then(resolve)
@@ -73,7 +74,7 @@ angular.module('Application')
               state.status = status;
 
               return status.$promise.then(function(results) {
-                fileOrUrl.encoding = results.encoding;
+                encoding = results.encoding;
                 return fileOrUrl;
               });
             })
@@ -90,6 +91,7 @@ angular.module('Application')
               }).then(_.identity);
             })
             .then(function(resource) {
+              resource.encoding = encoding;
               // Save file object - it will be needed when publishing
               // data package
               if (_.isObject(fileDescriptor)) {

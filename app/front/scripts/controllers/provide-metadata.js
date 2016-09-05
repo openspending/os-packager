@@ -21,8 +21,8 @@ angular.module('Application')
           fiscalPeriod = $scope.attributes.fiscalPeriod;
         }
         $scope.period = {
-          start: fiscalPeriod ? fiscalPeriod.from : '',
-          end: fiscalPeriod ? fiscalPeriod.to : ''
+          start: fiscalPeriod ? fiscalPeriod.start : '',
+          end: fiscalPeriod ? fiscalPeriod.end : ''
         };
 
         $scope.$watch('attributes.title', function() {

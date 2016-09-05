@@ -6,6 +6,10 @@ angular.module('Application')
   .controller('UploadFileController', [
     '$scope', 'UploadFileService', 'ApplicationLoader',
     function($scope, UploadFileService, ApplicationLoader) {
+      $scope.model = {
+        file: null,
+        url: null
+      };
 
       ApplicationLoader.then(function() {
 
@@ -13,10 +17,10 @@ angular.module('Application')
           $scope.state = UploadFileService.getState();
 
           if ($scope.state.isUrl) {
-            $scope.url = $scope.state.url;
+            $scope.model.url = $scope.state.url;
           }
           if ($scope.state.isFile) {
-            $scope.file = $scope.state.file.name;
+            $scope.model.file = $scope.state.file.name;
           }
           $scope.isFileSelected = $scope.state.isFile;
           $scope.isUrlSelected = $scope.state.isUrl;
@@ -25,19 +29,19 @@ angular.module('Application')
 
         UploadFileService.onReset(reloadState);
 
-        $scope.$watch('url', function(newValue, oldValue) {
+        $scope.$watch('model.url', function(newValue, oldValue) {
           if (newValue !== oldValue) {
             $scope.resetFromCurrentStep();
             $scope.state = UploadFileService.resourceChanged(null,
-              $scope.url);
+              $scope.model.url);
             $scope.isFileSelected = false;
-            $scope.isUrlSelected = !!$scope.url || $scope.state.isUrl;
+            $scope.isUrlSelected = !!$scope.model.url || $scope.state.isUrl;
           }
         });
 
         $scope.onFileSelected = function() {
           var file = _.first(this.files);
-          $scope.file = file.name;
+          $scope.model.file = file.name;
           $scope.resetFromCurrentStep();
           $scope.state = UploadFileService.resourceChanged(file, null);
           $scope.isFileSelected = $scope.state.isFile;
@@ -45,8 +49,8 @@ angular.module('Application')
         };
 
         $scope.onClearSelectedResource = function() {
-          $scope.file = null;
-          $scope.url = null;
+          $scope.model.file = null;
+          $scope.model.url = null;
           $scope.isFileSelected = false;
           $scope.isUrlSelected = false;
           UploadFileService.resourceChanged(null, null);

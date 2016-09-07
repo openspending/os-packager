@@ -1,99 +1,94 @@
-;(function(angular) {
+'use strict';
 
-  angular.module('Application')
-    .factory('ProvideMetadataService', [
-      '$timeout', '_', 'PackageService', 'UtilsService',
-      'ValidationService', 'ApplicationState', 'ApplicationLoader',
-      function($timeout, _, PackageService, UtilsService,
-        ValidationService, ApplicationState, ApplicationLoader) {
-        var result = {};
+var _ = require('lodash');
 
-        var geoData = {};
+angular.module('Application')
+  .factory('ProvideMetadataService', [
+    '$timeout', 'PackageService', 'UtilsService',
+    'ValidationService',
+    function($timeout, PackageService, UtilsService,
+      ValidationService) {
+      var result = {};
 
-        var state = null;
-        ApplicationLoader.then(function() {
-          state = {};
-          if (_.isObject(ApplicationState.provideMetadata)) {
-            state = ApplicationState.provideMetadata;
-          }
-          ApplicationState.provideMetadata = state;
+      var geoData = {};
+
+      var state = {};
+
+      result.resetState = function() {
+        state = {};
+      };
+
+      result.getState = function() {
+        return state;
+      };
+
+      result.getGeoData = function() {
+        return geoData;
+      };
+
+      result.updateFiscalPeriod = function(period) {
+        if (period) {
+          var attributes = PackageService.getAttributes();
+          attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(period);
+        }
+      };
+
+      var prependEmptyItem = function(items) {
+        return _.union([{
+          code: '',
+          name: ''
+        }], items);
+      };
+
+      geoData.regions = prependEmptyItem([]);
+      geoData.countries = prependEmptyItem([]);
+
+      UtilsService.getContinents().$promise
+        .then(prependEmptyItem)
+        .then(function(items) {
+          geoData.regions = items;
         });
 
-        result.resetState = function() {
-          state = {};
-          ApplicationState.provideMetadata = state;
-        };
+      // Preload countries, but do not show them until continent selected
+      UtilsService.getCountries();
+      geoData.countries = prependEmptyItem([]);
 
-        result.getState = function() {
-          return state;
-        };
-
-        result.getGeoData = function() {
-          return geoData;
-        };
-
-        result.updateFiscalPeriod = function(period) {
-          if (period) {
-            var attributes = PackageService.getAttributes();
-            attributes.fiscalPeriod = UtilsService.prepareFiscalPeriod(period);
+      result.updateCountries = function() {
+        var attributes = PackageService.getAttributes();
+        var regions = attributes.regionCode;
+        regions = !!regions ? [regions]
+          : _.map(
+          geoData.regions,
+          function(item) {
+            return item.code;
           }
-        };
-
-        var prependEmptyItem = function(items) {
-          return _.union([{
-            code: '',
-            name: ''
-          }], items);
-        };
-
-        geoData.regions = prependEmptyItem([]);
-        geoData.countries = prependEmptyItem([]);
-
-        UtilsService.getContinents().$promise
-          .then(prependEmptyItem)
-          .then(function(items) {
-            geoData.regions = items;
-          });
-
-        // Preload countries, but do not show them until continent selected
-        UtilsService.getCountries();
-        geoData.countries = prependEmptyItem([]);
-
-        result.updateCountries = function() {
+        );
+        UtilsService.getCountries(regions).$promise.then(function(items) {
           var attributes = PackageService.getAttributes();
-          var regions = attributes.regionCode;
-          regions = !!regions ? [regions]
-            : _.map(
-            geoData.regions,
-            function(item) {
-              return item.code;
-            }
-          );
-          UtilsService.getCountries(regions).$promise.then(function(items) {
-            var attributes = PackageService.getAttributes();
-            geoData.countries = prependEmptyItem(items);
-            var codes = _.map(items, function(item) {
-              return item.code;
-            });
-            if (!_.contains(codes, attributes.countryCode)) {
-              attributes.countryCode = '';
-            }
+          geoData.countries = prependEmptyItem(items);
+          var codes = _.map(items, function(item) {
+            return item.code;
           });
-        };
-
-        result.validatePackage = function(form) {
-          var result = ValidationService.validateAttributesForm(form);
-          if (result === true) {
-            result = PackageService.validateFiscalDataPackage();
+          var isItemFound = !!_.find(codes, function(item) {
+            return item == attributes.countryCode;
+          });
+          if (!isItemFound) {
+            attributes.countryCode = '';
           }
-          $timeout(function() {
-            state.status = result;
-          });
-          return state;
-        };
+        });
+      };
 
-        return result;
-      }
-    ]);
+      result.validatePackage = function(form) {
+        var result = ValidationService.validateAttributesForm(form);
+        if (result === true) {
+          result = PackageService.validateFiscalDataPackage();
+        }
+        $timeout(function() {
+          state.status = result;
+        });
+        return state;
+      };
 
-})(angular);
+      return result;
+    }
+  ]);

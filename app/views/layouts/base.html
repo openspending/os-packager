@@ -13,7 +13,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
 </head>
 
-<body ng-app="Application">
+<body>
   {% include "partials/header.html" %}
 
   <div class="x-page-container">
@@ -22,21 +22,21 @@
 
   {% include "partials/footer.html" %}
 
-  <script src="modules.js?{{ sessionSalt }}"></script>
-  <script src="vendor.js?{{ sessionSalt }}"></script>
-  <script src="app.js?{{ sessionSalt }}"></script>
-  <script src="{{conductor.url}}/user/lib"></script>
-
   {% if conductor %}
   <script type="text/javascript">
-    (function(options, conductor) {
+    (function(globals, conductor) {
+      var options = globals.ExternalConfig = {};
       options.conductorUrl = conductor.url + '/datastore/';
+      options.conductorInfoUrl = conductor.url + '/datastore/info';
       options.publishUrl = conductor.url + '/package/upload';
       options.statusUrl = conductor.url + '/package/status';
       options.pollInterval = conductor.pollInterval;
-    })(require('app/services').datastore.defaultOptions, {{ conductor | json | safe }});
+    })(window, {{ conductor | json | safe }});
   </script>
   {% endif %}
+
+  <script src="app.js?{{ sessionSalt }}"></script>
+  <script src="{{conductor.url}}/user/lib"></script>
 </body>
 
 </html>

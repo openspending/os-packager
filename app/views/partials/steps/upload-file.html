@@ -1,12 +1,13 @@
 {% raw %}
 <section id="step1-wrapper">
+<div ng-if="!isExternalDataPackage">
   <div class="row form-group">
     <div ng-hide="isUrlSelected" ng-class="{'col-sm-5': !isUrlSelected && !isFileSelected, 'col-xs-12': isFileSelected}">
       <div class="input-group">
         <span class="input-group-btn">
           <label class="btn btn-inverse" for="step1-upload-file">Upload a file</label>
         </span>
-        <input id="step1-input-file" ng-value="file" type="text" class="form-control" placeholder="No file selected" readonly="on">
+        <input id="step1-input-file" ng-value="model.file" type="text" class="form-control" placeholder="No file selected" readonly="on">
         <span class="input-group-btn" ng-if="isFileSelected">
           <button ng-click="onClearSelectedResource()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
@@ -18,7 +19,7 @@
     </div>
     <div ng-hide="isFileSelected" ng-class="{'col-sm-6': !isUrlSelected && !isFileSelected, 'col-xs-12': isUrlSelected}">
       <div ng-class="{'input-group': isUrlSelected}">
-        <input id="step1-input-url" name="step1-resource-url" ng-model="url" ng-change="urlChanged"
+        <input id="step1-input-url" name="step1-resource-url" ng-model="model.url"
           type="text" class="form-control" placeholder="http://">
         <span class="input-group-btn" ng-if="isUrlSelected">
           <button ng-click="onClearSelectedResource()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
@@ -73,5 +74,6 @@
     {% include "partials/modals/validation-results.html" %}
   {% raw %}
   </div>
+</div>
 </section>
 {% endraw %}

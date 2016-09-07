@@ -1,14 +1,17 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 var MD5 = require('./md5');
 var Promise = require('bluebird');
+var url = require('url');
+var utils = require('./utils');
 require('isomorphic-fetch');
 
 var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
   'http://next.openspending.org';
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR + '/datastore/',
+  conductorInfoUrl: OS_CONDUCTOR + '/datastore/info',
   publishUrl: OS_CONDUCTOR + '/package/upload',
   statusUrl: OS_CONDUCTOR + '/package/status',
   pollInterval: 1000
@@ -432,9 +435,13 @@ module.exports.publish = function(descriptor, options) {
     descriptor.status = ProcessingStatus.PUBLISHING;
     descriptor.progress = 0.0;
 
+    // jscs:disable
+    var permissionToken = options.permission_token;
+    // jscs:enable
+
     var publishUrl = options.publishUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl) +
-      '&jwt=' + encodeURIComponent(options.permission_token);
+      '&jwt=' + encodeURIComponent(permissionToken);
     var pollUrl = options.statusUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl);
 
@@ -492,4 +499,28 @@ module.exports.publish = function(descriptor, options) {
         reject(error);
       });
   });
+};
+
+module.exports.isDataStoreUrl = function(urlToCheck, permissionToken) {
+  var infoUrl = defaultOptions.conductorInfoUrl +
+    '?jwt=' + encodeURIComponent(permissionToken);
+  return fetch(infoUrl)
+    .then(function(response) {
+      if (response.status != 200) {
+        return {}; // Silently return empty object
+      }
+      return response.json();
+    })
+    .then(function(info) {
+      var result = false;
+      if (utils.isUrl(urlToCheck) && _.isObject(info)) {
+        _.each(info.prefixes, function(prefix) {
+          if (urlToCheck.indexOf(prefix) == 0) {
+            result = true;
+            return false;
+          }
+        });
+      }
+      return result;
+    });
 };

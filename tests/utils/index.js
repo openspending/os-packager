@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 // For PapaParse
 // xmlhttprequest lib has no onload/onerror properties, but papaparse relies on

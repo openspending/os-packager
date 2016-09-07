@@ -1,9 +1,18 @@
-;(function(angular) {
+'use strict';
 
-  angular.module('Application', [
-    'ngRoute',
-    'ngAnimate',
-    'authClient.services'
-  ]);
+var angular = require('angular');
+require('angular-route');
+require('angular-animate');
 
-})(angular);
+angular.module('Application', [
+  'ngRoute',
+  'ngAnimate',
+  'authClient.services'
+]);
+
+require('./config');
+require('./filters');
+require('./controllers');
+require('./directives');
+require('./animations');
+require('./services');

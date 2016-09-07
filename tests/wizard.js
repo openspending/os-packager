@@ -19,10 +19,12 @@ describe('Wizard UI', function() {
     var browser = utils.app.browser;
     browser.visit('/provide-data', function() {
       assert.ok(browser.success);
-      browser.waitForDigest('#step1-wrapper', 100).then(function() {
-        assert(browser.query('#step1-wrapper'), 'It should be step #1');
-        done();
-      });
+      browser.waitForDigest('#step1-wrapper', 100)
+        .then(function() {
+          assert(browser.query('#step1-wrapper'), 'It should be step #1');
+          done();
+        })
+        .catch(done);
     });
   });
 
@@ -36,15 +38,18 @@ describe('Wizard UI', function() {
       'File input should be empty on page load');
 
     browser.fill('#step1-input-url', exampleResourceUrl);
-    browser.waitForDigest('#step1-button-next').then(function() {
-      assert(browser.query('#step1-button-next'),
-        'Next button should be available');
-      browser.click('#step1-button-next');
-      browser.waitForDigest('#step2-wrapper').then(function() {
+    browser.waitForDigest('#step1-button-next')
+      .then(function() {
+        assert(browser.query('#step1-button-next'),
+          'Next button should be available');
+        browser.click('#step1-button-next');
+        return browser.waitForDigest('#step2-wrapper');
+      })
+      .then(function() {
         assert(browser.query('#step2-wrapper'), 'It should be step #2');
         done();
-      });
-    });
+      })
+      .catch(done);
   });
 
   it('Should map required concepts', function(done) {
@@ -59,17 +64,14 @@ describe('Wizard UI', function() {
     browser.waitForDigest('#step2-button-next').then(function() {
       assert(browser.query('#step2-button-next'),
         'Next button should be available');
-
-      //assert(
-      //  browser.query('#preview-data-panel .x-possibility-icon:not(.disabled)'),
-      //  'Some previews should be available');
-
       browser.click('#step2-button-next');
-      browser.waitForDigest('#step3-wrapper').then(function() {
-        assert(browser.query('#step3-wrapper'), 'It should be step #3');
-        done();
-      });
-    });
+      return browser.waitForDigest('#step3-wrapper');
+    })
+    .then(function() {
+      assert(browser.query('#step3-wrapper'), 'It should be step #3');
+      done();
+    })
+    .catch(done);
   });
 
   it('Should fill metadata', function(done) {
@@ -128,28 +130,31 @@ describe('Wizard UI', function() {
       .then(function() {
         assert(browser.query('#step4-wrapper'), 'It should be step #4');
         done();
-      });
+      })
+      .catch(done);
   });
 
   it('Should allow to download package', function(done) {
     var browser = utils.app.browser;
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
-    browser.waitForDigest('#step4-button-download').then(function() {
-      assert(browser.query('#step4-button-download'),
-        'Download button should be available');
-      assert(browser.query('#step4-button-cant-publish'),
-        'Publish button should be available');
-      var dataPackage = browser.evaluate('$("[name=data]").val();');
-      dataPackage = JSON.parse(dataPackage);
-      assert.equal(dataPackage.title, dataPackageTitle);
-      assert.equal(dataPackage.name, dataPackageSlug);
-      assert.property(dataPackage, 'resources');
-      assert.equal(dataPackage.resources.length, 1);
-      assert.property(dataPackage, 'model');
-      assert.property(dataPackage.model, 'measures');
-      assert.property(dataPackage.model, 'dimensions');
-      done();
-    });
+    browser.waitForDigest('#step4-button-download')
+      .then(function() {
+        assert(browser.query('#step4-button-download'),
+          'Download button should be available');
+        assert(browser.query('#step4-button-cant-publish'),
+          'Publish button should be available');
+        var dataPackage = browser.evaluate('$("[name=data]").val();');
+        dataPackage = JSON.parse(dataPackage);
+        assert.equal(dataPackage.title, dataPackageTitle);
+        assert.equal(dataPackage.name, dataPackageSlug);
+        assert.property(dataPackage, 'resources');
+        assert.equal(dataPackage.resources.length, 1);
+        assert.property(dataPackage, 'model');
+        assert.property(dataPackage.model, 'measures');
+        assert.property(dataPackage.model, 'dimensions');
+        done();
+      })
+      .catch(done);
   });
 
   it('Should go to first step', function(done) {
@@ -157,10 +162,12 @@ describe('Wizard UI', function() {
     assert(browser.query('#step4-wrapper'), 'It should be step #4');
     // Link #0 is a Restart Flow button
     browser.evaluate('$(".x-steps-container a:eq(0)").click();');
-    browser.waitForDigest('#step1-wrapper').then(function() {
-      assert(browser.query('#step1-wrapper'), 'It should be step #1');
-      done();
-    });
+    browser.waitForDigest('#step1-wrapper')
+      .then(function() {
+        assert(browser.query('#step1-wrapper'), 'It should be step #1');
+        done();
+      })
+      .catch(done);
   });
 
 });

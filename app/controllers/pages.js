@@ -1,7 +1,7 @@
 'use strict';
 
 var services = require('../services');
-var _ = require('underscore');
+var _ = require('lodash');
 
 function getBasePath(config) {
   var result = config.get('basePath');
@@ -36,7 +36,18 @@ module.exports.redirectToMain = function(req, res) {
   var steps = require('../services').data.steps;
   var firstStep = _.first(steps);
 
-  res.redirect(302, basePath + firstStep.route);
+  var url = basePath + firstStep.route;
+  var query = _.chain(req.query)
+    .map(function(value, key) {
+      return key + '=' + encodeURIComponent(value);
+    })
+    .join('&')
+    .value();
+  if (query) {
+    url = url + '?' + query;
+  }
+
+  res.redirect(302, url);
 };
 
 module.exports.landing = function(req, res) {

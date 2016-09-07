@@ -1,18 +1,36 @@
-;(function(angular) {
+'use strict';
 
-  angular.module('Application')
-    .factory('ApplicationLoader', [
-      '$q', 'UtilsService',
-      function($q, UtilsService) {
-        var promises = [
-          // Preload continents and countries
-          UtilsService.getCurrencies().$promise,
-          UtilsService.getContinents().$promise,
-          UtilsService.getCountries().$promise
-        ];
+var utils = require('../../../services/utils');
 
-        return $q.all(promises).then(function() {}); // Force execute
-      }
-    ]);
+angular.module('Application')
+  .factory('ApplicationLoader', [
+    '$q', '$location', '$rootScope', 'UtilsService', 'PackageService',
+    'Configuration', 'LoginService',
+    function($q, $location, $rootScope, UtilsService, PackageService,
+      Configuration, LoginService) {
+      var promises = [
+        // Preload continents and countries
+        UtilsService.getCurrencies().$promise,
+        UtilsService.getContinents().$promise,
+        UtilsService.getCountries().$promise,
+        LoginService.firstCheckAttempt()
+      ];
 
-})(angular);
+      return $q.all(promises)
+        .then(function() {
+          var dataPackageUrl = $location.search().package;
+          if (utils.isUrl) {
+            return PackageService.loadExternalDataPackage(dataPackageUrl)
+              .catch(function(error) {
+                $rootScope.externalDataPackageError = error.message ||
+                  ('' + error);
+              });
+          }
+        })
+        .then(function() {
+          $rootScope.isExternalDataPackage =
+            PackageService.isExternalDataPackage();
+        })
+        .catch(Configuration.defaultErrorHandler);
+    }
+  ]);

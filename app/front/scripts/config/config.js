@@ -2,11 +2,13 @@
 
 var _ = require('lodash');
 var osDataStore = require('../../../services/os-datastore');
+var fiscalDataPackage = require('../../../services/package');
 
 // See also `gulpfile.js` and `app/views/layouts/base.html`
 var externalConfig = (window || this).ExternalConfig;
 
-_.extend(osDataStore.defaultOptions, externalConfig);
+_.extend(osDataStore.defaultOptions, externalConfig.conductor);
+fiscalDataPackage.defaultOptions.adapterUrl = externalConfig.adapterUrl;
 
 angular.module('Application')
   .config([

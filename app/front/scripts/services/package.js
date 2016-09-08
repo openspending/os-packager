@@ -8,9 +8,9 @@ var osDataStore = require('../../../services/os-datastore');
 
 angular.module('Application')
   .factory('PackageService', [
-    '$q', '$timeout', 'UtilsService', 'Configuration', 'LoginService',
+    '$q', '$timeout', 'Configuration', 'LoginService',
     'ValidationService',
-    function($q, $timeout, UtilsService, Configuration, LoginService,
+    function($q, $timeout, Configuration, LoginService,
       ValidationService) {
       var isExternalDataPackage = false;
       var attributes = {};
@@ -70,10 +70,18 @@ angular.module('Application')
           var fileDescriptor = null;
           var encoding;
           return $q(function(resolve, reject) {
-            utils.blobToFileDescriptor(fileOrUrl)
+            fiscalDataPackage.transformResourceUrl(fileOrUrl)
               .then(resolve)
               .catch(reject);
           })
+            .then(function(newFileOrUrl) {
+              fileOrUrl = newFileOrUrl;
+              return $q(function(resolve, reject) {
+                utils.blobToFileDescriptor(fileOrUrl)
+                  .then(resolve)
+                  .catch(reject);
+              });
+            })
             .then(function(fileOrUrl) {
               var status = ValidationService.validateResource(fileOrUrl);
               state.status = status;
@@ -84,20 +92,16 @@ angular.module('Application')
               });
             })
             .then(function(fileOrUrl) {
-              var url = fileOrUrl;
-              if (_.isString(url)) {
-                url = UtilsService.decorateProxyUrl(url);
-              }
               fileDescriptor = fileOrUrl;
               return $q(function(resolve, reject) {
                 var permissionToken = LoginService.permissionToken;
-                fiscalDataPackage.createResourceFromSource(url, permissionToken)
+                fiscalDataPackage.createResourceFromSource(fileOrUrl,
+                  encoding, permissionToken)
                   .then(resolve)
                   .catch(reject);
-              }).then(_.identity);
+              });
             })
             .then(function(resource) {
-              resource.encoding = encoding;
               // Save file object - it will be needed when publishing
               // data package
               if (_.isObject(fileDescriptor)) {
@@ -153,7 +157,7 @@ angular.module('Application')
               }
               var url = resource.source.url;
               if (_.isString(url) && (url.length > 0)) {
-                url = 'proxy?url=' + encodeURIComponent(url);
+                url = utils.decorateProxyUrl(url);
               }
               return {
                 name: resource.name + '.csv',

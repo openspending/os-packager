@@ -10,66 +10,101 @@ var url = require('url');
 var datastore = require('./os-datastore');
 require('isomorphic-fetch');
 
-module.exports.createResourceFromSource = function(urlOrFile, permissionToken) {
-  return utils.getCsvSchema(urlOrFile).then(function(data) {
-    var resourceName = null;
-    var source = {};
-    if (_.isObject(urlOrFile)) {
-      source.fileName = urlOrFile.name;
-      source.mimeType = urlOrFile.type;
-      source.size = urlOrFile.size;
-      resourceName = utils.createNameFromPath(urlOrFile.name);
-    } else {
-      source.url = utils.undecorateProxyUrl(urlOrFile);
-      resourceName = utils.createNameFromUrl(urlOrFile);
-    }
-
-    var dataColumns = _.unzip(data.rows || []);
-
-    var result = {
-      name: resourceName,
-      title: resourceName,
-      source: source,
-      encoding: urlOrFile.encoding,
-      data: {
-        headers: data.headers,
-        rows: data.rows,
-        raw: data.raw
-      },
-      dialect: {
-        csvddfVersion: 1.0,
-        delimiter: data.dialect.delimiter,
-        lineTerminator: data.dialect.linebreak
-      },
-      fields: _.map(data.schema.fields, function(field, index) {
-        var _field = {};
-        _field.type = '';
-        _field.name = field.name;
-        _field.title = field.name;
-        _field.data = _.slice(dataColumns[index], 0, 3);
-        return _field;
-      })
-    };
-
-    return datastore.isDataStoreUrl(urlOrFile, permissionToken)
-      .then(function(flag) {
-        result.isFromDataStore = !!flag;
-        return result;
-      });
-  });
+var defaultOptions = {
+  adapterUrl: 'http://next.openspending.org/fdp-adapter/convert'
 };
+module.exports.defaultOptions = defaultOptions;
 
-module.exports.getFiscalDataPackageSchema = function(useProxy) {
+function transformResourceUrl(url) {
+  if (!utils.isUrl(url)) {
+    return Promise.resolve(url);
+  }
+  var adapterUrl = defaultOptions.adapterUrl + '?url=' +
+    encodeURIComponent(url);
+  return fetch(adapterUrl)
+    .then(function(response) {
+      if (response.status != 200) {
+        return url;
+      }
+      return response.text();
+    })
+    .then(function(data) {
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return url;
+      }
+    })
+    .then(function(dataPackage) {
+      if (!_.isObject(dataPackage)) {
+        return dataPackage;
+      }
+      return _.first(dataPackage.resources).path; // should be `url`
+    });
+}
+
+function createResourceFromSource(urlOrFile, encoding,
+  permissionToken) {
+  return utils.getCsvSchema(urlOrFile, encoding)
+    .then(function(data) {
+      var resourceName = null;
+      var source = {};
+      if (_.isObject(urlOrFile)) {
+        source.fileName = urlOrFile.name;
+        source.mimeType = urlOrFile.type;
+        source.size = urlOrFile.size;
+        resourceName = utils.createNameFromPath(urlOrFile.name);
+      } else {
+        source.url = urlOrFile;
+        resourceName = utils.createNameFromUrl(urlOrFile);
+      }
+
+      var dataColumns = _.unzip(data.rows || []);
+
+      var result = {
+        name: resourceName,
+        title: resourceName,
+        source: source,
+        encoding: encoding,
+        data: {
+          headers: data.headers,
+          rows: data.rows,
+          raw: data.raw
+        },
+        dialect: {
+          csvddfVersion: 1.0,
+          delimiter: data.dialect.delimiter,
+          lineTerminator: data.dialect.linebreak
+        },
+        fields: _.map(data.schema.fields, function(field, index) {
+          var _field = {};
+          _field.type = '';
+          _field.name = field.name;
+          _field.title = field.name;
+          _field.data = _.slice(dataColumns[index], 0, 3);
+          return _field;
+        })
+      };
+
+      return datastore.isDataStoreUrl(urlOrFile, permissionToken)
+        .then(function(flag) {
+          result.isFromDataStore = !!flag;
+          return result;
+        });
+    });
+}
+
+function getFiscalDataPackageSchema(useProxy) {
   return 'fiscal';
-};
+}
 
-module.exports.validateDataPackage = function(dataPackage, schema) {
+function validateDataPackage(dataPackage, schema) {
   return new Promise(function(resolve, reject) {
     resolve(datapackageValidate(dataPackage, schema));
   });
-};
+}
 
-module.exports.createFiscalDataPackage = function(attributes, resources) {
+function createFiscalDataPackage(attributes, resources) {
   // Use OSTypes to generate FDP
   //TODO: Add support for more than one resource once OSTypes supports it
   var fields = resources[0].fields;
@@ -121,7 +156,7 @@ module.exports.createFiscalDataPackage = function(attributes, resources) {
     'fiscal-data-package.jsonld';
 
   return fdp;
-};
+}
 
 function convertResource(resource, dataPackage, dataPackageUrl,
   permissionToken) {
@@ -184,8 +219,7 @@ function convertResource(resource, dataPackage, dataPackageUrl,
     });
 }
 
-module.exports.loadFiscalDataPackage = function(dataPackageUrl, userId,
-  permissionToken) {
+function loadFiscalDataPackage(dataPackageUrl, userId, permissionToken) {
   if (!utils.isUrl(dataPackageUrl)) {
     return Promise.resolve(null);
   }
@@ -225,4 +259,11 @@ module.exports.loadFiscalDataPackage = function(dataPackageUrl, userId,
     .then(function() {
       return result;
     });
-};
+}
+
+module.exports.createResourceFromSource = createResourceFromSource;
+module.exports.getFiscalDataPackageSchema = getFiscalDataPackageSchema;
+module.exports.validateDataPackage = validateDataPackage;
+module.exports.createFiscalDataPackage = createFiscalDataPackage;
+module.exports.loadFiscalDataPackage = loadFiscalDataPackage;
+module.exports.transformResourceUrl = transformResourceUrl;

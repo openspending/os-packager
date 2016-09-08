@@ -23,6 +23,8 @@ nconf.defaults({
     url: conductorHost,
     pollInterval: process.env.POLL_INTERVAL || 3000
   },
+  fdpAdapterUrl: process.env.FDP_ADAPTER_URL ||
+    DEFAULT_HOST + '/fdp-adapter/convert',
   basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH
 });
 

@@ -10,35 +10,38 @@ var path = require('path');
 var url = require('url');
 var validator = require('validator');
 
-module.exports.isUrl = function(url) {
+function isUrl(url) {
   return validator.isURL(url);
-};
+}
 
-module.exports.undecorateProxyUrl = function(urlToUndecorate) {
-  var result = url.parse(urlToUndecorate, true);
-  if (result && result.pathname) {
-    if ((result.pathname == 'proxy') && result.query && result.query.url) {
-      return result.query.url;
-    }
-  }
-  return urlToUndecorate;
-};
+function decorateProxyUrl(urlToDecorate) {
+  return 'proxy?url=' + encodeURIComponent(urlToDecorate);
+}
 
-module.exports.decorateProxyUrl = function(urlToDecorate) {
-  return 'proxy?url=' + encodeURIComponent(
-    module.exports.undecorateProxyUrl(urlToDecorate));
-};
-
-module.exports.convertToSlug = function(string) {
+function convertToSlug(string) {
   var ret = inflector.parameterize(
     inflector.transliterate('' + (string || '')));
   if (ret === '') {
     return 'slug';
   }
   return ret;
-};
+}
 
-module.exports.getCsvSchema = function(urlOrFile) {
+function getPapaParseError(parseErrors) {
+  parseErrors = _.filter(parseErrors, function(error) {
+    // Delimiter was not auto-detected (defaults used).
+    // We'll not treat this as an error
+    var delimiterNotDetected = (error.type == 'Delimiter') &&
+      (error.code == 'UndetectableDelimiter');
+
+    return !delimiterNotDetected;
+  });
+  if (parseErrors.length > 0) {
+    return new Error(parseErrors[0].message);
+  }
+}
+
+function getCsvSchema(urlOrFile, encoding) {
   var data = [];
   var meta = null;
   var errors = [];
@@ -47,7 +50,7 @@ module.exports.getCsvSchema = function(urlOrFile) {
       download: true,
       preview: 1000,
       skipEmptyLines: true,
-      encoding: urlOrFile.encoding,
+      encoding: encoding,
       chunk: function(results) {
         meta = results.meta;
         [].push.apply(data, results.data);
@@ -59,8 +62,9 @@ module.exports.getCsvSchema = function(urlOrFile) {
           errors: errors,
           meta: meta
         };
-        if (results.errors.length > 0) {
-          reject(results.errors);
+        var error = getPapaParseError(results.errors);
+        if (error) {
+          reject(error);
         } else {
           var records = results.data;
           var headers = _.first(records);
@@ -86,12 +90,12 @@ module.exports.getCsvSchema = function(urlOrFile) {
         }
       }
     };
-    csv.parse(_.isObject(urlOrFile) ? urlOrFile.blob : urlOrFile, config);
+    csv.parse(_.isObject(urlOrFile) ? urlOrFile.blob :
+      decorateProxyUrl(urlOrFile), config);
   });
-};
+}
 
-module.exports.validateData = function(data, dataUrl, schema,
-  userEndpointURL) {
+function validateData(data, dataUrl, schema, userEndpointURL) {
   var goodTables = new GoodTables({
     method: 'post',
     // jscs:disable
@@ -118,11 +122,9 @@ module.exports.validateData = function(data, dataUrl, schema,
         })
       };
     });
-};
+}
 
-module.exports.availableCurrencies = [];
-
-module.exports.getDefaultCurrency = function() {
+function getDefaultCurrency() {
   var currencies = module.exports.availableCurrencies;
   var defaultCurrencies = _.intersection(
     ['USD', 'EUR', _.first(currencies).code],
@@ -133,64 +135,7 @@ module.exports.getDefaultCurrency = function() {
   return _.find(currencies, function(item) {
     return item.code == defaultCurrencyCode;
   });
-};
-
-module.exports.availableConcepts = (function() {
-  var allTypes = _.map(module.exports.availableDataTypes, function(item) {
-    return item.id;
-  });
-  var idTypes = ['integer', 'number', 'string'];
-  return [
-    {
-      name: '',
-      id: '',
-      group: null,
-      required: false
-    },
-    {
-      osType: 'value',
-      id: 'measures.amount',
-      group: 'measure',
-      required: true,
-      options: [
-        {
-          name: 'currency',
-          title: 'Currency',
-          defaultValue: null,
-          values: []
-        },
-        {
-          name: 'factor',
-          title: 'Factor',
-          defaultValue: '',
-          type: 'number'
-        },
-        {
-          name: 'direction',
-          title: 'Direction',
-          defaultValue: '',
-          values: [
-            {name: '', value: ''},
-            {name: 'Expenditure', value: 'expenditure'},
-            {name: 'Revenue', value: 'revenue'}
-          ]
-        },
-        {
-          name: 'phase',
-          title: 'Phase',
-          defaultValue: '',
-          values: [
-            {name: '', value: ''},
-            {name: 'Proposed', value: 'proposed'},
-            {name: 'Approved', value: 'approved'},
-            {name: 'Adjusted', value: 'adjusted'},
-            {name: 'Executed', value: 'executed'}
-          ]
-        }
-      ]
-    },
-  ];
-})();
+}
 
 //module.exports.availablePossibilities = (function() {
 //  var updateByConcepts = function(resources) {
@@ -202,7 +147,7 @@ module.exports.availableConcepts = (function() {
 //      .map(function(concept) {
 //        return [concept, false];
 //      })
-//      .object()
+//      .fromPairs()
 //      .value();
 //
 //    var self = this;
@@ -290,30 +235,28 @@ module.exports.availableConcepts = (function() {
 //  ];
 //})();
 
-module.exports.setAvailableCurrencies = function(currencies) {
+function setAvailableCurrencies(currencies) {
   var temp = module.exports.availableCurrencies;
   temp.splice(0, temp.length);
   if (_.isArray(currencies)) {
     [].push.apply(temp, currencies);
   }
-};
+}
 
-module.exports.setAvailableCurrencies(require('../data/iso4217.json'));
-
-module.exports.createNameFromPath = function(fileName) {
+function createNameFromPath(fileName) {
   var result = path.basename(fileName, path.extname(fileName));
-  return module.exports.convertToSlug(result || fileName);
-};
+  return convertToSlug(result || fileName);
+}
 
-module.exports.createNameFromUrl = function(urlOfResource) {
-  var result = url.parse(module.exports.undecorateProxyUrl(urlOfResource));
+function createNameFromUrl(urlOfResource) {
+  var result = url.parse(urlOfResource);
   if (result && result.pathname) {
-    return module.exports.createNameFromPath(result.pathname);
+    return createNameFromPath(result.pathname);
   }
   return urlOfResource;
-};
+}
 
-module.exports.createUniqueName = function(desiredName, availableNames) {
+function createUniqueName(desiredName, availableNames) {
   var isItemFound = !!_.find(availableNames, function(item) {
     return item == desiredName;
   });
@@ -332,21 +275,21 @@ module.exports.createUniqueName = function(desiredName, availableNames) {
   });
   mapped.push(0);
   return desiredName + (_.max(mapped) + 1);
-};
+}
 
-module.exports.addItemWithUniqueName = function(collection, item) {
-  item.name = module.exports.createUniqueName(item.name,
+function addItemWithUniqueName(collection, item) {
+  item.name = createUniqueName(item.name,
     _.map(collection, function(item) {
       return item.name;
     }));
   collection.push(item);
-};
+}
 
-module.exports.removeEmptyAttributes = function(object) {
+function removeEmptyAttributes(object) {
   return _.pickBy(object, function(value) {
     return !!value;
   });
-};
+}
 
 //module.exports.getDataForPreview =  function() { return [{name:'Hello',value:'world',dateTime:'today'}]; };
 //module.exports.getDataForPreview = function(resources, maxCount) {
@@ -401,7 +344,7 @@ module.exports.removeEmptyAttributes = function(object) {
 //  });
 //};
 
-module.exports.blobToFileDescriptor = function(blob) {
+function blobToFileDescriptor(blob) {
   if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
     !(blob instanceof Blob)) {
     return Promise.resolve(blob);
@@ -424,4 +367,77 @@ module.exports.blobToFileDescriptor = function(blob) {
     var slice = blob.slice || blob.webkitSlice || blob.mozSlice;
     reader.readAsArrayBuffer(slice.call(blob, 0, 1024 * 1024));
   });
-};
+}
+
+module.exports.availableCurrencies = [];
+module.exports.availableConcepts = (function() {
+  var allTypes = _.map(module.exports.availableDataTypes, function(item) {
+    return item.id;
+  });
+  var idTypes = ['integer', 'number', 'string'];
+  return [
+    {
+      name: '',
+      id: '',
+      group: null,
+      required: false
+    },
+    {
+      osType: 'value',
+      id: 'measures.amount',
+      group: 'measure',
+      required: true,
+      options: [
+        {
+          name: 'currency',
+          title: 'Currency',
+          defaultValue: null,
+          values: []
+        },
+        {
+          name: 'factor',
+          title: 'Factor',
+          defaultValue: '',
+          type: 'number'
+        },
+        {
+          name: 'direction',
+          title: 'Direction',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Expenditure', value: 'expenditure'},
+            {name: 'Revenue', value: 'revenue'}
+          ]
+        },
+        {
+          name: 'phase',
+          title: 'Phase',
+          defaultValue: '',
+          values: [
+            {name: '', value: ''},
+            {name: 'Proposed', value: 'proposed'},
+            {name: 'Approved', value: 'approved'},
+            {name: 'Adjusted', value: 'adjusted'},
+            {name: 'Executed', value: 'executed'}
+          ]
+        }
+      ]
+    },
+  ];
+})();
+setAvailableCurrencies(require('../data/iso4217.json'));
+
+module.exports.isUrl = isUrl;
+module.exports.decorateProxyUrl = decorateProxyUrl;
+module.exports.convertToSlug = convertToSlug;
+module.exports.getCsvSchema = getCsvSchema;
+module.exports.validateData = validateData;
+module.exports.getDefaultCurrency = getDefaultCurrency;
+module.exports.setAvailableCurrencies = setAvailableCurrencies;
+module.exports.createNameFromPath = createNameFromPath;
+module.exports.createNameFromUrl = createNameFromUrl;
+module.exports.createUniqueName = createUniqueName;
+module.exports.addItemWithUniqueName = addItemWithUniqueName;
+module.exports.removeEmptyAttributes = removeEmptyAttributes;
+module.exports.blobToFileDescriptor = blobToFileDescriptor;

@@ -293,7 +293,7 @@ function prepareFilesForUpload(files, options) {
           }
         ];
       })
-      .object()
+      .fromPairs()
       .value()
   };
 
@@ -332,19 +332,19 @@ function prepareFilesForUpload(files, options) {
                   .map(function(values, key) {
                     return [key, _.first(values)];
                   })
-                  .object()
+                  .fromPairs()
                   .value()
               }
             ];
           })
-          .object()
+          .fromPairs()
           .value();
       }
       return {};
     });
 }
 
-module.exports.readContents = function(descriptor, options) {
+function readContents(descriptor, options) {
   options = _.extend({}, defaultOptions, options, {
     onDownloadProgress: function(value) {
       descriptor.progress = value;
@@ -378,9 +378,9 @@ module.exports.readContents = function(descriptor, options) {
       descriptor.blob = blob;
       return descriptor;
     });
-};
+}
 
-module.exports.calculateMetrics = function(descriptor) {
+function calculateMetrics(descriptor) {
   // If metrics already calculated - do nothing; assume that
   // file didn't change
   if (descriptor.md5) {
@@ -399,9 +399,9 @@ module.exports.calculateMetrics = function(descriptor) {
     descriptor.progress = 1.0;
     return descriptor;
   });
-};
+}
 
-module.exports.prepareForUpload = function(descriptor, options) {
+function prepareForUpload(descriptor, options) {
   options = _.extend({}, defaultOptions, options);
   descriptor.status = ProcessingStatus.PREPARING;
   descriptor.progress = 0.0;
@@ -411,9 +411,9 @@ module.exports.prepareForUpload = function(descriptor, options) {
       descriptor.progress = 1.0;
       return descriptor;
     });
-};
+}
 
-module.exports.upload = function(descriptor, options) {
+function upload(descriptor, options) {
   options = _.extend({}, defaultOptions, options, {
     onUploadProgress: function(value) {
       descriptor.progress = value;
@@ -426,9 +426,9 @@ module.exports.upload = function(descriptor, options) {
       descriptor.progress = 1.0;
       return descriptor;
     });
-};
+}
 
-module.exports.publish = function(descriptor, options) {
+function publish(descriptor, options) {
   return new Promise(function(resolve, reject) {
     options = _.extend({}, module.exports.defaultOptions, options);
 
@@ -499,9 +499,9 @@ module.exports.publish = function(descriptor, options) {
         reject(error);
       });
   });
-};
+}
 
-module.exports.isDataStoreUrl = function(urlToCheck, permissionToken) {
+function isDataStoreUrl(urlToCheck, permissionToken) {
   var infoUrl = defaultOptions.conductorInfoUrl +
     '?jwt=' + encodeURIComponent(permissionToken);
   return fetch(infoUrl)
@@ -523,4 +523,11 @@ module.exports.isDataStoreUrl = function(urlToCheck, permissionToken) {
       }
       return result;
     });
-};
+}
+
+module.exports.readContents = readContents;
+module.exports.calculateMetrics = calculateMetrics;
+module.exports.prepareForUpload = prepareForUpload;
+module.exports.upload = upload;
+module.exports.publish = publish;
+module.exports.isDataStoreUrl = isDataStoreUrl;

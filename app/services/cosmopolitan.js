@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var utils = require('./utils');
 require('isomorphic-fetch');
 
 var cosmopolitanApiUrl = 'http://cosmopolitan.openspending.org/?format=json';
@@ -21,7 +22,7 @@ function getItemsFromSource(source, useProxy) {
 
   var url = cosmopolitanApiUrl;
   if (useProxy) {
-    url = 'proxy?url=' + encodeURIComponent(url);
+    url = utils.decorateProxyUrl(url);
   }
 
   var options = {
@@ -37,7 +38,7 @@ function getItemsFromSource(source, useProxy) {
       var allResults = [];
       var fetchNext = function(url, options) {
         if (useProxy) {
-          url = 'proxy?url=' + encodeURIComponent(url);
+          url = utils.decorateProxyUrl(url);
         }
 
         return fetch(url, options).then(processFetchResponse)
@@ -58,7 +59,7 @@ function getItemsFromSource(source, useProxy) {
     });
 }
 
-module.exports.getCountries = function(useProxy) {
+function getCountries(useProxy) {
   return getItemsFromSource('countries', useProxy).then(function(items) {
     return _.map(items, function(item) {
       return {
@@ -69,9 +70,9 @@ module.exports.getCountries = function(useProxy) {
       };
     });
   });
-};
+}
 
-module.exports.getContinents = function(useProxy) {
+function getContinents(useProxy) {
   return getItemsFromSource('continents', useProxy).then(function(items) {
     return _.map(items, function(item) {
       return {
@@ -80,9 +81,9 @@ module.exports.getContinents = function(useProxy) {
       };
     });
   });
-};
+}
 
-module.exports.getCurrencies = function(useProxy) {
+function getCurrencies(useProxy) {
   return getItemsFromSource('currencies', useProxy).then(function(items) {
     return _.map(items, function(item) {
       return {
@@ -91,4 +92,8 @@ module.exports.getCurrencies = function(useProxy) {
       };
     });
   });
-};
+}
+
+module.exports.getCountries = getCountries;
+module.exports.getContinents = getContinents;
+module.exports.getCurrencies = getCurrencies;

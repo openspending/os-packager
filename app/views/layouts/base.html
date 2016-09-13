@@ -24,14 +24,19 @@
 
   {% if conductor %}
   <script type="text/javascript">
-    (function(globals, conductor) {
+    (function(globals, conductor, fdpAdapterUrl) {
       var options = globals.ExternalConfig = {};
-      options.conductorUrl = conductor.url + '/datastore/';
-      options.conductorInfoUrl = conductor.url + '/datastore/info';
-      options.publishUrl = conductor.url + '/package/upload';
-      options.statusUrl = conductor.url + '/package/status';
-      options.pollInterval = conductor.pollInterval;
-    })(window, {{ conductor | json | safe }});
+
+      var conductorConfig = options.conductor = {};
+      conductorConfig.conductorUrl = conductor.url + '/datastore/';
+      conductorConfig.conductorInfoUrl = conductor.url + '/datastore/info';
+      conductorConfig.publishUrl = conductor.url + '/package/upload';
+      conductorConfig.statusUrl = conductor.url + '/package/status';
+      conductorConfig.pollInterval = conductor.pollInterval;
+
+      options.adapterUrl = fdpAdapterUrl;
+      options.proxyUrl = 'proxy?url=';
+    })(window, {{ conductor | json | safe }}, {{ fdpAdapterUrl | json | safe }});
   </script>
   {% endif %}
 

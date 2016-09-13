@@ -14,15 +14,6 @@ angular.module('Application')
       var allCurrencies = null;
 
       return {
-        slug: function(string) {
-          return utils.convertToSlug(string);
-        },
-        decorateProxyUrl: function(url) {
-          return utils.decorateProxyUrl(url);
-        },
-        undecorateProxyUrl: function(url) {
-          return utils.undecorateProxyUrl(url);
-        },
         findConcept: function(osType) {
           return _.find(utils.availableConcepts, function(concept) {
             return concept.osType == osType;
@@ -30,14 +21,6 @@ angular.module('Application')
         },
         getAvailableConcepts: function() {
           return utils.availableConcepts;
-        },
-        getAvailableTypes: function() {
-          return utils.availableDataTypes;
-        },
-        promisify: function(alienPromise) {
-          return $q(function(resolve, reject) {
-            alienPromise.then(resolve).catch(reject);
-          });
         },
         prepareFiscalPeriod: function(period) {
           var range = [];

@@ -39,7 +39,7 @@ function transformResourceUrl(url) {
       if (!_.isObject(dataPackage)) {
         return dataPackage;
       }
-      return _.first(dataPackage.resources).path; // should be `url`
+      return _.first(dataPackage.resources).url;
     });
 }
 

@@ -35,6 +35,7 @@
       conductorConfig.pollInterval = conductor.pollInterval;
 
       options.adapterUrl = fdpAdapterUrl;
+      options.proxyUrl = 'proxy?url=';
     })(window, {{ conductor | json | safe }}, {{ fdpAdapterUrl | json | safe }});
   </script>
   {% endif %}

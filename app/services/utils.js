@@ -10,12 +10,20 @@ var path = require('path');
 var url = require('url');
 var validator = require('validator');
 
+var defaultOptions = {
+  proxyUrl: null
+};
+module.exports.defaultOptions = defaultOptions;
+
 function isUrl(url) {
   return validator.isURL(url);
 }
 
 function decorateProxyUrl(urlToDecorate) {
-  return 'proxy?url=' + encodeURIComponent(urlToDecorate);
+  if (defaultOptions.proxyUrl) {
+    return defaultOptions.proxyUrl + encodeURIComponent(urlToDecorate);
+  }
+  return urlToDecorate;
 }
 
 function convertToSlug(string) {
@@ -90,6 +98,7 @@ function getCsvSchema(urlOrFile, encoding) {
         }
       }
     };
+    //console.log(urlOrFile, decorateProxyUrl(urlOrFile));
     csv.parse(_.isObject(urlOrFile) ? urlOrFile.blob :
       decorateProxyUrl(urlOrFile), config);
   });

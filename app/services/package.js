@@ -86,7 +86,15 @@ function createResourceFromSource(urlOrFile, encoding,
         })
       };
 
-      return datastore.isDataStoreUrl(urlOrFile, permissionToken)
+      return new Promise(function(resolve) {
+        datastore.isDataStoreUrl(urlOrFile, permissionToken)
+          .then(function(flag) {
+            resolve(flag)
+          })
+          .catch(function() {
+            resolve(false)
+          })
+      })
         .then(function(flag) {
           result.isFromDataStore = !!flag;
           return result;

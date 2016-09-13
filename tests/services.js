@@ -48,12 +48,7 @@ describe('Application services', function() {
         ['/skip/example.test.csv', 'example-test'],
         ['/skip/example', 'example'],
         ['/skip/перевірка.csv', 'slug'],
-        ['/skip/перевірка', 'slug'],
-
-        // Proxy
-        ['proxy?url=http%3A%2F%2Fexample.com%2Fexample.csv', 'example'],
-        ['proxy?url=http%3A%2F%2Fexample.com%2Fskip%2Fexample.csv', 'example'],
-        ['proxy?url=%2Fskip%2Fexample.csv', 'example']
+        ['/skip/перевірка', 'slug']
       ];
       _.each(tests, function(test) {
         assert.equal(utils.createNameFromUrl(test[0]), test[1]);

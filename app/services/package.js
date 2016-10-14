@@ -43,8 +43,7 @@ function transformResourceUrl(url) {
     });
 }
 
-function createResourceFromSource(urlOrFile, encoding,
-  permissionToken) {
+function createResourceFromSource(urlOrFile, encoding) {
   return utils.getCsvSchema(urlOrFile, encoding)
     .then(function(data) {
       var resourceName = null;
@@ -61,7 +60,7 @@ function createResourceFromSource(urlOrFile, encoding,
 
       var dataColumns = _.unzip(data.rows || []);
 
-      var result = {
+      return {
         name: resourceName,
         title: resourceName,
         source: source,
@@ -85,20 +84,6 @@ function createResourceFromSource(urlOrFile, encoding,
           return _field;
         })
       };
-
-      return new Promise(function(resolve) {
-        datastore.isDataStoreUrl(urlOrFile, permissionToken)
-          .then(function(flag) {
-            resolve(flag)
-          })
-          .catch(function() {
-            resolve(false)
-          })
-      })
-        .then(function(flag) {
-          result.isFromDataStore = !!flag;
-          return result;
-        });
     });
 }
 
@@ -166,10 +151,9 @@ function createFiscalDataPackage(attributes, resources) {
   return fdp;
 }
 
-function convertResource(resource, dataPackage, dataPackageUrl,
-  permissionToken) {
+function convertResource(resource, dataPackage, dataPackageUrl) {
   var resourceUrl = resource.url || url.resolve(dataPackageUrl, resource.path);
-  return module.exports.createResourceFromSource(resourceUrl, permissionToken)
+  return createResourceFromSource(resourceUrl)
     .then(function(result) {
       // Copy some properties from original resource
       // to keep them when re-assembling datapackage.json
@@ -180,6 +164,7 @@ function convertResource(resource, dataPackage, dataPackageUrl,
       result.source.fileName = resource.path;
       result.source.mimeType = resource.mediatype;
       result.source.size = resource.bytes;
+      result.source.originUrl = resourceUrl;
       _.each(result.fields, function(field) {
         var originalField = _.find(resource.schema.fields, {
           name: field.name
@@ -227,7 +212,7 @@ function convertResource(resource, dataPackage, dataPackageUrl,
     });
 }
 
-function loadFiscalDataPackage(dataPackageUrl, userId, permissionToken) {
+function loadFiscalDataPackage(dataPackageUrl, userId) {
   if (!utils.isUrl(dataPackageUrl)) {
     return Promise.resolve(null);
   }
@@ -244,7 +229,7 @@ function loadFiscalDataPackage(dataPackageUrl, userId, permissionToken) {
     })
     .then(function(dataPackage) {
       // User can edit only own files
-      if (dataPackage.owner && (dataPackage.owner != userId)) {
+      if (userId && dataPackage.owner && (dataPackage.owner != userId)) {
         throw new Error('Permission denied: you can edit ' +
           'only own data packages.');
       }
@@ -256,8 +241,7 @@ function loadFiscalDataPackage(dataPackageUrl, userId, permissionToken) {
         }
       });
       var promises = _.map(dataPackage.resources, function(resource) {
-        return convertResource(resource, dataPackage, dataPackageUrl,
-          permissionToken);
+        return convertResource(resource, dataPackage, dataPackageUrl);
       });
       return Promise.all(promises);
     })

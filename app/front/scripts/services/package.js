@@ -166,7 +166,8 @@ angular.module('Application')
                     return {
                       name: resource.name + '.csv',
                       url: url,
-                      blob: resource.descriptor ? resource.descriptor.blob : null
+                      blob: resource.descriptor ?
+                        resource.descriptor.blob : null
                     };
                   })
                   .filter()
@@ -257,12 +258,14 @@ angular.module('Application')
                       })
                         .then(function() {
                           triggerDigest = null;
-                          packageFile.status = osDataStore.ProcessingStatus.READY;
+                          packageFile.status =
+                            osDataStore.ProcessingStatus.READY;
                           resolve(packageFile);
                         })
                         .catch(function(error) {
                           triggerDigest = null;
-                          packageFile.status = osDataStore.ProcessingStatus.FAILED;
+                          packageFile.status =
+                            osDataStore.ProcessingStatus.FAILED;
                           packageFile.error = error;
                           reject(error);
                         });

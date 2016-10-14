@@ -501,27 +501,43 @@ function publish(descriptor, options) {
   });
 }
 
-function isDataStoreUrl(urlToCheck, permissionToken) {
-  var infoUrl = defaultOptions.conductorInfoUrl +
-    '?jwt=' + encodeURIComponent(permissionToken);
-  return fetch(infoUrl)
-    .then(function(response) {
-      if (response.status != 200) {
-        return {}; // Silently return empty object
-      }
-      return response.json();
-    })
-    .then(function(info) {
-      var result = false;
-      if (utils.isUrl(urlToCheck) && _.isObject(info)) {
-        _.each(info.prefixes, function(prefix) {
+function createCheckDataStoreUrlPredicate(prefixes) {
+  return function(urlToCheck) {
+    var result = false;
+    if (_.isArray(prefixes) && (prefixes.length > 0)) {
+      if (utils.isUrl(urlToCheck)) {
+        _.each(prefixes, function(prefix) {
           if (urlToCheck.indexOf(prefix) == 0) {
             result = true;
             return false;
           }
         });
       }
-      return result;
+    }
+    return result;
+  };
+}
+
+function isDataStoreUrl(permissionToken) {
+  return new Promise(function(resolve) {
+    var infoUrl = defaultOptions.conductorInfoUrl +
+      '?jwt=' + encodeURIComponent(permissionToken);
+    return fetch(infoUrl)
+      .then(function(response) {
+        if (response.status != 200) {
+          return {}; // Silently return empty object
+        }
+        return response.json();
+      })
+      .then(function(info) {
+        resolve(_.isObject(info) ? info.prefixes : []);
+      })
+      .catch(function() {
+        resolve([]);
+      });
+  })
+    .then(function(prefixes) {
+      return createCheckDataStoreUrlPredicate(prefixes);
     });
 }
 

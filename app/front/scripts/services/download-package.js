@@ -65,18 +65,19 @@ angular.module('Application')
       result.publishDataPackage = function() {
         state.packagePublicUrl = null;
         state.isUploading = true;
-        var files = PackageService.publish();
-        state.uploads = files;
-        files.$promise
-          .then(function(dataPackage) {
-            var packageName = PackageService.getAttributes().name;
-            var owner = LoginService.userId;
-            state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
-            state.uploads = null;
-          })
-          .finally(function() {
-            state.isUploading = false;
-          });
+        PackageService.publish().then(function(files) {
+          state.uploads = files;
+          files.$promise
+            .then(function() {
+              var packageName = PackageService.getAttributes().name;
+              var owner = LoginService.userId;
+              state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
+              state.uploads = null;
+            })
+            .finally(function() {
+              state.isUploading = false;
+            });
+        });
         return state;
       };
 

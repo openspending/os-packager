@@ -72,7 +72,7 @@ gulp.task('scripts.application', function() {
   return bundler.bundle()
     .pipe(source('app.js'))
     .pipe(buffer())
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest(publicScriptsDir));
 });
 

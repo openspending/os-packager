@@ -12,25 +12,26 @@ angular.module('Application')
         // Preload continents and countries
         UtilsService.getCurrencies().$promise,
         UtilsService.getContinents().$promise,
-        UtilsService.getCountries().$promise,
-        LoginService.firstCheckAttempt()
+        UtilsService.getCountries().$promise
       ];
 
+      var dataPackageUrl = $location.search().package;
+      if (utils.isUrl) {
+        promises.push(
+          PackageService.loadExternalDataPackage(dataPackageUrl)
+            .then(function() {
+              $rootScope.isExternalDataPackage =
+                PackageService.isExternalDataPackage();
+            })
+            .catch(function(error) {
+              $rootScope.externalDataPackageError = error.message ||
+                ('' + error);
+            })
+        );
+      }
+
       return $q.all(promises)
-        .then(function() {
-          var dataPackageUrl = $location.search().package;
-          if (utils.isUrl) {
-            return PackageService.loadExternalDataPackage(dataPackageUrl)
-              .catch(function(error) {
-                $rootScope.externalDataPackageError = error.message ||
-                  ('' + error);
-              });
-          }
-        })
-        .then(function() {
-          $rootScope.isExternalDataPackage =
-            PackageService.isExternalDataPackage();
-        })
+        .then(function() {})
         .catch(Configuration.defaultErrorHandler);
     }
   ]);

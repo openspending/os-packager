@@ -46,9 +46,7 @@ angular.module('Application')
         },
         loadExternalDataPackage: function(url) {
           return $q(function(resolve, reject) {
-            var permissionToken = LoginService.permissionToken;
-            fiscalDataPackage.loadFiscalDataPackage(url, LoginService.userId,
-              permissionToken)
+            fiscalDataPackage.loadFiscalDataPackage(url)
               .then(function(data) {
                 if (_.isObject(data)) {
                   attributes = data.attributes;
@@ -94,9 +92,7 @@ angular.module('Application')
             .then(function(fileOrUrl) {
               fileDescriptor = fileOrUrl;
               return $q(function(resolve, reject) {
-                var permissionToken = LoginService.permissionToken;
-                fiscalDataPackage.createResourceFromSource(fileOrUrl,
-                  encoding, permissionToken)
+                fiscalDataPackage.createResourceFromSource(fileOrUrl, encoding)
                   .then(resolve)
                   .catch(reject);
               });
@@ -150,122 +146,138 @@ angular.module('Application')
             resources);
         },
         publish: function() {
-          var files = _.chain(resources)
-            .map(function(resource) {
-              if (resource.isFromDataStore) {
-                return;
-              }
-              var url = resource.source.url;
-              if (_.isString(url) && (url.length > 0)) {
-                url = utils.decorateProxyUrl(url);
-              }
-              return {
-                name: resource.name + '.csv',
-                url: url,
-                blob: resource.descriptor ? resource.descriptor.blob : null
-              };
-            })
-            .filter()
-            .value();
-          var modifiedResources = _.map(resources, function(resource) {
-            if (resource.source.url) {
-              resource = _.clone(resource);
-              resource.source = {
-                fileName: resource.name + '.csv'
-              };
-            }
-            return resource;
-          });
-          var dataPackage = fiscalDataPackage.createFiscalDataPackage(
-            attributes, modifiedResources);
-          dataPackage.owner = LoginService.userId;
-          dataPackage.author = LoginService.name +
-            ' <' + LoginService.email + '>';
+          return $q(function(resolve, reject) {
+            var permissionToken = LoginService.permissionToken;
+            osDataStore.isDataStoreUrl(permissionToken)
+              .then(function(isDataStoreUrl) {
+                var files = _.chain(resources)
+                  .map(function(resource) {
+                    if (_.isString(resource.source.originUrl)) {
+                      if (isDataStoreUrl(resource.source.originUrl)) {
+                        // Skip files that are already at datastore
+                        return;
+                      }
+                    }
 
-          // Create and prepend datapackage.json
-          var packageFile = {
-            name: Configuration.defaultPackageFileName,
-            data: dataPackage
-          };
-          files.splice(0, 0, packageFile);
-
-          var triggerDigest = function(immediateCall) {
-            if (_.isFunction(triggerDigest)) {
-              $timeout(triggerDigest, 500);
-            }
-            if (!!immediateCall) {
-              $timeout(function() {});
-            }
-          };
-
-          files = _.map(files, function(file) {
-            file.$promise = $q(function(resolve, reject) {
-              triggerDigest(true);
-              osDataStore.readContents(file)
-                .then(function() {
-                  return osDataStore.calculateMetrics(file);
-                })
-                .then(function() {
-                  return osDataStore.prepareForUpload(file, {
-                    // jscs:disable
-                    permission_token: LoginService.permissionToken,
-                    // jscs:enable
-                    name: dataPackage.name,
-                    owner: dataPackage.owner
-                  });
-                })
-                .then(function() {
-                  return osDataStore.upload(file);
-                })
-                .then(function() {
-                  // datapackage.json has one more step in processing chain
-                  if (file.name != Configuration.defaultPackageFileName) {
-                    file.status = osDataStore.ProcessingStatus.READY;
+                    var url = resource.source.url;
+                    if (_.isString(url) && (url.length > 0)) {
+                      url = utils.decorateProxyUrl(url);
+                    }
+                    return {
+                      name: resource.name + '.csv',
+                      url: url,
+                      blob: resource.descriptor ?
+                        resource.descriptor.blob : null
+                    };
+                  })
+                  .filter()
+                  .value();
+                var modifiedResources = _.map(resources, function(resource) {
+                  if (resource.source.url) {
+                    resource = _.clone(resource);
+                    resource.source = {
+                      fileName: resource.name + '.csv'
+                    };
                   }
+                  return resource;
+                });
+                var dataPackage = fiscalDataPackage.createFiscalDataPackage(
+                  attributes, modifiedResources);
+                dataPackage.owner = LoginService.userId;
+                dataPackage.author = LoginService.name +
+                  ' <' + LoginService.email + '>';
+
+                // Create and prepend datapackage.json
+                var packageFile = {
+                  name: Configuration.defaultPackageFileName,
+                  data: dataPackage
+                };
+                files.splice(0, 0, packageFile);
+
+                var triggerDigest = function(immediateCall) {
+                  if (_.isFunction(triggerDigest)) {
+                    $timeout(triggerDigest, 500);
+                  }
+                  if (!!immediateCall) {
+                    $timeout(function() {
+                    });
+                  }
+                };
+
+                files = _.map(files, function(file) {
+                  file.$promise = $q(function(resolve, reject) {
+                    triggerDigest(true);
+                    osDataStore.readContents(file)
+                      .then(function() {
+                        return osDataStore.calculateMetrics(file);
+                      })
+                      .then(function() {
+                        return osDataStore.prepareForUpload(file, {
+                          // jscs:disable
+                          permission_token: permissionToken,
+                          // jscs:enable
+                          name: dataPackage.name,
+                          owner: dataPackage.owner
+                        });
+                      })
+                      .then(function() {
+                        return osDataStore.upload(file);
+                      })
+                      .then(function() {
+                        // datapackage.json has one more step in processing chain
+                        if (file.name != Configuration.defaultPackageFileName) {
+                          file.status = osDataStore.ProcessingStatus.READY;
+                        }
+                        return file;
+                      })
+                      .then(resolve)
+                      .catch(function(error) {
+                        file.status = osDataStore.ProcessingStatus.FAILED;
+                        file.error = error;
+                        reject(error);
+                      });
+                  });
                   return file;
-                })
-                .then(resolve)
-                .catch(function(error) {
-                  file.status = osDataStore.ProcessingStatus.FAILED;
-                  file.error = error;
-                  reject(error);
                 });
-            });
-            return file;
-          });
 
-          files.$promise = $q(function(resolve, reject) {
-            $q.all(_.map(files, function(item) {
-              return item.$promise;
-            }))
-              .then(function(results) {
-                packageFile.countOfLines = 0;
-                _.each(files, function(file) {
-                  if (file !== packageFile) {
-                    packageFile.countOfLines += file.countOfLines;
-                  }
+                files.$promise = $q(function(resolve, reject) {
+                  $q.all(_.map(files, function(item) {
+                    return item.$promise;
+                  }))
+                    .then(function() {
+                      packageFile.countOfLines = 0;
+                      _.each(files, function(file) {
+                        if (file !== packageFile) {
+                          packageFile.countOfLines += file.countOfLines;
+                        }
+                      });
+                      osDataStore.publish(packageFile, {
+                        // jscs:disable
+                        permission_token: permissionToken
+                        // jscs:enable
+                      })
+                        .then(function() {
+                          triggerDigest = null;
+                          packageFile.status =
+                            osDataStore.ProcessingStatus.READY;
+                          resolve(packageFile);
+                        })
+                        .catch(function(error) {
+                          triggerDigest = null;
+                          packageFile.status =
+                            osDataStore.ProcessingStatus.FAILED;
+                          packageFile.error = error;
+                          reject(error);
+                        });
+                    })
+                    .catch(reject);
                 });
-                osDataStore.publish(packageFile, {
-                    // jscs:disable
-                    permission_token: LoginService.permissionToken
-                    // jscs:enable
-                  })
-                  .then(function() {
-                    triggerDigest = null;
-                    packageFile.status = osDataStore.ProcessingStatus.READY;
-                    resolve(packageFile);
-                  })
-                  .catch(function(error) {
-                    triggerDigest = null;
-                    packageFile.status = osDataStore.ProcessingStatus.FAILED;
-                    packageFile.error = error;
-                    reject(error);
-                  });
+
+                return files;
               })
+              .then(resolve)
               .catch(reject);
           });
-
-          return files;
         }
       };
 

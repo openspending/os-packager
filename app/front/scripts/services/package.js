@@ -164,7 +164,7 @@ angular.module('Application')
                       url = utils.decorateProxyUrl(url);
                     }
                     return {
-                      name: resource.name + '.csv',
+                      name: resource.source.fileName || resource.name + '.csv',
                       url: url,
                       blob: resource.descriptor ?
                         resource.descriptor.blob : null

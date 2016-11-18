@@ -15,7 +15,7 @@ angular.module('Application')
           PackageService.createFiscalDataPackage());
         $scope.login = LoginService;
         $scope.publishDataPackage = DownloadPackageService.publishDataPackage;
-        $scope.state = DownloadPackageService.getState();
+        $scope.state = DownloadPackageService.getState(true);
       });
     }
   ]);

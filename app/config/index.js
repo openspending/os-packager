@@ -12,6 +12,25 @@ nconf.file({
 
 var conductorHost = process.env.OS_PACKAGER_CONDUCTOR_HOST || DEFAULT_HOST;
 
+// Options for frontend
+var frontendOptions = {
+  conductor: {
+    authLibUrl: conductorHost + '/user/lib',
+    conductorUrl: conductorHost + '/datastore/',
+    conductorInfoUrl: conductorHost + '/datastore/info',
+    publishUrl: conductorHost + '/package/upload',
+    statusUrl: conductorHost + '/package/status',
+    pollInterval: process.env.POLL_INTERVAL || 3000
+  },
+
+  adapterUrl: process.env.FDP_ADAPTER_URL ||
+    DEFAULT_HOST + '/fdp-adapter/convert',
+
+  proxyUrl: 'proxy?url=',
+  osViewerUrl: process.env.OS_VIEWER_URL || DEFAULT_HOST + '/viewer/',
+  osAdminUrl: process.env.OS_ADMIN_URL || DEFAULT_HOST + '/admin/'
+};
+
 // this is the object that you want to override in your own local config
 nconf.defaults({
   env: process.env.NODE_ENV || 'development',
@@ -19,17 +38,8 @@ nconf.defaults({
   app: {
     port: process.env.PORT || 5000
   },
-  conductor: {
-    url: conductorHost,
-    pollInterval: process.env.POLL_INTERVAL || 3000
-  },
-  fdpAdapterUrl: process.env.FDP_ADAPTER_URL ||
-    DEFAULT_HOST + '/fdp-adapter/convert',
+  frontend: frontendOptions,
   basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH
 });
 
-module.exports = {
-  get: nconf.get.bind(nconf),
-  set: nconf.set.bind(nconf),
-  reset: nconf.reset.bind(nconf)
-};
+module.exports = nconf;

@@ -7,7 +7,7 @@ angular.module('Application')
     '$q', '$location', '$rootScope', 'UtilsService', 'PackageService',
     'Configuration', 'LoginService',
     function($q, $location, $rootScope, UtilsService, PackageService,
-      Configuration, LoginService) {
+      Configuration) {
       var promises = [
         // Preload continents and countries
         UtilsService.getCurrencies().$promise,

@@ -83,9 +83,8 @@ angular.module('Application')
         if (result === true) {
           result = PackageService.validateFiscalDataPackage();
         }
-        $timeout(function() {
-          state.status = result;
-        });
+        state.status = result;
+        $timeout(function() {});
         return state;
       };
 

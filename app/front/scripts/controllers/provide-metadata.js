@@ -8,6 +8,13 @@ angular.module('Application')
     'ApplicationLoader',
     function($scope, PackageService, ProvideMetadataService,
       ApplicationLoader) {
+
+      var validateAttributes = _.debounce(function() {
+        $scope.state = ProvideMetadataService.validatePackage(
+          $scope.forms.metadata);
+        $scope.$applyAsync();
+      }, 500);
+
       ApplicationLoader.then(function() {
         $scope.forms = _.extend({}, $scope.forms);
 
@@ -25,36 +32,41 @@ angular.module('Application')
           end: fiscalPeriod ? fiscalPeriod.end : ''
         };
 
-        $scope.$watch('attributes.title', function() {
-          $scope.state = ProvideMetadataService.validatePackage(
-            $scope.forms.metadata);
-        });
-
-        $scope.$watch('attributes.name', function() {
-          $scope.state = ProvideMetadataService.validatePackage(
-            $scope.forms.metadata);
-        });
-
         $scope.$watch('period', function(value) {
           ProvideMetadataService.updateFiscalPeriod(value);
-          $scope.state = ProvideMetadataService.validatePackage(
-            $scope.forms.metadata);
+          validateAttributes();
         }, true);
 
         $scope.$watch('attributes.regionCode', function() {
           ProvideMetadataService.updateCountries();
           $scope.geoData = ProvideMetadataService.getGeoData();
-          $scope.state = ProvideMetadataService.validatePackage(
-            $scope.forms.metadata);
         });
 
         $scope.$watch('attributes', function(newValue, oldValue) {
           if ((newValue === oldValue)) {
             return;
           }
-          $scope.state = ProvideMetadataService.validatePackage(
-            $scope.forms.metadata);
+          validateAttributes();
         }, true);
+
+        // Initial validation
+        var hasValues = _.chain($scope.attributes)
+          .values()
+          .filter(function(value) {
+            if (_.isString(value)) {
+              return value.length > 0;
+            }
+            return !!value;
+          })
+          .value()
+          .length > 0;
+        // If user has populated some attribute values - set dirty flag
+        // and validate form
+        if (hasValues) {
+          $scope.forms.metadata.$setDirty();
+        }
+        validateAttributes();
+        validateAttributes.flush();
       });
     }
   ]);

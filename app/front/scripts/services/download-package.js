@@ -4,17 +4,35 @@ var _ = require('lodash');
 
 angular.module('Application')
   .factory('DownloadPackageService', [
-    '$q', 'PackageService', 'StepsService', 'LoginService',
-    function($q, PackageService, StepsService, LoginService) {
+    '$q', 'PackageService', 'StepsService', 'LoginService', 'Configuration',
+    function($q, PackageService, StepsService, LoginService, Configuration) {
       var result = {};
 
       var state = {};
+      var lastState = {};
+
+      var lastPublishedPackage = null;
+
+      result.isPackageChangedSincePublished = function() {
+        if (!_.isObject(lastPublishedPackage)) {
+          return null;
+        }
+        var currentPackage = PackageService.createFiscalDataPackage();
+        return !_.isEqual(lastPublishedPackage, currentPackage);
+      };
 
       result.resetState = function() {
         state = {};
       };
 
-      result.getState = function() {
+      result.getState = function(checkModificationFlag) {
+        state = _.extend(state, lastState);
+        if (checkModificationFlag) {
+          if (result.isPackageChangedSincePublished()) {
+            lastState = _.extend(lastState, state);
+            state.packagePublicUrl = null;
+          }
+        }
         return state;
       };
 
@@ -71,7 +89,11 @@ angular.module('Application')
             .then(function() {
               var packageName = PackageService.getAttributes().name;
               var owner = LoginService.userId;
-              state.packagePublicUrl = '/viewer/' + owner + ':' + packageName;
+              state.packagePublicUrl = Configuration.osViewerUrl +
+                encodeURIComponent(owner + ':' + packageName);
+              state.packageManageUrl = Configuration.osAdminUrl +
+                '?hl=' + encodeURIComponent(owner + ':' + packageName);
+              lastPublishedPackage = PackageService.createFiscalDataPackage();
               state.uploads = null;
             })
             .finally(function() {

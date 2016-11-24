@@ -53,24 +53,23 @@
     <input type="hidden" name="name" value="{{ fileName }}">
     <input type="hidden" name="mime" value="application/octet-stream">
     <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
-    <button id="step4-button-download" type="submit" class="btn btn-success btn-lg">
-      <i class="fa fa-download"></i>&nbsp;&nbsp;Download
-    </button>
-    <button ng-if="login.isLoggedIn"
-        ng-click="publishDataPackage()"
-        ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
-        type="button"
-        class="btn btn-primary btn-lg margin-left-16" id="step4-button-publish">
-      <i class="fa fa-cloud-upload"></i>
-      &nbsp;&nbsp;Publish this Data Package
-    </button>
-    <button ng-if="!login.isLoggedIn"
-        ng-click="login.login()"
-        type="button"
-        class="btn btn-primary btn-lg margin-left-16" id="step4-button-cant-publish">
-      <i class="fa fa-cloud-upload"></i>
-      &nbsp;&nbsp;Log in to Publish
-    </button>
+    <div ng-if="!state.packagePublicUrl">
+      <button ng-if="login.isLoggedIn"
+          ng-click="publishDataPackage()"
+          ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
+          type="button"
+          class="btn btn-primary btn-lg" id="step4-button-publish">
+        <i class="fa fa-cloud-upload"></i>
+        &nbsp;&nbsp;Save this Data Package
+      </button>
+      <button ng-if="!login.isLoggedIn"
+          ng-click="login.login()"
+          type="button"
+          class="btn btn-primary btn-lg" id="step4-button-cant-publish">
+        <i class="fa fa-cloud-upload"></i>
+        &nbsp;&nbsp;Log in to Publish
+      </button>
+    </div>
   </form>
 
   <div ng-if="state.uploads.length">
@@ -93,9 +92,16 @@
       <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
       <strong>File successfully published!</strong> You can now visualize it and explore it with <strong>OpenSpending Viewer</strong>!
     </div>
+
     <a class="btn btn-primary" ng-href="{{ state.packagePublicUrl }}" target="_blank">
       <i class="fa fa-2x fa-bar-chart vertical-align-middle margin-right-4"></i>
       Explore and visualize your data now!
+    </a>
+
+    <a ng-if="!!state.packageManageUrl" class="btn btn-success margin-left-16"
+      ng-href="{{ state.packageManageUrl }}" target="_blank">
+      <i class="fa fa-2x fa-gears vertical-align-middle margin-right-4"></i>
+      Manage your datasets
     </a>
   </div>
 </section>

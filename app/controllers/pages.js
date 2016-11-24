@@ -23,8 +23,7 @@ module.exports.main = function(req, res) {
   var basePath = getBasePath(config);
 
   res.render('pages/main.html', {
-    conductor: config.get('conductor'),
-    fdpAdapterUrl: config.get('fdpAdapterUrl'),
+    frontendOptions: config.get('frontend'),
     basePath: basePath,
     title: 'Create a Fiscal Data Package'
   });
@@ -57,8 +56,7 @@ module.exports.landing = function(req, res) {
   var firstStep = _.first(services.data.steps);
 
   res.render('pages/landing.html', {
-    conductor: config.get('conductor'),
-    fdpAdapterUrl: config.get('fdpAdapterUrl'),
+    frontendOptions: config.get('frontend'),
     basePath: basePath,
     title: 'OS Packager',
     getStartedUrl: basePath + firstStep.route
@@ -70,8 +68,7 @@ module.exports.loggedIn = function(req, res) {
   var basePath = getBasePath(config);
 
   res.render('pages/logged-in.html', {
-    conductor: config.get('conductor'),
-    fdpAdapterUrl: config.get('fdpAdapterUrl'),
+    frontendOptions: config.get('frontend'),
     basePath: basePath,
     title: 'OS Packager'
   });

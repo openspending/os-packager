@@ -22,26 +22,14 @@
 
   {% include "partials/footer.html" %}
 
-  {% if conductor %}
+  {% if frontendOptions %}
   <script type="text/javascript">
-    (function(globals, conductor, fdpAdapterUrl) {
-      var options = globals.ExternalConfig = {};
-
-      var conductorConfig = options.conductor = {};
-      conductorConfig.conductorUrl = conductor.url + '/datastore/';
-      conductorConfig.conductorInfoUrl = conductor.url + '/datastore/info';
-      conductorConfig.publishUrl = conductor.url + '/package/upload';
-      conductorConfig.statusUrl = conductor.url + '/package/status';
-      conductorConfig.pollInterval = conductor.pollInterval;
-
-      options.adapterUrl = fdpAdapterUrl;
-      options.proxyUrl = 'proxy?url=';
-    })(window, {{ conductor | json | safe }}, {{ fdpAdapterUrl | json | safe }});
+    window.ExternalConfig = {{ frontendOptions | json | safe }};
   </script>
   {% endif %}
 
   <script src="app.js?{{ sessionSalt }}"></script>
-  <script src="{{conductor.url}}/user/lib"></script>
+  <script src="{{frontendOptions.conductor.authLibUrl}}"></script>
 </body>
 
 </html>

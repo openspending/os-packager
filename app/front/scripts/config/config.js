@@ -25,11 +25,14 @@ angular.module('Application')
   .run([
     '$rootScope', 'ApplicationLoader',
     'StepsService', 'UploadFileService', 'DescribeDataService',
-    'ProvideMetadataService', 'DownloadPackageService',
+    'ProvideMetadataService', 'DownloadPackageService', 'Configuration',
     function($rootScope, ApplicationLoader,
       StepsService, UploadFileService, DescribeDataService,
-      ProvideMetadataService, DownloadPackageService) {
+      ProvideMetadataService, DownloadPackageService, Configuration) {
       $rootScope.ProcessingStatus = osDataStore.ProcessingStatus;
+
+      Configuration.osViewerUrl = externalConfig.osViewerUrl;
+      Configuration.osAdminUrl = externalConfig.osAdminUrl;
 
       StepsService.setStepResetCallbacks({
         'upload-file': UploadFileService.resetState,

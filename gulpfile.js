@@ -38,14 +38,14 @@ gulp.task('default', [
   'assets'
 ]);
 
-gulp.task('watch', ['default'], function () {
+gulp.task('watch', ['default'], function() {
   var files = [
     path.join(frontScriptsDir, '/**/*.js'),
     path.join(servicesDir, '/**/*.js'),
     path.join(frontStylesDir, '/**/*.less'),
     path.join(viewsDir, '/**/*.html')
   ];
-  watch(files, {usePolling: true}, function (events) {
+  watch(files, {usePolling: true}, function() {
     gulp.start('default');
   });
 });
@@ -130,9 +130,12 @@ gulp.task('assets.fonts', function() {
 gulp.task('assets.images', function() {
   var files = [
     path.join(frontAssetsDir, '/**/*'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/os.svg'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
-    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/vector/light/ospackager.svg'),
+    path.join(nodeModulesDir,
+      '/os-bootstrap/dist/assets/os-branding/vector/light/os.svg'),
+    path.join(nodeModulesDir,
+      '/os-bootstrap/dist/assets/os-branding/vector/light/packager.svg'),
+    path.join(nodeModulesDir,
+      '/os-bootstrap/dist/assets/os-branding/vector/light/ospackager.svg')
   ];
   return gulp.src(files)
     .pipe(gulp.dest(publicAssetsDir));
@@ -140,7 +143,8 @@ gulp.task('assets.images', function() {
 
 gulp.task('assets.favicon', function() {
   var files = [
-    path.join(nodeModulesDir, '/os-bootstrap/dist/assets/os-branding/packager-favicon.ico')
+    path.join(nodeModulesDir,
+      '/os-bootstrap/dist/assets/os-branding/packager-favicon.ico')
   ];
   return gulp.src(files)
     .pipe(rename('favicon.ico'))

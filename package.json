@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "NODE_ENV=test mocha tests/*.js",
-    "review": "jscs app tests",
+    "review": "jscs app tests index.js gulpfile.js",
     "develop": "gulp && npm start",
     "build": "gulp"
   },

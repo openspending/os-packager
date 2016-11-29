@@ -187,13 +187,6 @@ angular.module('Application')
                 dataPackage.author = LoginService.name +
                   ' <' + LoginService.email + '>';
 
-                // Create and prepend datapackage.json
-                var packageFile = {
-                  name: Configuration.defaultPackageFileName,
-                  data: dataPackage
-                };
-                files.splice(0, 0, packageFile);
-
                 var triggerDigest = function(immediateCall) {
                   if (_.isFunction(triggerDigest)) {
                     $timeout(triggerDigest, 500);
@@ -204,8 +197,8 @@ angular.module('Application')
                   }
                 };
 
-                files = _.map(files, function(file) {
-                  file.$promise = $q(function(resolve, reject) {
+                function prepareFile(file) {
+                  return $q(function(resolve, reject) {
                     triggerDigest(true);
                     osDataStore.readContents(file)
                       .then(function() {
@@ -237,20 +230,45 @@ angular.module('Application')
                         reject(error);
                       });
                   });
+                }
+
+                files = _.map(files, function(file) {
+                  file.$promise = prepareFile(file);
                   return file;
                 });
+                var filesPromise = $q.all(_.map(files, function(item) {
+                  return item.$promise;
+                }));
+
+                // Create and prepend datapackage.json
+                var packageFile = {
+                  name: Configuration.defaultPackageFileName,
+                  data: dataPackage,
+                  countOfLines: 0,
+                  $promise: filesPromise.then(function() {
+                    // jscs:disable
+                    dataPackage.count_of_rows = 0;
+                    _.each(files, function(file) {
+                      var count = parseInt(file.countOfLines) || 0;
+                      if (count < 0) {
+                        count = 0;
+                      }
+                      dataPackage.count_of_rows += count;
+                    });
+                    // jscs:enable
+                    return prepareFile(packageFile);
+                  })
+                };
+                files.splice(0, 0, packageFile);
 
                 files.$promise = $q(function(resolve, reject) {
                   $q.all(_.map(files, function(item) {
                     return item.$promise;
                   }))
                     .then(function() {
-                      packageFile.countOfLines = 0;
-                      _.each(files, function(file) {
-                        if (file !== packageFile) {
-                          packageFile.countOfLines += file.countOfLines;
-                        }
-                      });
+                      // jscs:disable
+                      packageFile.countOfLines = dataPackage.count_of_rows;
+                      // jscs:enable
                       osDataStore.publish(packageFile, {
                         // jscs:disable
                         permission_token: permissionToken

@@ -175,8 +175,15 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
           field.slug = originalField.slug;
           field.type = originalField.osType;
 
+          var allowedOptionFields = _.map(
+            new OSTypes().getDataTypeExtraOptions(field.type),
+            function(option) {
+              return option.name;
+            }
+          );
+
           // Populate additional properties
-          field.options = {};
+          field.options = _.pick(originalField, allowedOptionFields);
 
           var measure = _.find(dataPackage.model.measures, function(item) {
             return item.source == field.name;
@@ -194,18 +201,21 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
             .value());
           }
 
-          var allowedFields = ['format', 'decimalChar', 'groupChar'];
           _.each(dataPackage.model.dimensions, function(dimension) {
             var attr = _.find(dimension.attributes, function(item) {
               return item.source == field.name;
             });
             if (attr) {
-              _.extend(field.options, _.pick(attr, allowedFields));
+              _.extend(field.options, _.pick(attr, allowedOptionFields));
               // Field can belong only to one dimension, so once we found it -
               // break the loop
               return false;
             }
           });
+
+          if (_.isString(field.options.format)) {
+            field.options.format = field.options.format.replace(/^fmt:/g, '');
+          }
         }
       });
       return result;

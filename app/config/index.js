@@ -39,7 +39,10 @@ nconf.defaults({
     port: process.env.PORT || 5000
   },
   frontend: frontendOptions,
-  basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH
+  basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH,
+  snippets: {
+    ga: process.env.OS_SNIPPETS_GA || 'UA-33874954-42'
+  }
 });
 
 module.exports = nconf;

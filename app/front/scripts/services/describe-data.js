@@ -49,7 +49,7 @@ angular.module('Application')
         var fdp = new OSTypes().fieldsToModel(fields);
         if (fdp.errors) {
           _.forEach(fields, function(field) {
-            var fieldErrors = fdp.errors.perField[field.title];
+            var fieldErrors = fdp.errors.perField[field.name];
             if (fieldErrors) {
               field.errors = fieldErrors;
             }
@@ -57,8 +57,8 @@ angular.module('Application')
         }
         _.forEach(fields, function(field) {
           if (fdp.schema && fdp.schema.fields &&
-            fdp.schema.fields[field.title]) {
-            var schemaField = fdp.schema.fields[field.title];
+            fdp.schema.fields[field.name]) {
+            var schemaField = fdp.schema.fields[field.name];
             field.additionalOptions = schemaField.options;
             if (!field.options) {
               field.options = {};

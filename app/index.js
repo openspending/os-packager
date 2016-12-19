@@ -41,11 +41,17 @@ module.exports.start = function() {
       autoescape: true,
       express: app
     });
+    env.addGlobal('globalConfig', {
+      snippets: config.get('env') != 'test' ? config.get('snippets') : {}
+    });
     env.addGlobal('marked', marked);
     env.addGlobal('sessionSalt', '' + Date.now() +
       Math.round(Math.random() * 10000));
     env.addFilter('json', function(value, pretty) {
       return JSON.stringify(value, null, !!pretty ? 2 : null);
+    });
+    env.addFilter('stringify', function(str) {
+      return env.getFilter('safe')(JSON.stringify(str));
     });
 
     var server = app.listen(app.get('port'), function() {

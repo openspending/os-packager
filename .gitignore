@@ -1,5 +1,7 @@
 *.log
-settings.json
 node_modules
 .idea
 .projectile
+settings.json
+!docker/settings.json
+

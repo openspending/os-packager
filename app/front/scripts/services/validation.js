@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var utils = require('../../../services/utils');
 
-var goodTablesUrl = 'http://goodtables.okfnlabs.org/api/run';
+var goodTablesUrl = '//goodtables.okfnlabs.org/api/run';
 
 angular.module('Application')
   .factory('ValidationService', [

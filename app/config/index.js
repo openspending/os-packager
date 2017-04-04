@@ -3,7 +3,7 @@
 var path = require('path');
 var nconf = require('nconf');
 
-const DEFAULT_HOST = 'http://next.openspending.org';
+const DEFAULT_HOST = '//next.openspending.org';
 const DEFAULT_BASE_PATH = '';
 
 nconf.file({

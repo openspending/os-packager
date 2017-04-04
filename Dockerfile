@@ -23,4 +23,4 @@ ADD docker/startup.sh /startup.sh
 
 EXPOSE 8000
 
-CMD OS_CONDUCTOR="http://${OS_EXTERNAL_ADDRESS}" /startup.sh
+CMD OS_CONDUCTOR="//${OS_EXTERNAL_ADDRESS}" /startup.sh

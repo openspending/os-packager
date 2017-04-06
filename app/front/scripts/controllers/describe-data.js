@@ -10,18 +10,22 @@ angular.module('Application')
         $scope.state = DescribeDataService.getState();
         $scope.resources = PackageService.getResources();
 
-        _.each($scope.resources, function(resource) {
-          _.each(resource.fields, function(field) {
-            $scope.state = DescribeDataService.updateField(field);
+        DescribeDataService.updateField()
+          .then(function(state) {
+            $scope.state = state;
+            $scope.$apply();
           });
-        });
         $scope.selectedMeasures = DescribeDataService
           .getSelectedConcepts('measure');
         $scope.selectedDimensions = DescribeDataService
           .getSelectedConcepts('dimension');
 
         $scope.onConceptChanged = function(field) {
-          $scope.state = DescribeDataService.updateField(field);
+          DescribeDataService.updateField(field)
+            .then(function(state) {
+              $scope.state = state;
+              $scope.$apply();
+            });
           $scope.selectedMeasures = DescribeDataService
             .getSelectedConcepts('measure');
           $scope.selectedDimensions = DescribeDataService

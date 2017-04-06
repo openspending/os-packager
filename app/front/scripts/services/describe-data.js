@@ -35,10 +35,7 @@ angular.module('Application')
         return mapped;
       };
 
-      result.updateField = function(field) {
-        if (!field) {
-          return;
-        }
+      result.updateField = function() {
         var fields = PackageService.getResources()[0].fields;
         //TODO: Support more than 1 resource when OSTypes supports it
         _.forEach(fields, function(field) {

@@ -2,8 +2,7 @@
 
 var _ = require('lodash');
 var Promise = require('bluebird');
-var datapackageValidate = require('datapackage-validate').validate;
-var registry = require('datapackage-registry');
+var datapackage = require('datapackage');
 var OSTypes = require('os-types');
 var utils = require('./utils');
 var url = require('url');
@@ -91,10 +90,11 @@ function getFiscalDataPackageSchema(useProxy) {
   return 'fiscal';
 }
 
-function validateDataPackage(dataPackage, schema) {
-  return new Promise(function(resolve, reject) {
-    resolve(datapackageValidate(dataPackage, schema));
-  });
+function validateDataPackage(descriptor, schema) {
+  return datapackage.validate(descriptor, schema, true)
+    .then(function(validation) {
+        return validation == true;
+    });
 }
 
 function createFiscalDataPackage(attributes, resources) {

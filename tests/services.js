@@ -215,8 +215,8 @@ describe('Application services', function() {
           var schema = dataPackage.getFiscalDataPackageSchema(false);
           return dataPackage.validateDataPackage(fiscalPackage, schema);
         })
-        .then(function(results) {
-          assert(results.valid, 'It should be valid');
+        .then(function(isValid) {
+          assert(isValid, 'It should be valid');
           done();
         })
         .catch(done);

@@ -4,7 +4,7 @@ var _ = require('lodash');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
-var cosmopolitanApiUrl = '//cosmopolitan.openspending.org/?format=json';
+var cosmopolitanApiUrl = 'https://cosmopolitan.openspending.org/?format=json';
 
 function upper(v) {
   return (v + '').toUpperCase();

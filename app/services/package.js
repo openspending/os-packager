@@ -10,7 +10,7 @@ var datastore = require('./os-datastore');
 require('isomorphic-fetch');
 
 var defaultOptions = {
-  adapterUrl: '//next.openspending.org/fdp-adapter/convert'
+  adapterUrl: 'https://next.openspending.org/fdp-adapter/convert'
 };
 module.exports.defaultOptions = defaultOptions;
 

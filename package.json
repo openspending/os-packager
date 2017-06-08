@@ -45,6 +45,7 @@
     "inflected": "^1.1.6",
     "isomorphic-fetch": "^2.2.0",
     "jquery": "^2.0.0",
+    "jquery.mmenu": "^6.1.0",
     "js-polyfills": "^0.1.12",
     "jsontableschema": "0.1.0",
     "lodash": "^4.11.1",
@@ -54,8 +55,6 @@
     "os-types": "~1.10.0",
     "papaparse": "git+https://github.com/kravets-levko/PapaParse.git",
     "request": "^2.65.0",
-    "typeahead.js": "^0.11.1",
-    "typeahead.js-bootstrap-css": "git+https://github.com/bassjobsen/typeahead.js-bootstrap-css",
     "validator": "^4.2.1"
   },
   "devDependencies": {

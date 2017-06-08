@@ -1,123 +1,119 @@
 'use strict';
 
 var OSTypes = require('os-types');
-var _ = require('lodash');
+var $ = require('jquery');
+require('jquery.mmenu/dist/jquery.mmenu.js');
+require('jquery.mmenu/dist/addons/navbars/jquery.mmenu.navbars.js');
+require('jquery.mmenu/dist/addons/searchfield/jquery.mmenu.searchfield.js');
+require('jquery.mmenu/dist/addons/lazysubmenus/jquery.mmenu.lazysubmenus.js');
 
 angular.module('Application')
   .directive('osDatatype', [
-    function() {
-      var sep = ' ❯ ';
-      var convertCompletionToSuggestion = function(completion) {
-        return {
-          val: completion.type,
-          displayName: completion.displayName,
-          description: completion.description,
-          group: completion.group,
-          text: completion.displayName + ' (' + _.trimEnd(completion.type, ':')
-            .replace(/:/g,sep) + ')',
-          leaf: _.last(completion.type) != ':'
-        };
-      };
+    '$timeout',
+    function($timeout) {
       return {
         restrict: 'E',
         templateUrl: 'templates/directives/os-datatype.html',
         replace: true,
-        controller: [
-          function() {
-            var sugg = '';
-            return {
-              setSugg: function(_sugg) {
-                sugg = _sugg;
-              },
-              getSugg: function() {
-                return sugg;
-              },
-              isIncomplete: function() {
-                return _.endsWith(sugg, ':');
-              },
-              setVal: function(val, clear) {
-                this.field.type = val;
-                if (clear) {
-                  this.field.options = {};
-                }
-                this.onChanged();
-              }
-            };
-          }
-        ],
         controllerAs: 'ctrl',
         bindToController: {
           field: '=',
           onChanged: '&'
         },
+        controller: [
+          function() {
+            return {
+              convertOSTypesDescriptions: function convertOSTypesDescriptions(OSTypesDescriptions) {
+                var result = [];
+
+                Object.keys(OSTypesDescriptions).forEach(function (key) {
+                  var data = OSTypesDescriptions[key];
+                  var keyParts = key.replace(/:$/, '').split(':');
+
+                  // This returns an array like ['foo', 'foo:bar', 'foo:bar:baz']
+                  var intermediaryKeys = keyParts.map(function (_, index, array) {
+                    return array.slice(0, index + 1).join(':');
+                  });
+
+                  var currentArray = result;
+                  intermediaryKeys.forEach(function (key) {
+                    var subArray = currentArray.find(function (element) {
+                      return element.key === key;
+                    });
+
+                    if (subArray) {
+                      subArray.types = subArray.types || [];
+                      currentArray = subArray.types;
+                    } else {
+                      var currentData = Object.assign(
+                        {
+                          key: key,
+                          types: [],
+                        },
+                        data
+                      );
+                      currentArray.push(currentData);
+                      currentArray = currentData.types;
+                    }
+                  });
+                });
+
+                return result;
+              }
+            };
+          }
+        ],
         link: function($scope, element, attr, ctrl) {
-          var input = element.find('.typeahead')[0];
-          var clear = element.find('.clear')[0];
-          var ot = new OSTypes();
-          $(input).typeahead({
-            minLength: 0,
-            highlight: true
-          }, {
-            limit: 100,
-            source: function(query, sync) {
-              query = $(input).attr('data-code');
-              sync(_.map(ot.autoComplete(query),
-                convertCompletionToSuggestion));
-            },
-            display: function(sugg) {
-              return sugg.text;
-            },
-            templates: {
-              suggestion: function(sugg) {
-                var suffix;
-                if (!sugg.leaf) {
-                  suffix = sep;
-                } else {
-                  suffix = '';
-                }
-                var ret = sugg.displayName + suffix;
-                var group = !sugg.group ? '' :
-                  '<div class="group">' + sugg.group.substring(4) + '</div>';
-                var groupClass = sugg.group ? 'grouped' : '';
-                return '<div class="suggestion-content ' + groupClass + '">' +
-                  '<div>' + group + ret + '</div>' +
-                  '<div class="suggestion-tooltip">' + sugg.description +
-                  '</div>' +
-                  '</div>';
+          var menu = $('nav', element);
+          var osTypes = new OSTypes();
+
+          $scope.dataTypes = ctrl.convertOSTypesDescriptions(osTypes.typesDescriptions);
+
+          $scope.openMenu = function() {
+            $scope.showMenu = true;
+          };
+
+          $scope.closeMenu = function() {
+            $scope.showMenu = false;
+          };
+
+          $scope.selectItem = function(item) {
+            if (item.types === undefined || item.types.length == 0) {
+              $scope.field.type = item.key;
+              $scope.closeMenu();
+              if ($scope.onChanged) {
+                $scope.onChanged();
               }
             }
-          });
-          var selectSugg = function(sugg, clear) {
-            var currentCode = $(input).attr('data-code');
-            $(input).attr('data-code', sugg.val);
-            ctrl.setSugg(sugg.val);
-            if (!sugg.leaf) {
-              window.setTimeout(function() {
-                $(input).typeahead('val', sugg.text + sep);
-                $(input).typeahead('open');
-              }, 100);
-            } else {
-              ctrl.setVal(sugg.val, currentCode != sugg.val && clear);
-            }
-            $scope.$applyAsync();
           };
-          if (ctrl.field.type) {
-            var completion = ot.autoComplete(ctrl.field.type)[0];
-            var sugg = convertCompletionToSuggestion(completion);
-            selectSugg(sugg, false);
-            $(input).typeahead('val',sugg.text);
-          }
-          $(input).bind('typeahead:select', function(ev, sugg) {
-            selectSugg(sugg, true);
+
+          // Need to use $timeout to allow Angular to build the navigation from the data
+          $timeout(function () {
+            menu.mmenu({
+              offCanvas: false,
+              navbar: {
+                title: false,
+              },
+              navbars: [
+                {
+                  position: 'top',
+                  content: [
+                    'searchfield',
+                    '<a class="fa fa-times close" aria-hidden="true" title="Close"></a>',
+                  ],
+                },
+              ],
+              lazySubmenus: true,
+              extensions: [
+                'multiline',
+              ],
+            });
+
+            $('.close', menu).click(function() {
+              $scope.$apply($scope.closeMenu);
+            });
           });
-          $(clear).bind('click', function() {
-            $(input).attr('data-code', '');
-            $(input).typeahead('val','');
-            ctrl.setSugg('');
-            ctrl.setVal(null, true);
-            $scope.$applyAsync();
-          });
-        }
+        },
       };
     }
   ]);

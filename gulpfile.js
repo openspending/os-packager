@@ -103,7 +103,10 @@ gulp.task('styles.vendor', function() {
     path.join(nodeModulesDir, '/os-bootstrap/dist/css/os-bootstrap.min.css'),
     path.join(nodeModulesDir, '/angular/angular-csp.css'),
     path.join(nodeModulesDir, '/c3/c3.min.css'),
-    path.join(nodeModulesDir, '/typeahead.js-bootstrap-css/typeaheadjs.css')
+    path.join(nodeModulesDir, '/jquery.mmenu/dist/jquery.mmenu.css'),
+    path.join(nodeModulesDir, '/jquery.mmenu/dist/addons/navbars/jquery.mmenu.navbars.css'),
+    path.join(nodeModulesDir, '/jquery.mmenu/dist/addons/searchfield/jquery.mmenu.searchfield.css'),
+    path.join(nodeModulesDir, '/jquery.mmenu/dist/extensions/multiline/jquery.mmenu.multiline.css'),
   ];
   return gulp.src(files)
     .pipe(concat('vendor.css'))

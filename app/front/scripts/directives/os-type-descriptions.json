@@ -1,0 +1,1414 @@
+{
+  "activity:": {
+    "displayName": "Activity",
+    "description": "The activity that's being funded (e.g. project, program, contract etc.)",
+    "group": "300-Activity"
+  },
+  "activity:generic:": {
+    "displayName": "Non-standard Activity",
+    "description": "Activity codes or labels that do not adhere to a specific standard"
+  },
+  "activity:generic:contract:": {
+    "displayName": "Contract",
+    "description": "The contract that's being funded or related to the spending line"
+  },
+  "activity:generic:contract:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the contract"
+  },
+  "activity:generic:contract:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the contract"
+  },
+  "activity:generic:contract:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the contract (will be combined with the sub/project code)"
+  },
+  "activity:generic:contract:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this contract"
+  },
+  "activity:generic:program:": {
+    "displayName": "Program",
+    "description": "The program that's being funded or related to the spending line"
+  },
+  "activity:generic:program:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the program"
+  },
+  "activity:generic:program:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this program"
+  },
+  "activity:generic:subprogram:": {
+    "displayName": "Project",
+    "description": "The subprogram that's being funded or related to the spending line"
+  },
+  "activity:generic:subprogram:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the subprogram"
+  },
+  "activity:generic:subprogram:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the subprogram"
+  },
+  "activity:generic:subprogram:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the subprogram (will be combined with the program code)"
+  },
+  "activity:generic:subprogram:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this subprogram"
+  },
+  "activity:generic:project:": {
+    "displayName": "Project",
+    "description": "The project that's being funded or related to the spending line"
+  },
+  "activity:generic:project:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the project"
+  },
+  "activity:generic:project:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the project"
+  },
+  "activity:generic:project:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the project (will be combined with the program code)"
+  },
+  "activity:generic:project:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this project"
+  },
+  "activity:generic:subproject:": {
+    "displayName": "Sub-Project",
+    "description": "The sub-project that's being funded or related to the spending line"
+  },
+  "activity:generic:subproject:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the sub-project"
+  },
+  "activity:generic:subproject:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the sub-project"
+  },
+  "activity:generic:subproject:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the sub-project (will be combined with the project code)"
+  },
+  "activity:generic:subproject:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this sub-project"
+  },
+  "administrative-classification:": {
+    "displayName": "Administrative Classification",
+    "description": "The entity responsible for managing the public funds",
+    "group": "200-Classifications"
+  },
+  "administrative-classification:generic:": {
+    "displayName": "Non-standard Administrative Classification",
+    "description": "Administrative Classification that does not adhere to a specific standard"
+  },
+  "administrative-classification:generic:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the classification (not level specific)"
+  },
+  "administrative-classification:generic:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for the classification"
+  },
+  "administrative-classification:generic:description": {
+    "displayName": "Description",
+    "description": "A longer descriptive text for this classification"
+  },
+  "administrative-classification:generic:level1:": {
+    "displayName": "Top Classification Level",
+    "description": "Top level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level1:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the top level of the classification"
+  },
+  "administrative-classification:generic:level1:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level1:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level2:": {
+    "displayName": "2nd Classification Level",
+    "description": "2nd level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level2:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 2nd level of the classification"
+  },
+  "administrative-classification:generic:level2:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 2nd level of the classification"
+  },
+  "administrative-classification:generic:level2:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 2nd level of the classification"
+  },
+  "administrative-classification:generic:level2:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level2:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level3:": {
+    "displayName": "3rd Classification Level",
+    "description": "3rd level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level3:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 3rd level of the classification"
+  },
+  "administrative-classification:generic:level3:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 3rd level of the classification"
+  },
+  "administrative-classification:generic:level3:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 3rd level of the classification"
+  },
+  "administrative-classification:generic:level3:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level3:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level4:": {
+    "displayName": "4th Classification Level",
+    "description": "4th level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level4:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 4th level of the classification"
+  },
+  "administrative-classification:generic:level4:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 4th level of the classification"
+  },
+  "administrative-classification:generic:level4:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 4th level of the classification"
+  },
+  "administrative-classification:generic:level4:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level4:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level5:": {
+    "displayName": "5th Classification Level",
+    "description": "5th level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level5:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 5th level of the classification"
+  },
+  "administrative-classification:generic:level5:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 5th level of the classification"
+  },
+  "administrative-classification:generic:level5:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 5th level of the classification"
+  },
+  "administrative-classification:generic:level5:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level5:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level6:": {
+    "displayName": "6th Classification Level",
+    "description": "6th level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level6:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 6th level of the classification"
+  },
+  "administrative-classification:generic:level6:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 6th level of the classification"
+  },
+  "administrative-classification:generic:level6:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 6th level of the classification"
+  },
+  "administrative-classification:generic:level6:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level6:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level7:": {
+    "displayName": "7th Classification Level",
+    "description": "7th level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level7:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 7th level of the classification"
+  },
+  "administrative-classification:generic:level7:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 7th level of the classification"
+  },
+  "administrative-classification:generic:level7:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 7th level of the classification"
+  },
+  "administrative-classification:generic:level7:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level7:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrative-classification:generic:level8:": {
+    "displayName": "8th Classification Level",
+    "description": "8th level of the Administrative Classification"
+  },
+  "administrative-classification:generic:level8:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 8th level of the classification"
+  },
+  "administrative-classification:generic:level8:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 8th level of the classification"
+  },
+  "administrative-classification:generic:level8:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 8th level of the classification"
+  },
+  "administrative-classification:generic:level8:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "administrative-classification:generic:level8:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "administrator:": {
+    "displayName": "Administrator",
+    "description": "The body that is authorized to spend the money",
+    "group": "400-Participating Entities"
+  },
+  "administrator:generic:": {
+    "displayName": "Non-standard Administrator",
+    "description": "Administrator identifiers or labels that do not adhere to a specific standard"
+  },
+  "administrator:generic:id": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the Administrator"
+  },
+  "administrator:generic:name": {
+    "displayName": "Display Name",
+    "description": "The display name for the Administrator"
+  },
+  "budget-line-id": {
+    "displayName": "Budget Line Identifier",
+    "description": "A unique identifier for this budget line",
+    "group": "700-Identifiers"
+  },
+  "date:": {
+    "displayName": "Date",
+    "description": "Date related data types",
+    "group": "100-Time"
+  },
+  "date:fiscal:": {
+    "displayName": "Fiscal Dates",
+    "description": "Specific dates related to fiscal events"
+  },
+  "date:fiscal:activity-start": {
+    "displayName": "Start Date",
+    "description": "The starting date of a specific activity"
+  },
+  "date:fiscal:activity-end": {
+    "displayName": "Ending Date",
+    "description": "The ending date of a specific activity"
+  },
+  "date:fiscal:activity-approval": {
+    "displayName": "Approval Date",
+    "description": "The approval date of a specific activity"
+  },
+  "date:fiscal:first-payment": {
+    "displayName": "First Payment Date",
+    "description": "The date of the first payment for a specific activity"
+  },
+  "date:fiscal:final-payment": {
+    "displayName": "Final Payment Date",
+    "description": "The date of the last payment for a specific activity"
+  },
+  "date:fiscal-year": {
+    "displayName": "Fiscal year",
+    "description": "The fiscal-year for which the values in this record are relevant"
+  },
+  "date:generic": {
+    "displayName": "Other date",
+    "description": "An non-specific date related to the values in this record (e.g. transaction date etc.)"
+  },
+  "direction": {
+    "displayName": "Budget Direction",
+    "description": "Specifies whether the values in this line are expenditure or revenues",
+    "group": "500-Fiscal Attributes"
+  },
+  "economic-classification:": {
+    "displayName": "Economic Classification",
+    "description": "The type of budget and expenditure incurred (e.g.salaries, goods and services, interest payments, or capital spending etc.)",
+    "group": "200-Classifications"
+  },
+  "economic-classification:generic:": {
+    "displayName": "Non-standard Economic Classification",
+    "description": "Economic Classification that does not adhere to a specific standard"
+  },
+  "economic-classification:generic:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the classification (not level specific)"
+  },
+  "economic-classification:generic:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for the classification"
+  },
+  "economic-classification:generic:description": {
+    "displayName": "Description",
+    "description": "A longer descriptive text for this classification"
+  },
+  "economic-classification:generic:level1:": {
+    "displayName": "Top Classification Level",
+    "description": "Top level of the Economic Classification"
+  },
+  "economic-classification:generic:level1:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the top level of the classification"
+  },
+  "economic-classification:generic:level1:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level1:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level2:": {
+    "displayName": "2nd Classification Level",
+    "description": "2nd level of the Economic Classification"
+  },
+  "economic-classification:generic:level2:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 2nd level of the classification"
+  },
+  "economic-classification:generic:level2:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 2nd level of the classification"
+  },
+  "economic-classification:generic:level2:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 2nd level of the classification"
+  },
+  "economic-classification:generic:level2:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level2:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level3:": {
+    "displayName": "3rd Classification Level",
+    "description": "3rd level of the Economic Classification"
+  },
+  "economic-classification:generic:level3:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 3rd level of the classification"
+  },
+  "economic-classification:generic:level3:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 3rd level of the classification"
+  },
+  "economic-classification:generic:level3:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 3rd level of the classification"
+  },
+  "economic-classification:generic:level3:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level3:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level4:": {
+    "displayName": "4th Classification Level",
+    "description": "4th level of the Economic Classification"
+  },
+  "economic-classification:generic:level4:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 4th level of the classification"
+  },
+  "economic-classification:generic:level4:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 4th level of the classification"
+  },
+  "economic-classification:generic:level4:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 4th level of the classification"
+  },
+  "economic-classification:generic:level4:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level4:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level5:": {
+    "displayName": "5th Classification Level",
+    "description": "5th level of the Economic Classification"
+  },
+  "economic-classification:generic:level5:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 5th level of the classification"
+  },
+  "economic-classification:generic:level5:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 5th level of the classification"
+  },
+  "economic-classification:generic:level5:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 5th level of the classification"
+  },
+  "economic-classification:generic:level5:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level5:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level6:": {
+    "displayName": "6th Classification Level",
+    "description": "6th level of the Economic Classification"
+  },
+  "economic-classification:generic:level6:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 6th level of the classification"
+  },
+  "economic-classification:generic:level6:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 6th level of the classification"
+  },
+  "economic-classification:generic:level6:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 6th level of the classification"
+  },
+  "economic-classification:generic:level6:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level6:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level7:": {
+    "displayName": "7th Classification Level",
+    "description": "7th level of the Economic Classification"
+  },
+  "economic-classification:generic:level7:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 7th level of the classification"
+  },
+  "economic-classification:generic:level7:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 7th level of the classification"
+  },
+  "economic-classification:generic:level7:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 7th level of the classification"
+  },
+  "economic-classification:generic:level7:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level7:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:generic:level8:": {
+    "displayName": "8th Classification Level",
+    "description": "8th level of the Economic Classification"
+  },
+  "economic-classification:generic:level8:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 8th level of the classification"
+  },
+  "economic-classification:generic:level8:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 8th level of the classification"
+  },
+  "economic-classification:generic:level8:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 8th level of the classification"
+  },
+  "economic-classification:generic:level8:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:generic:level8:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:gfsm:": {
+    "displayName": "GFSM Economic Classification",
+    "description": "Economic Classification adhering the GFSM standard from the IMF"
+  },
+  "economic-classification:gfsm:level1:": {
+    "displayName": "Top Classification Level",
+    "description": "Top level of the Economic Classification"
+  },
+  "economic-classification:gfsm:level1:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the top level of the classification"
+  },
+  "economic-classification:gfsm:level1:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:gfsm:level1:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:gfsm:level2:": {
+    "displayName": "2nd Classification Level",
+    "description": "2nd level of the Economic Classification"
+  },
+  "economic-classification:gfsm:level2:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 2nd level of the classification"
+  },
+  "economic-classification:gfsm:level2:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:gfsm:level2:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:gfsm:level3:": {
+    "displayName": "3rd Classification Level",
+    "description": "3rd level of the Economic Classification"
+  },
+  "economic-classification:gfsm:level3:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 3rd level of the classification"
+  },
+  "economic-classification:gfsm:level3:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:gfsm:level3:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "economic-classification:gfsm:level4:": {
+    "displayName": "4th Classification Level",
+    "description": "4th level of the Economic Classification"
+  },
+  "economic-classification:gfsm:level4:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 4th level of the classification"
+  },
+  "economic-classification:gfsm:level4:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "economic-classification:gfsm:level4:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:cofog:": {
+    "displayName": "COFOG Functional Classification",
+    "description": "Functional Classification adhering to the COFOG standard from the UN"
+  },
+  "functional-classification:cofog:class:": {
+    "displayName": "COFOG Class",
+    "description": "The COFOG 'Class' Level "
+  },
+  "functional-classification:cofog:class:code:": {
+    "displayName": "COFOG Class code",
+    "description": "The COFOG 'Class' Level code"
+  },
+  "functional-classification:cofog:class:code:full": {
+    "displayName": "Full COFOG Class code",
+    "description": "The full COFOG 'Class' Level code"
+  },
+  "functional-classification:cofog:class:code:part": {
+    "displayName": "Partial COFOG Class code",
+    "description": "A partial COFOG 'Class' Level code"
+  },
+  "functional-classification:cofog:class:description": {
+    "displayName": "COFOG Class description",
+    "description": "A more detailed textual description for this class"
+  },
+  "functional-classification:cofog:class:label": {
+    "displayName": "COFOG Class display name",
+    "description": "A label or display name for this class"
+  },
+  "functional-classification:cofog:code": {
+    "displayName": "Complete COFOG code",
+    "description": "The complete COFOG classification code, non level-specific"
+  },
+  "functional-classification:cofog:description": {
+    "displayName": "COFOG description",
+    "description": "Description for this COFOG classification, non level-specific"
+  },
+  "functional-classification:cofog:division:": {
+    "displayName": "COFOG Division",
+    "description": "The COFOG 'Division' Level "
+  },
+  "functional-classification:cofog:division:code": {
+    "displayName": "COFOG Division code",
+    "description": "The COFOG 'Division' Level code"
+  },
+  "functional-classification:cofog:division:description": {
+    "displayName": "COFOG Division description",
+    "description": "A more detailed textual description for this division"
+  },
+  "functional-classification:cofog:division:label": {
+    "displayName": "COFOG Division display name",
+    "description": "A label or display name for this division"
+  },
+  "functional-classification:cofog:group:": {
+    "displayName": "COFOG Group",
+    "description": "The COFOG 'Group' Level "
+  },
+  "functional-classification:cofog:group:code:": {
+    "displayName": "COFOG Group code",
+    "description": "The COFOG 'Group' Level code"
+  },
+  "functional-classification:cofog:group:code:full": {
+    "displayName": "Full COFOG Group code",
+    "description": "The full COFOG 'Group' Level code"
+  },
+  "functional-classification:cofog:group:code:part": {
+    "displayName": "Partial COFOG Group code",
+    "description": "A partial COFOG 'Group' Level code"
+  },
+  "functional-classification:cofog:group:description": {
+    "displayName": "COFOG Group description",
+    "description": "A more detailed textual description for this group"
+  },
+  "functional-classification:cofog:group:label": {
+    "displayName": "COFOG Group display name",
+    "description": "A label or display name for this group"
+  },
+  "functional-classification:cofog:label": {
+    "displayName": "COFOG display name",
+    "description": "Display name for this COFOG classification, non level-specific"
+  },
+  "functional-classification:": {
+    "displayName": "Functional Classification",
+    "description": "Classification of expenditure according to the purposes and objectives for which they are intended",
+    "group": "200-Classifications"
+  },
+  "functional-classification:generic:": {
+    "displayName": "Non-standard Functional Classification",
+    "description": "Functional Classification that does not adhere to a specific standard"
+  },
+  "functional-classification:generic:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the classification (not level specific)"
+  },
+  "functional-classification:generic:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for the classification"
+  },
+  "functional-classification:generic:description": {
+    "displayName": "Description",
+    "description": "A longer descriptive text for this classification"
+  },
+  "functional-classification:generic:level1:": {
+    "displayName": "Top Classification Level",
+    "description": "Top level of the Functional Classification"
+  },
+  "functional-classification:generic:level1:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the top level of the classification"
+  },
+  "functional-classification:generic:level1:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level1:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level2:": {
+    "displayName": "2nd Classification Level",
+    "description": "2nd level of the Functional Classification"
+  },
+  "functional-classification:generic:level2:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 2nd level of the classification"
+  },
+  "functional-classification:generic:level2:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 2nd level of the classification"
+  },
+  "functional-classification:generic:level2:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 2nd level of the classification"
+  },
+  "functional-classification:generic:level2:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level2:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level3:": {
+    "displayName": "3rd Classification Level",
+    "description": "3rd level of the Functional Classification"
+  },
+  "functional-classification:generic:level3:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 3rd level of the classification"
+  },
+  "functional-classification:generic:level3:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 3rd level of the classification"
+  },
+  "functional-classification:generic:level3:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 3rd level of the classification"
+  },
+  "functional-classification:generic:level3:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level3:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level4:": {
+    "displayName": "4th Classification Level",
+    "description": "4th level of the Functional Classification"
+  },
+  "functional-classification:generic:level4:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 4th level of the classification"
+  },
+  "functional-classification:generic:level4:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 4th level of the classification"
+  },
+  "functional-classification:generic:level4:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 4th level of the classification"
+  },
+  "functional-classification:generic:level4:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level4:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level5:": {
+    "displayName": "5th Classification Level",
+    "description": "5th level of the Functional Classification"
+  },
+  "functional-classification:generic:level5:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 5th level of the classification"
+  },
+  "functional-classification:generic:level5:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 5th level of the classification"
+  },
+  "functional-classification:generic:level5:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 5th level of the classification"
+  },
+  "functional-classification:generic:level5:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level5:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level6:": {
+    "displayName": "6th Classification Level",
+    "description": "6th level of the Functional Classification"
+  },
+  "functional-classification:generic:level6:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 6th level of the classification"
+  },
+  "functional-classification:generic:level6:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 6th level of the classification"
+  },
+  "functional-classification:generic:level6:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 6th level of the classification"
+  },
+  "functional-classification:generic:level6:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level6:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level7:": {
+    "displayName": "7th Classification Level",
+    "description": "7th level of the Functional Classification"
+  },
+  "functional-classification:generic:level7:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 7th level of the classification"
+  },
+  "functional-classification:generic:level7:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 7th level of the classification"
+  },
+  "functional-classification:generic:level7:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 7th level of the classification"
+  },
+  "functional-classification:generic:level7:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level7:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "functional-classification:generic:level8:": {
+    "displayName": "8th Classification Level",
+    "description": "8th level of the Functional Classification"
+  },
+  "functional-classification:generic:level8:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 8th level of the classification"
+  },
+  "functional-classification:generic:level8:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "The complete code or unique identifier for the 8th level of the classification"
+  },
+  "functional-classification:generic:level8:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial representation of code or unique identifier for the 8th level of the classification"
+  },
+  "functional-classification:generic:level8:label": {
+    "displayName": "Display Name",
+    "description": "A label, title or display name for this level of the classification"
+  },
+  "functional-classification:generic:level8:description": {
+    "displayName": "Description Name",
+    "description": "A longer descriptive text for this level of the classification"
+  },
+  "geo-source:": {
+    "displayName": "Geographic information",
+    "description": "Geographic information related to the record (e.g. related city, region etc.)",
+    "group": "600-Geographic"
+  },
+  "geo-source:address:": {
+    "displayName": "Information regarding address",
+    "description": "Geographic information which is an address"
+  },
+  "geo-source:address:country:": {
+    "displayName": "Country in address",
+    "description": "The country part of the address"
+  },
+  "geo-source:address:country:code": {
+    "displayName": "Country-code in address",
+    "description": "The code of the country part of the address"
+  },
+  "geo-source:address:country:label": {
+    "displayName": "Country name in address",
+    "description": "The name of the country part of the address"
+  },
+  "geo-source:address:region:": {
+    "displayName": "Region in address",
+    "description": "The region part of the address"
+  },
+  "geo-source:address:region:code": {
+    "displayName": "Region-code in address",
+    "description": "The code of the region part of the address"
+  },
+  "geo-source:address:region:label": {
+    "displayName": "Region name in address",
+    "description": "The name of the region part of the address"
+  },
+  "geo-source:address:county:": {
+    "displayName": "County in address",
+    "description": "The county part of the address"
+  },
+  "geo-source:address:county:code": {
+    "displayName": "County-code in address",
+    "description": "The code of the county part of the address"
+  },
+  "geo-source:address:county:label": {
+    "displayName": "County name in address",
+    "description": "The name of the county part of the address"
+  },
+  "geo-source:address:city:": {
+    "displayName": "City in address",
+    "description": "The city part of the address"
+  },
+  "geo-source:address:city:code": {
+    "displayName": "City-code in address",
+    "description": "The code of the city part of the address"
+  },
+  "geo-source:address:city:label": {
+    "displayName": "City name in address",
+    "description": "The name of the city part of the address"
+  },
+  "geo-source:address:zip:": {
+    "displayName": "Postal code in address",
+    "description": "The postal code in the address"
+  },
+  "geo-source:address:zip:code": {
+    "displayName": "Postal code in address",
+    "description": "The postal code in the address"
+  },
+  "geo-source:address:street-address:": {
+    "displayName": "Actual street address",
+    "description": "Actual street address in whole address"
+  },
+  "geo-source:address:street-address:description": {
+    "displayName": "Actual street address",
+    "description": "Actual street address in whole address"
+  },
+  "geo-source:generic:": {
+    "displayName": "Other Geographic information",
+    "description": "Geographic information which is can't be associated with any other category"
+  },
+  "geo-source:generic:code": {
+    "displayName": "Unique Identifier",
+    "description": "Unique identifier or code for Geographic feature specified in the data"
+  },
+  "geo-source:generic:codeList": {
+    "displayName": "Code List",
+    "description": "Indicates a specific code list from which a Geographic identifier is drawn"
+  },
+  "geo-source:generic:title": {
+    "displayName": "Display Name",
+    "description": "The display name of the geographic feature"
+  },
+  "geo-source:source:": {
+    "displayName": "Source Geographic information",
+    "description": "Geographic information which is related to the geographic source of the funds"
+  },
+  "geo-source:source:code": {
+    "displayName": "Unique Identifier",
+    "description": "Unique identifier or code for Geographic feature specified in the data"
+  },
+  "geo-source:source:codeList": {
+    "displayName": "Code List",
+    "description": "Indicates a specific code list from which a Geographic identifier is drawn"
+  },
+  "geo-source:source:title": {
+    "displayName": "Display Name",
+    "description": "The display name of the geographic feature"
+  },
+  "geo-source:target:": {
+    "displayName": "Target Geographic information",
+    "description": "Geographic information which is related to the geographic target of the funds"
+  },
+  "geo-source:target:code": {
+    "displayName": "Unique Identifier",
+    "description": "Unique identifier or code for Geographic feature specified in the data"
+  },
+  "geo-source:target:codeList": {
+    "displayName": "Code List",
+    "description": "Indicates a specific code list from which a Geographic identifier is drawn"
+  },
+  "geo-source:target:title": {
+    "displayName": "Display Name",
+    "description": "The display name of the geographic feature"
+  },
+  "geo-source:target:level1:": {
+    "displayName": "Top Level",
+    "description": "Top Level for Target Geographic information"
+  },
+  "geo-source:target:level1:code": {
+    "displayName": "Unique identifier",
+    "description": "Unique identifier or code for the Top Level Geographic feature specified in the data"
+  },
+  "geo-source:target:level1:title": {
+    "displayName": "Unique identifier",
+    "description": "The display name for the Top Level Geographic feature specified in the data"
+  },
+  "geo-source:target:level2:": {
+    "displayName": "2nd Level",
+    "description": "2nd Level for Target Geographic information"
+  },
+  "geo-source:target:level2:code:": {
+    "displayName": "Unique identifier",
+    "description": "Unique identifier or code for the 2nd Level Geographic feature specified in the data"
+  },
+  "geo-source:target:level2:code:full": {
+    "displayName": "Complete Unique identifier",
+    "description": "Complete Unique identifier or code for the 2nd Level Geographic feature specified in the data"
+  },
+  "geo-source:target:level2:code:part": {
+    "displayName": "Partial Unique identifier",
+    "description": "Partial Unique identifier or code for the 2nd Level Geographic feature specified in the data"
+  },
+  "geo-source:target:level2:title": {
+    "displayName": "Unique identifier",
+    "description": "The display name for the 2nd Level Geographic feature specified in the data"
+  },
+  "transaction-id:": {
+    "displayName": "Transaction Identifiers",
+    "description": "Unique identifiers for this transaction",
+    "group": "700-Identifiers"
+  },
+  "transaction-id:code": {
+    "displayName": "Unique Identifier",
+    "description": "A Unique identifier for this transaction"
+  },
+  "transaction-id:purchase-order": {
+    "displayName": "Purchase Order",
+    "description": "Unique identifier for the Purchase Order for this transaction"
+  },
+  "transaction-id:invoice-id": {
+    "displayName": "Invoice Identifier",
+    "description": "Unique identifier for the Invoice for this transaction"
+  },
+  "transaction-id:tender-id": {
+    "displayName": "Tender",
+    "description": "Unique identifier for the Tender for this transaction"
+  },
+  "transaction-id:tender-kind": {
+    "displayName": "Tender Kind",
+    "description": "Unique identifier for the Tender Kind for this transaction"
+  },
+  "transaction-id:contract-id": {
+    "displayName": "Contract Identifier",
+    "description": "Unique identifier for the Contract for this transaction"
+  },
+  "transaction-id:budget-code": {
+    "displayName": "Budget Code",
+    "description": "Unique identifier for the Budget Line for this transaction"
+  },
+  "transaction-id:court-order": {
+    "displayName": "Court Order",
+    "description": "Unique identifier for the Court Order for this transaction"
+  },
+  "transaction-id:transaction-kind": {
+    "displayName": "Transaction Kind",
+    "description": "Unique identifier for the Transaction Kind for this transaction"
+  },
+  "phase:": {
+    "displayName": "Budget Life-cycle Phase",
+    "description": "The phase for the values in this line (e.g. approved, executed etc.)",
+    "group": "500-Fiscal Attributes"
+  },
+  "phase:id": {
+    "displayName": "Phase Identifier",
+    "description": "The phase identifier"
+  },
+  "phase:label": {
+    "displayName": "Budget Life-cycle Phase",
+    "description": "The phase display name"
+  },
+  "procurer:": {
+    "displayName": "Procurer",
+    "description": "The government entity acting as procurer for the transaction",
+    "group": "400-Participating Entities"
+  },
+  "procurer:generic:": {
+    "displayName": "Non-standard Procurer",
+    "description": "Procurer identifiers or labels that do not adhere to a specific standard"
+  },
+  "procurer:generic:id": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the Procurer"
+  },
+  "procurer:generic:name": {
+    "displayName": "Display Name",
+    "description": "The display name of the Procurer"
+  },
+  "procurer:bank:": {
+    "displayName": "Bank",
+    "description": "Bank information for the Procurer"
+  },
+  "procurer:bank:code": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the bank of the Procurer"
+  },
+  "procurer:bank:account": {
+    "displayName": "Account",
+    "description": "Unique identifier for the bank account of the Procurer"
+  },
+  "procurer:bank:branch:": {
+    "displayName": "Branch",
+    "description": "Information about the bank's branch of the Procurer"
+  },
+  "procurer:bank:branch:code": {
+    "displayName": "Identifier",
+    "description": "Unique identifier of the bank's branch of the Procurer"
+  },
+  "procurer:bank:branch:name": {
+    "displayName": "Display Name",
+    "description": "Name of the bank's branch of the Procurer"
+  },
+  "recipient:": {
+    "displayName": "Recipient",
+    "description": "The recipient targeted by the transaction",
+    "group": "400-Participating Entities"
+  },
+  "recipient:generic:": {
+    "displayName": "Non-standard Recipient",
+    "description": "Recipient identifiers or labels that do not adhere to a specific standard"
+  },
+  "recipient:generic:id": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the Recipient"
+  },
+  "recipient:generic:name": {
+    "displayName": "Display Name",
+    "description": "The display name for the Recipient"
+  },
+  "recipient:generic:url": {
+    "displayName": "URL",
+    "description": "An Internet address for the Recipient"
+  },
+  "recipient:generic:legal-entity:": {
+    "displayName": "Information regarding a legal entity",
+    "description": "Information regarding the legal entity (e.g. company) which is the recipient"
+  },
+  "recipient:generic:legal-entity:code": {
+    "displayName": "Legal entity code",
+    "description": "Unique identifier for the legal entity"
+  },
+  "recipient:generic:legal-entity:label": {
+    "displayName": "Legal entity display name",
+    "description": "Trading name (or other) of the legal entity"
+  },
+  "recipient:generic:legal-entity:point-of-contact:": {
+    "displayName": "POC inside the legal entity",
+    "description": "Information regarding a person representing the legal entity"
+  },
+  "recipient:generic:legal-entity:point-of-contact:description": {
+    "displayName": "POC details",
+    "description": "Text describing the representative of the legal entity"
+  },
+  "recipient:generic:legal-entity:receiving-project:": {
+    "displayName": "Specific project details",
+    "description": "Information regarding a specific project inside the legal entity"
+  },
+  "recipient:generic:legal-entity:receiving-project:code": {
+    "displayName": "Project code",
+    "description": "Code of the specific project inside the legal entity"
+  },
+  "recipient:generic:legal-entity:receiving-project:status": {
+    "displayName": "Project status",
+    "description": "Status of the specific project inside the legal entity"
+  },
+  "recipient:generic:legal-entity:receiving-project:label": {
+    "displayName": "Project name",
+    "description": "Name of the specific project inside the legal entity"
+  },
+  "recipient:generic:legal-entity:receiving-project:description": {
+    "displayName": "Project description",
+    "description": "Name of the specific project inside the legal entity"
+  },
+  "recipient:bank:": {
+    "displayName": "Bank",
+    "description": "Bank information for the Recipient"
+  },
+  "recipient:bank:code": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the bank of the Recipient"
+  },
+  "recipient:bank:account": {
+    "displayName": "Account",
+    "description": "Unique identifier for the bank account of the Recipient"
+  },
+  "recipient:bank:branch:": {
+    "displayName": "Branch",
+    "description": "Information about the bank's branch of the Recipient"
+  },
+  "recipient:bank:branch:code": {
+    "displayName": "Identifier",
+    "description": "Unique identifier of the bank's branch of the Recipient"
+  },
+  "recipient:bank:branch:name": {
+    "displayName": "Display Name",
+    "description": "Name of the bank's branch of the Recipient"
+  },
+  "supplier:": {
+    "displayName": "Supplier",
+    "description": "The supplier for a procurement or other goods",
+    "group": "400-Participating Entities"
+  },
+  "supplier:generic:": {
+    "displayName": "Non-standard Supplier",
+    "description": "Supplier identifiers or labels that do not adhere to a specific standard"
+  },
+  "supplier:generic:id": {
+    "displayName": "Identifier",
+    "description": "Unique identifier for the Supplier"
+  },
+  "supplier:generic:name": {
+    "displayName": "Display Name",
+    "description": "The display name for the Supplier"
+  },
+  "value": {
+    "displayName": "Amount",
+    "description": "Numeric value depicting a fiscal amount related to the budget item, spending transaction etc.",
+    "group": "800-Amount"
+  },
+  "value-kind:": {
+    "displayName": "Amount Kind",
+    "description": "Textual value describing the amounts in this row",
+    "group": "800-Amount"
+  },
+  "value-kind:code": {
+    "displayName": "Code for Amount Kind",
+    "description": "Unique identifier for the amount kind"
+  },
+  "value-kind:label": {
+    "displayName": "Label for Amount Kind",
+    "description": "Display name for the amount kind"
+  },
+  "fin-source:": {
+    "displayName": "Financial Source",
+    "description": "The Financial source for budgetary funds",
+    "group": "500-Fiscal Attributes"
+  },
+  "fin-source:generic:": {
+    "displayName": "Non-standard Financial Source",
+    "description": "Identifiers and labels for financial sources which do not adhere to a specific standard"
+  },
+  "fin-source:generic:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the financial source"
+  },
+  "fin-source:generic:label": {
+    "displayName": "Display Name",
+    "description": "Display name or title for the financial source"
+  },
+  "fin-source:generic:level1:": {
+    "displayName": "Top Level for a hierarchical financial source",
+    "description": "Identifiers and labels for the top level of the financial source hierarchy"
+  },
+  "fin-source:generic:level1:code": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the top level of the financial source hierarchy"
+  },
+  "fin-source:generic:level1:label": {
+    "displayName": "Display Name",
+    "description": "Display name or title for the top level of the financial source hierarchy"
+  },
+  "fin-source:generic:level2:": {
+    "displayName": "2nd Level for a hierarchical financial source",
+    "description": "Identifiers and labels for the 2nd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level2:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 2nd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level2:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the 2nd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level2:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the 2nd level of the financial source hierarchy (will be combined with the level1 code"
+  },
+  "fin-source:generic:level2:label": {
+    "displayName": "Display Name",
+    "description": "Display name or title for the 2nd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level3:": {
+    "displayName": "3rd Level for a hierarchical financial source",
+    "description": "Identifiers and labels for the 3rd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level3:code:": {
+    "displayName": "Unique Identifier",
+    "description": "A code or unique identifier for the 3rd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level3:code:full": {
+    "displayName": "Complete Identifier",
+    "description": "A complete code or unique identifier for the 3rd level of the financial source hierarchy"
+  },
+  "fin-source:generic:level3:code:part": {
+    "displayName": "Partial Identifier",
+    "description": "A partial code or unique identifier for the 3rd level of the financial source hierarchy (will be combined with the level1 code"
+  },
+  "fin-source:generic:level3:label": {
+    "displayName": "Display Name",
+    "description": "Display name or title for the 3rd level of the financial source hierarchy"
+  },
+  "expenditure-type:": {
+    "displayName": "Expenditure Type",
+    "description": "Extra attributes providing more properties regarding the expenditure",
+    "group": "500-Fiscal Attributes"
+  },
+  "expenditure-type:code": {
+    "displayName": "Unique Identifier",
+    "description": "Unique identifier for the expenditure type"
+  },
+  "expenditure-type:label": {
+    "displayName": "Display Name",
+    "description": "Display name for the expenditure type"
+  },
+  "budgetary-transfers": {
+    "displayName": "Budgetary Transfers",
+    "description": "Extra properties regarding whether the expenditure contains budgetary transfers",
+    "group": "500-Fiscal Attributes"
+  },
+  "unknown:": {
+    "displayName": "Unknown Mapping",
+    "description": "Use when no other data type applies to the column",
+    "group": "900-Other"
+  },
+  "unknown:string": {
+    "displayName": "Unknown Mapping - String",
+    "description": "An unknown string column with no mapping"
+  },
+  "unknown:date": {
+    "displayName": "Unknown Mapping - Date",
+    "description": "An unknown date column with no mapping"
+  },
+  "unknown:time": {
+    "displayName": "Unknown Mapping - Time",
+    "description": "An unknown date/time column with no mapping"
+  },
+  "unknown:datetime": {
+    "displayName": "Unknown Mapping - Date/Time",
+    "description": "An unknown time column with no mapping"
+  },
+  "unknown:number": {
+    "displayName": "Unknown Mapping - Number",
+    "description": "An unknown numeric column with no mapping"
+  },
+  "unknown:integer": {
+    "displayName": "Unknown Mapping - Integer",
+    "description": "An unknown integer column with no mapping"
+  }
+}

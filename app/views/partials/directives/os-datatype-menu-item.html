@@ -1,0 +1,12 @@
+{% raw %}
+<span ng-click="onClick({item: item})">
+    {{ item.displayName }}
+    <em class="separator">-</em>
+    <small>
+        {{ item.description }}
+    </small>
+</span>
+<ul ng-if="item.types.length > 0">
+    <li ng-repeat="item in item.types" ng-include="templateUrl"></li>
+</ul>
+{% endraw %}

@@ -1,3 +1,5 @@
+@success: #2abb9c;
+
 html {
   background: #131518;
   height: 100%;
@@ -130,7 +132,7 @@ textarea.resize-both {
 
 tr.x-strong-highlight td,
 td.x-strong-highlight {
-  background: #2abb9c;
+  background: @success;
   color: #fff;
   font-weight: bold;
   letter-spacing: 0.07em;
@@ -351,7 +353,7 @@ td.x-strong-highlight {
 
   .active,
   .passed {
-    @color: #2abb9c;
+    @color: @success;
 
     a {
       &,
@@ -472,76 +474,6 @@ td.x-strong-highlight {
     }
   }
 
-  span.twitter-typeahead {
-    display: block !important;
-
-    .tt-menu {
-      width: 400px;
-    }
-
-    .tt-suggestion {
-      white-space: inherit;
-      max-height:26px;
-
-      &.grouped {
-        max-height:40px;
-      }
-
-      .group {
-        font-size: 70%;
-        text-indent: -1em;
-      }
-
-      .suggestion-tooltip {
-        opacity:0;
-        display: block;
-        position: relative;
-        left:50px;
-        transition-property: left, opacity;
-        transition-duration: 250ms;
-        padding:10px;
-        border-radius: 10px;
-        pointer-events: none;
-      }
-
-      &:hover, &.tt-cursor {
-        .suggestion-tooltip {
-          opacity: 1;
-          top: 10px;
-          left: 0px;
-          background: #000000;
-          border: 1px solid #888888;
-
-          &:after, &:before {
-            bottom: 100%;
-            left: 10%;
-            border: solid transparent;
-            content: " ";
-            height: 0;
-            width: 0;
-            position: absolute;
-            pointer-events: none;
-          }
-
-          &:after {
-            border-color: rgba(0, 0, 0, 0);
-            border-bottom-color: #000000;
-            border-width: 9px;
-            margin-left: -9px;
-          }
-
-          &:before {
-            border-color: rgba(0, 0, 0, 0);
-            border-bottom-color: #888888;
-            border-width: 10px;
-            margin-left: -10px;
-          }
-        }
-
-      }
-    }
-  }
-
   a.clear {
     float:right;
   }
@@ -647,7 +579,7 @@ td.x-strong-highlight {
         fill: #3a99d9;
       }
       &.text-success path {
-        fill: #2abb9c;
+        fill: @success;
       }
       &.text-info path {
         fill: #7d4e92;
@@ -722,3 +654,9 @@ td.x-strong-highlight {
     }
   }
 }
+
+[ng-click] {
+    cursor: pointer;
+}
+
+@import "_os-datatype.less";

@@ -17,7 +17,6 @@ var _ = require('lodash');
   require('isomorphic-fetch/fetch-npm-browserify');
 
   require('os-bootstrap/dist/js/os-bootstrap');
-  require('typeahead.js/dist/typeahead.jquery');
 
   var angular = require('angular');
   globals.angular = angular;

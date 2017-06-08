@@ -1,8 +1,15 @@
 {% raw %}
-<div>
-    <label class="control-label">DataType</label>
-    <textarea type="text" class="form-control typeahead" rows="2" readonly/>
-    <a href="#" class="clear" ng-show="ctrl.getSugg() != ''"><span class="glyphicon glyphicon-remove-circle"></span>&nbsp;Clear</a>
-    <span class="warning message" ng-show="ctrl.isIncomplete()"><i class="glyphicon glyphicon-warning-sign"></i>&nbsp;Incomplete Type</span>
+<div class="os-datatype">
+    <label class="control-label">Data Type</label>
+    <input type="text" class="form-control" ng-click="openMenu()" ng-model="field.type" readonly />
+    <nav class="os-datatype-menu" ng-show="showMenu">
+        <ul>
+            <li os-datatype-menu-item
+                ng-repeat="dataType in dataTypes"
+                data-item="dataType"
+                data-on-click="selectItem(item)">
+            </li>
+        </ul>
+    </nav>
 </div>
 {% endraw %}

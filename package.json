@@ -13,8 +13,8 @@
     "build": "gulp"
   },
   "engines": {
-    "node": "^4.8.0",
-    "npm": "^2.15.0"
+    "node": "^4.1.0",
+    "npm": "^2.14.0"
   },
   "repository": {
     "type": "git",

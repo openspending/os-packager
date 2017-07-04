@@ -1,0 +1,65 @@
+{
+  "header": {
+    "logo": {
+     "icon": "assets/os.svg",
+     "image": "assets/packager.svg"
+    },
+    "links": [
+      {
+        "title": "Fiscal Data Package Spec",
+        "href": "https://fiscal.dataprotocols.org/spec"
+      },
+      {
+        "title": "Explore Datasets",
+        "href": "/explorer"
+      }
+    ]
+  },
+  "footer": {
+    "projectLogo": {
+      "href": "/",
+      "image": "https://a.okfn.org/img/openspending/logo.svg",
+      "alt": "OpenSpending"
+    },
+    "orgLogo": {
+      "href": "https://okfn.org",
+      "image": "https://a.okfn.org/img/oki/landscape-white-165x43.png",
+      "alt": "Open Knowledge International"
+    },
+    "links": [
+      {
+        "title": "Privacy policy",
+        "href": "https://okfn.org/privacy-policy/"
+      },
+      {
+        "title": "IP policy",
+        "href": "https://okfn.org/ip-policy/"
+      },
+      {
+        "title": "Cookie policy",
+        "href": "https://okfn.org/cookie-policy/"
+      },
+      {
+        "title": "Terms of use",
+        "href": "https://okfn.org/terms-of-use/"
+      }
+    ]
+  },
+  "socialMedia": [
+    {
+      "href": "https://facebook.com/OKFNetwork",
+      "icon": "https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/facebook-logo-circle.png",
+      "alt": "Facebook"
+    },
+    {
+      "href": "https://twitter.com/okfn",
+      "icon": "https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/twitter-logo-circle.png",
+      "alt": "Twitter"
+    },
+    {
+      "href": "https://www.youtube.com/user/openknowledgefdn",
+      "icon": "https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/youtube-logo-circle.png",
+      "alt": "YouTube"
+    }
+  ]
+}

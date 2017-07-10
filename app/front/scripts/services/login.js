@@ -41,7 +41,7 @@ angular.module('Application')
           $location.port() == '80' ? '' : ':' + $location.port();
         var path = window.location.pathname;
         if (path[path.length - 1] == '/') {
-          path = path.slice(0, -1);
+          path += 'dummy';
         }
         var urlParts = path.split('/');
         urlParts[urlParts.length - 1] = 'logged-in';

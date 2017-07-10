@@ -8288,7 +8288,7 @@
         "jsontableschema": {
           "version": "0.1.0",
           "from": "git+http://github.com/akariv/jsontableschema-js#fix/handle-percent-signs",
-          "resolved": "git+ssh://git@github.com/akariv/jsontableschema-js.git#ae343a039c67d00160724900bad171db58f922e6",
+          "resolved": "git+http://github.com/akariv/jsontableschema-js.git#ae343a039c67d00160724900bad171db58f922e6",
           "dependencies": {
             "bluebird": {
               "version": "2.11.0",

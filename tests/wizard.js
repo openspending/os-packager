@@ -18,7 +18,7 @@ describe('Wizard UI', function() {
 
   it('Should open app page', function(done) {
     var browser = utils.app.browser;
-    browser.visit(BASE_URL+'/provide-data', function() {
+    browser.visit(BASE_URL + '/provide-data', function() {
       assert.ok(browser.success);
       browser.waitForDigest('#step1-wrapper', 100)
         .then(function() {

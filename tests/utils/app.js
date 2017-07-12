@@ -44,7 +44,6 @@ exports.start = function(done) {
     // Run the server
     start().then(function(app) {
       exports.app = app;
-      Browser.localhost('127.0.0.1', 5000);
       exports.browser = new Browser({
         maxWait: 5000
       });

@@ -8,6 +8,7 @@ var exampleResourceUrl = 'http://localhost:5000' +
   '/example-resource.csv';
 var dataPackageTitle = 'Test Перевірка';
 var dataPackageSlug = 'test-perevirka';
+var BASE_URL = 'http://localhost:5000';
 
 describe('Wizard UI', function() {
   this.timeout(60000);
@@ -17,7 +18,7 @@ describe('Wizard UI', function() {
 
   it('Should open app page', function(done) {
     var browser = utils.app.browser;
-    browser.visit('/provide-data', function() {
+    browser.visit(BASE_URL+'/provide-data', function() {
       assert.ok(browser.success);
       browser.waitForDigest('#step1-wrapper', 100)
         .then(function() {

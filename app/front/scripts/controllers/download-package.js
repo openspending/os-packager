@@ -1,4 +1,5 @@
 'use strict';
+var osAdminService = require('../services/admin');
 
 angular.module('Application')
   .controller('DownloadPackageController', [
@@ -16,6 +17,37 @@ angular.module('Application')
         $scope.login = LoginService;
         $scope.publishDataPackage = DownloadPackageService.publishDataPackage;
         $scope.state = DownloadPackageService.getState(true);
+        LoginService.check();
       });
+
+      $scope.runWebHooks = function(packageId) {
+        // query data packages to extract the user's "owner id"
+        osAdminService.getDataPackages(LoginService.authToken, LoginService.userId).then(function (packages) {
+          console.log(packages);
+          var ownerId = packages[0].owner;
+          var dataPackageId = ownerId + ":" + packageId;
+
+          // set the data package status to "published" (a.k.a. public)
+          osAdminService.togglePackagePublicationStatus(LoginService.permissionToken, {id: dataPackageId}).then(
+            function (res) {
+              // run web hooks for the package
+              console.log(res);
+              var dataPackage = _.find(packages, {id: dataPackageId});
+              console.log(dataPackage);
+
+              if (dataPackage) {
+                dataPackage.isRunningWebhooks = true;
+                var token = LoginService.permissionToken;
+                osAdminService.runWebHooks(token, dataPackage).then(function() {
+                  dataPackage.isRunningWebhooks = false;
+                });
+              }
+            }
+          );
+        },
+        function (err) {
+          console.log(err);
+        });
+      };
     }
   ]);

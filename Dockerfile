@@ -3,10 +3,7 @@ FROM node:7-alpine
 WORKDIR /app
 ADD . .
 
-RUN apk add --update git
-RUN npm install
-RUN npm install
-RUN node node_modules/gulp/bin/gulp.js
+RUN npm install && npm build
 
 ENV OS_PACKAGER_BASE_PATH=packager
 

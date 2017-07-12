@@ -53,6 +53,7 @@ angular.module('Application')
         check.then(function(response) {
           attempting = false;
           token = response.token;
+          that.authToken = token;
           that.isLoggedIn = true;
           that.name = response.profile.name;
           that.email = response.profile.email;

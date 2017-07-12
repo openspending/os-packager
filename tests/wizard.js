@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var config = require('../app/config');
 var utils = require('./utils');
 
-var exampleResourceUrl = 'http://localhost:' + config.get('app:port') +
+var exampleResourceUrl = 'http://localhost:' + config.app.port +
   '/example-resource.csv';
 var dataPackageTitle = 'Test Перевірка';
 var dataPackageSlug = 'test-perevirka';

@@ -51,7 +51,7 @@
     "marked": "^0.3.5",
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",
-    "os-types": "~1.10.0",
+    "os-types": "^1.14.0",
     "papaparse": "git+https://github.com/kravets-levko/PapaParse.git",
     "request": "^2.65.0",
     "typeahead.js": "^0.11.1",

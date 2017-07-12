@@ -11,7 +11,7 @@ describe('Core', function() {
 
   it('Should be alive', function(done) {
     var browser = utils.app.browser;
-    browser.visit('/', function() {
+    browser.visit('http://localhost:5000/', function() {
       assert.ok(browser.success);
       done();
     });

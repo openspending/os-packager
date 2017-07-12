@@ -2554,8 +2554,8 @@
     },
     "goodtables": {
       "version": "0.4.1",
-      "from": "git+https://github.com/akariv/goodtables-js.git",
-      "resolved": "git+https://github.com/akariv/goodtables-js.git#f25eb4cda9e4711809a80e6a780047bc22e83fcc",
+      "from": "akariv/goodtables-js",
+      "resolved": "git://github.com/akariv/goodtables-js.git#f25eb4cda9e4711809a80e6a780047bc22e83fcc",
       "dependencies": {
         "bluebird": {
           "version": "2.11.0",
@@ -4093,8 +4093,8 @@
     },
     "os-bootstrap": {
       "version": "3.3.6",
-      "from": "git+https://github.com/openspending/os-bootstrap.git",
-      "resolved": "git+https://github.com/openspending/os-bootstrap.git#a0436a4cc0117a0c85b0ec10ed099d4f71e12a9f",
+      "from": "openspending/os-bootstrap",
+      "resolved": "git://github.com/openspending/os-bootstrap.git#a0436a4cc0117a0c85b0ec10ed099d4f71e12a9f",
       "dev": true
     },
     "os-browserify": {
@@ -4166,8 +4166,8 @@
     },
     "papaparse": {
       "version": "4.1.2",
-      "from": "git+https://github.com/kravets-levko/PapaParse.git",
-      "resolved": "git+https://github.com/kravets-levko/PapaParse.git#cdd76a97d9a2a83b8c65a660289db7413d4e51f8"
+      "from": "kravets-levko/PapaParse",
+      "resolved": "git://github.com/kravets-levko/PapaParse.git#cdd76a97d9a2a83b8c65a660289db7413d4e51f8"
     },
     "param-case": {
       "version": "1.1.2",
@@ -5287,8 +5287,8 @@
     },
     "typeahead.js-bootstrap-css": {
       "version": "1.2.1",
-      "from": "git+https://github.com/bassjobsen/typeahead.js-bootstrap-css.git",
-      "resolved": "git+https://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1609593308175290819697542dac9c47b65af1ce"
+      "from": "bassjobsen/typeahead.js-bootstrap-css",
+      "resolved": "git://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1609593308175290819697542dac9c47b65af1ce"
     },
     "typedarray": {
       "version": "0.0.6",

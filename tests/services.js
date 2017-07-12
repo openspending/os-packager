@@ -165,6 +165,7 @@ describe('Application services', function() {
 
           var fiscalPackage = dataPackage.createFiscalDataPackage(attributes,
             resources);
+          delete fiscalPackage.promise;
 
           assert.deepEqual(fiscalPackage,
             require('./data/example-package.json'));

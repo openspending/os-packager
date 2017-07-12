@@ -1,26 +1,14 @@
-FROM gliderlabs/alpine:3.4
+FROM node:7-alpine
 
+WORKDIR /app
+ADD . .
 
-RUN apk add --update python git nodejs
-RUN apk add --update --virtual=build-dependencies ca-certificates build-base 
-RUN update-ca-certificates
-RUN cd $(npm root -g)/npm \
- && npm install fs-extra \
- && sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs.move/ ./lib/utils/rename.js
-RUN npm install npm@latest -g
-RUN npm --version
-RUN git clone http://github.com/openspending/os-packager.git app
-RUN cd app && npm install
-RUN cd app && npm install
-RUN cd app && node node_modules/gulp/bin/gulp.js
-RUN apk del build-dependencies
-RUN rm -rf /var/cache/apk/*
+RUN npm install && npm build
 
 ENV OS_PACKAGER_BASE_PATH=packager
 
 ADD docker/settings.json /app/settings.json
-ADD docker/startup.sh /startup.sh
 
 EXPOSE 8000
 
-CMD OS_CONDUCTOR="//${OS_EXTERNAL_ADDRESS}" /startup.sh
+CMD OS_CONDUCTOR="//${OS_EXTERNAL_ADDRESS}" /app/docker/startup.sh

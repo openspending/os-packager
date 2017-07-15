@@ -16,7 +16,8 @@ angular.module('Application')
   .config([
     '$httpProvider', '$compileProvider', '$logProvider',
     function($httpProvider, $compileProvider, $logProvider) {
-      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|javascript):/);
+      $compileProvider.aHrefSanitizationWhitelist(
+        /^\s*(https?|ftp|mailto|file|javascript):/);
       $httpProvider.defaults.useXDomain = true;
       $httpProvider.defaults.withCredentials = true;
       $logProvider.debugEnabled(true);
@@ -35,10 +36,12 @@ angular.module('Application')
       Configuration.osAdminUrl = externalConfig.osAdminUrl;
 
       StepsService.setStepResetCallbacks({
+        /* eslint-disable quote-props */
         'upload-file': UploadFileService.resetState,
         'describe-data': DescribeDataService.resetState,
         'metadata': ProvideMetadataService.resetState,
         'download': DownloadPackageService.resetState
+        /* eslint-enable quote-props */
       });
 
       ApplicationLoader.then(function() {

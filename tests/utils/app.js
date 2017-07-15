@@ -19,7 +19,7 @@ function waitForDigest(element, iterations) {
   }
 
   function waiter(resolve) {
-    browser.wait(wait,function() {
+    browser.wait(wait, function() {
       iterations -= 1;
       if (iterations <= 0) {
         resolve();
@@ -47,7 +47,7 @@ exports.start = function(done) {
       exports.browser = new Browser({
         maxWait: 5000
       });
-      //exports.browser.debug();
+      // exports.browser.debug();
       exports.browser.waitForDigest = waitForDigest;
       done();
     });

@@ -206,9 +206,7 @@ angular.module('Application')
                       })
                       .then(function() {
                         return osDataStore.prepareForUpload(file, {
-                          // jscs:disable
                           permission_token: permissionToken,
-                          // jscs:enable
                           name: dataPackage.name,
                           owner: dataPackage.owner
                         });
@@ -217,7 +215,8 @@ angular.module('Application')
                         return osDataStore.upload(file);
                       })
                       .then(function() {
-                        // datapackage.json has one more step in processing chain
+                        // datapackage.json has one more step in
+                        // processing chain
                         if (file.name != Configuration.defaultPackageFileName) {
                           file.status = osDataStore.ProcessingStatus.READY;
                         }
@@ -246,7 +245,6 @@ angular.module('Application')
                   data: dataPackage,
                   countOfLines: 0,
                   $promise: filesPromise.then(function() {
-                    // jscs:disable
                     dataPackage.count_of_rows = 0;
                     _.each(files, function(file) {
                       var count = parseInt(file.countOfLines) || 0;
@@ -255,7 +253,6 @@ angular.module('Application')
                       }
                       dataPackage.count_of_rows += count;
                     });
-                    // jscs:enable
                     return prepareFile(packageFile);
                   })
                 };
@@ -266,13 +263,9 @@ angular.module('Application')
                     return item.$promise;
                   }))
                     .then(function() {
-                      // jscs:disable
                       packageFile.countOfLines = dataPackage.count_of_rows;
-                      // jscs:enable
                       osDataStore.publish(packageFile, {
-                        // jscs:disable
                         permission_token: permissionToken
-                        // jscs:enable
                       })
                         .then(function() {
                           triggerDigest = null;

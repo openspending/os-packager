@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-
 angular.module('Application')
   .controller('DescribeDataController', [
     '$scope', 'PackageService', 'DescribeDataService', 'ApplicationLoader',

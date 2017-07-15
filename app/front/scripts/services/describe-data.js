@@ -6,13 +6,10 @@ var _ = require('lodash');
 angular.module('Application')
   .factory('DescribeDataService', [
     'PackageService', 'UtilsService', 'ValidationService',
-    'PreviewDataService',
-    function(PackageService, UtilsService, ValidationService,
-      PreviewDataService) {
+    function(PackageService, UtilsService, ValidationService) {
       var result = {};
 
       var state = {};
-      PreviewDataService.update();
 
       result.resetState = function() {
         state = {};
@@ -37,7 +34,7 @@ angular.module('Application')
 
       result.updateField = function() {
         var fields = PackageService.getResources()[0].fields;
-        //TODO: Support more than 1 resource when OSTypes supports it
+        // TODO: Support more than 1 resource when OSTypes supports it
         _.forEach(fields, function(field) {
           delete field.errors;
           delete field.additionalOptions;
@@ -107,8 +104,6 @@ angular.module('Application')
           state.status = ValidationService.validateRequiredConcepts(
             fdp.errors,
             PackageService.getResources());
-
-          PreviewDataService.update();
 
           return state;
         });

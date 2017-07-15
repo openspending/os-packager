@@ -14,7 +14,7 @@ angular.module('Application')
           description: completion.description,
           group: completion.group,
           text: completion.displayName + ' (' + _.trimEnd(completion.type, ':')
-            .replace(/:/g,sep) + ')',
+            .replace(/:/g, sep) + ')',
           leaf: _.last(completion.type) != ':'
         };
       };
@@ -105,14 +105,14 @@ angular.module('Application')
             var completion = ot.autoComplete(ctrl.field.type)[0];
             var sugg = convertCompletionToSuggestion(completion);
             selectSugg(sugg, false);
-            $(input).typeahead('val',sugg.text);
+            $(input).typeahead('val', sugg.text);
           }
           $(input).bind('typeahead:select', function(ev, sugg) {
             selectSugg(sugg, true);
           });
           $(clear).bind('click', function() {
             $(input).attr('data-code', '');
-            $(input).typeahead('val','');
+            $(input).typeahead('val', '');
             ctrl.setSugg('');
             ctrl.setVal(null, true);
             $scope.$applyAsync();

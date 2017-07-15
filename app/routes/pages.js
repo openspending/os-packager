@@ -5,7 +5,7 @@ var express = require('express');
 var pages = require('../controllers/pages');
 
 module.exports = function() {
-  var router = express.Router();
+  var router = express.Router(); // eslint-disable-line
 
   var steps = require('../services').data.steps;
   var firstStep = _.first(steps);

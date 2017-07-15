@@ -1,30 +1,5 @@
 {% raw %}
-<div ng-controller="PreviewDataController" id="preview-data-panel">
+<div id="preview-data-panel">
   <div class="text-right"><strong>OSViewer</strong> compatibility</div>
-
-  <div class="text-right">
-    <div ng-repeat="possibility in possibilities" class="x-possibility-icon"
-      ng-class="{disabled: !possibility.isAvailable}">
-      <div ng-if="possibility.isAvailable" tabindex="-1"
-        popover="#preview-graph-{{ possibility.graph }}">
-        <i class="{{ possibility.icon }}"></i>
-      </div>
-      <div ng-if="!possibility.isAvailable">
-        <i class="{{ possibility.icon }}"></i>
-      </div>
-    </div>
-  </div>
-
-  <script type="text/template" id="preview-graph-treemap" class="hidden">
-    <treemap data="previewData" class="x-preview-chart treemap"></treemap>
-  </script>
-
-  <script type="text/template" id="preview-graph-lines" class="hidden">
-    <line-chart data="previewData" type="spline" class="x-preview-chart"></line-chart>
-  </script>
-
-  <script type="text/template" id="preview-graph-pie" class="hidden">
-    <pie-chart data="previewData" class="x-preview-chart"></pie-chart>
-  </script>
 </div>
 {% endraw %}

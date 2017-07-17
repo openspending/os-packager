@@ -12,7 +12,7 @@ angular.module('Application')
         if (isFinite(fractionDigits) && (fractionDigits >= 1)) {
           fractionDigits = Math.floor(fractionDigits);
           input = input.toFixed(fractionDigits);
-          return input.replace(/\.?0*$/,''); // Remove trailing zeros
+          return input.replace(/\.?0*$/, ''); // Remove trailing zeros
         } else {
           return Math.round(input);
         }

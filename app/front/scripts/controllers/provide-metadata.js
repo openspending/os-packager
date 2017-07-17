@@ -6,9 +6,10 @@ angular.module('Application')
   .controller('ProvideMetadataController', [
     '$scope', 'PackageService', 'ProvideMetadataService',
     'ApplicationLoader',
-    function($scope, PackageService, ProvideMetadataService,
-      ApplicationLoader) {
-
+    function(
+      $scope, PackageService, ProvideMetadataService,
+      ApplicationLoader
+    ) {
       var validateAttributes = _.debounce(function() {
         $scope.state = ProvideMetadataService.validatePackage(
           $scope.forms.metadata);

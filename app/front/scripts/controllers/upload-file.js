@@ -12,7 +12,6 @@ angular.module('Application')
       };
 
       ApplicationLoader.then(function() {
-
         function reloadState() {
           $scope.state = UploadFileService.getState();
 

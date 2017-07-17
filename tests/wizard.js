@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('chai').assert;
-var config = require('../app/config');
 var utils = require('./utils');
 
 var exampleResourceUrl = 'http://localhost:5000' +
@@ -171,5 +170,4 @@ describe('Wizard UI', function() {
       })
       .catch(done);
   });
-
 });

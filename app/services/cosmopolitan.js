@@ -12,7 +12,7 @@ function upper(v) {
 
 function processFetchResponse(response) {
   if (response.status != 200) {
-    throw 'Failed loading data from ' + response.url;
+    throw new Error('Failed loading data from ' + response.url);
   }
   return response.text().then(JSON.parse);
 }
@@ -32,7 +32,7 @@ function getItemsFromSource(source, useProxy) {
   return fetch(url, options).then(processFetchResponse)
     .then(function(sources) {
       if (!sources[source]) {
-        throw 'Source "' + source + '" is not available';
+        throw new Error('Source "' + source + '" is not available');
       }
 
       var allResults = [];

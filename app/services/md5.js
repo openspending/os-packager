@@ -7,7 +7,7 @@ function arrayBufferToWordArray(buffer) {
   var result = [];
   for (var i = 0; i < bytes.length; i += 4) {
     result.push(
-      bytes[i    ] << 24 |
+      bytes[i    ] << 24 |  // eslint-disable-line
       bytes[i + 1] << 16 |
       bytes[i + 2] << 8 |
       bytes[i + 3]

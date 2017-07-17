@@ -6,7 +6,6 @@ var datapackage = require('datapackage');
 var OSTypes = require('os-types');
 var utils = require('./utils');
 var url = require('url');
-var datastore = require('./os-datastore');
 require('isomorphic-fetch');
 
 var defaultOptions = {
@@ -99,7 +98,7 @@ function validateDataPackage(descriptor, schema) {
 
 function createFiscalDataPackage(attributes, resources) {
   // Use OSTypes to generate FDP
-  //TODO: Add support for more than one resource once OSTypes supports it
+  // TODO: Add support for more than one resource once OSTypes supports it
   var fields = resources[0].fields;
   _.forEach(fields, function(field) {
     delete field.errors;
@@ -233,7 +232,7 @@ function loadFiscalDataPackage(dataPackageUrl, userId) {
   return fetch(dataPackageUrl)
     .then(function(response) {
       if (response.status != 200) {
-        throw 'Failed to load data from ' + response.url;
+        throw new Error('Failed to load data from ' + response.url);
       }
       return response.json();
     })

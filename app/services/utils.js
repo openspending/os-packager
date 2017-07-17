@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var GoodTables = require('goodtables');
 var Promise = require('bluebird');
-var csv  = require('papaparse');
+var csv = require('papaparse');
 var jts = require('jsontableschema');
 var inflector = require('inflected');
 var path = require('path');
@@ -98,7 +98,6 @@ function getCsvSchema(urlOrFile, encoding) {
         }
       }
     };
-    //console.log(urlOrFile, decorateProxyUrl(urlOrFile));
     csv.parse(_.isObject(urlOrFile) ? urlOrFile.blob :
       decorateProxyUrl(urlOrFile), config);
   });
@@ -107,9 +106,7 @@ function getCsvSchema(urlOrFile, encoding) {
 function validateData(data, dataUrl, schema, userEndpointURL) {
   var goodTables = new GoodTables({
     method: 'post',
-    // jscs:disable
     report_type: 'grouped'
-    // jscs:enable
   }, userEndpointURL);
 
   return goodTables.run(
@@ -145,104 +142,6 @@ function getDefaultCurrency() {
     return item.code == defaultCurrencyCode;
   });
 }
-
-//module.exports.availablePossibilities = (function() {
-//  var updateByConcepts = function(resources) {
-//    if (!this || !_.isArray(this.concepts)) {
-//      return;
-//    }
-//
-//    var conceptsToCheck = _.chain(this.concepts)
-//      .map(function(concept) {
-//        return [concept, false];
-//      })
-//      .fromPairs()
-//      .value();
-//
-//    var self = this;
-//    _.each(resources, function(resource) {
-//      _.each(resource.fields, function(field) {
-//        var isItemFound = !!_.contains(self.concepts, function(item) {
-//          return item == field.concept;
-//        });
-//        if (isItemFound) {
-//          conceptsToCheck[field.concept] = true;
-//        }
-//      });
-//    });
-//
-//    this.isAvailable = !_.find(conceptsToCheck, function(item) {
-//      return item == false;
-//    });
-//  };
-//
-//  return [
-//    {
-//      id: 'transaction-table',
-//      name: 'Transaction Table',
-//      isAvailable: false,
-//      concepts: ['measures.amount'],
-//      graph: 'pie',
-//      icon: 'os-icon os-icon-piechart',
-//      update: updateByConcepts
-//    },
-//    {
-//      id: 'time-series',
-//      name: 'Time series',
-//      isAvailable: false,
-//      graph: 'lines',
-//      icon: 'os-icon os-icon-linechart',
-//      concepts: ['measures.amount', 'dimensions.datetime'],
-//      update: updateByConcepts
-//    },
-//    {
-//      id: 'treemap',
-//      name: 'Treemap',
-//      isAvailable: false,
-//      graph: 'treemap',
-//      icon: 'os-icon os-icon-treemap',
-//      concepts: ['measures.amount', 'dimensions.classification'],
-//      update: updateByConcepts
-//    },
-//    {
-//      id: 'classification',
-//      name: 'Classification explorer',
-//      isAvailable: false,
-//      graph: 'treemap',
-//      icon: 'os-icon os-icon-table',
-//      concepts: ['measures.amount', 'dimensions.classification'],
-//      update: updateByConcepts
-//    },
-//    {
-//      id: 'mutlidimension',
-//      name: 'Multiple dimension agg',
-//      isAvailable: false,
-//      graph: 'treemap',
-//      icon: 'os-icon os-icon-layers',
-//      concepts: ['measures.amount'],
-//      update: function(resources) {
-//        updateByConcepts.call(this, resources);
-//        if (this.isAvailable) {
-//          var countOfDimensions = 0;
-//          _.each(resources, function(resource) {
-//            _.each(resource.fields, function(field) {
-//              var concept = _.find(module.exports.availableConcepts, {
-//                id: field.concept
-//              });
-//              if (concept && (concept.group == 'dimension')) {
-//                countOfDimensions += 1;
-//              }
-//            });
-//          });
-//          // There should be at least one measure and more than one dimension
-//          if (countOfDimensions < 2) {
-//            this.isAvailable = false;
-//          }
-//        }
-//      }
-//    }
-//  ];
-//})();
 
 function setAvailableCurrencies(currencies) {
   var temp = module.exports.availableCurrencies;
@@ -300,59 +199,6 @@ function removeEmptyAttributes(object) {
   });
 }
 
-//module.exports.getDataForPreview =  function() { return [{name:'Hello',value:'world',dateTime:'today'}]; };
-//module.exports.getDataForPreview = function(resources, maxCount) {
-//  if (!_.isArray(resources) || (resources.length < 1)) {
-//    return [];
-//  }
-//
-//  var amountFieldIndex = null;
-//  var dateTimeFieldIndex = null;
-//  var dimensionFieldIndex = null;
-//
-//  var resource = _.first(resources);
-//  _.each(resource.fields, function(field, index) {
-//    switch (field.concept) {
-//      case 'measures.amount': amountFieldIndex = index; break;
-//      case 'dimensions.datetime': dateTimeFieldIndex = index; break;
-//      case 'dimensions.entity': dimensionFieldIndex = index; break;
-//      case 'dimensions.classification': dimensionFieldIndex = index; break;
-//      case 'dimensions.activity': dimensionFieldIndex = index; break;
-//      case 'dimensions.location': dimensionFieldIndex = index; break;
-//    }
-//  });
-//
-//  if (amountFieldIndex === null) {
-//    return [];
-//  }
-//
-//  if (dimensionFieldIndex === null) {
-//    dimensionFieldIndex = dateTimeFieldIndex;
-//  }
-//  if (dimensionFieldIndex === null) {
-//    dimensionFieldIndex = amountFieldIndex;
-//  }
-//
-//  var rows = resource.data.rows;
-//  maxCount = parseFloat(maxCount);
-//  if (isFinite(maxCount)) {
-//    rows = rows.slice(0, maxCount);
-//  }
-//
-//  return _.map(rows, function(row) {
-//    var result = {};
-//    result.value = row[amountFieldIndex];
-//    if (dateTimeFieldIndex !== null) {
-//      result.dateTime = row[dateTimeFieldIndex];
-//    }
-//    if (dimensionFieldIndex !== null) {
-//      result.name = row[dimensionFieldIndex];
-//    }
-//
-//    return result;
-//  });
-//};
-
 function blobToFileDescriptor(blob) {
   if ((typeof Blob == 'undefined') || !_.isFunction(Blob) ||
     !(blob instanceof Blob)) {
@@ -380,10 +226,6 @@ function blobToFileDescriptor(blob) {
 
 module.exports.availableCurrencies = [];
 module.exports.availableConcepts = (function() {
-  var allTypes = _.map(module.exports.availableDataTypes, function(item) {
-    return item.id;
-  });
-  var idTypes = ['integer', 'number', 'string'];
   return [
     {
       name: '',
@@ -432,7 +274,7 @@ module.exports.availableConcepts = (function() {
           ]
         }
       ]
-    },
+    }
   ];
 })();
 setAvailableCurrencies(require('../data/iso4217.json'));

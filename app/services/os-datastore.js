@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var MD5 = require('./md5');
 var Promise = require('bluebird');
-var url = require('url');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
@@ -29,6 +28,7 @@ var ProcessingStatus = {
   FAILED: 'Failed'
 };
 
+/* eslint-disable quote-props */
 var RemoteProcessingStatus = {
   'queued': 'Waiting in queue for an available processor',
   'initializing': 'Getting ready to load the package',
@@ -44,6 +44,7 @@ var RemoteProcessingStatus = {
   'done': 'Done',
   'fail': 'Failed'
 };
+/* eslint-enable quote-props */
 
 module.exports.ProcessingStatus = ProcessingStatus;
 
@@ -62,7 +63,7 @@ function requestViaFetch(url, options) {
   })
   .then(function(response) {
     if (response.status != 200) {
-      throw 'Failed to load data from ' + response.url;
+      throw new Error('Failed to load data from ' + response.url);
     }
     if (_.isFunction(options.onUploadProgress)) {
       options.onUploadProgress(1.0); // normalized to range 0.0 .. 1.0
@@ -300,9 +301,7 @@ function prepareFilesForUpload(files, options) {
   var requestOptions = {
     method: 'POST',
     headers: {
-      // jscs:disable
       'Auth-Token': options.permission_token
-      // jscs:enable
     },
     body: JSON.stringify(payload),
     mode: 'cors',
@@ -312,7 +311,7 @@ function prepareFilesForUpload(files, options) {
   return fetch(options.conductorUrl, requestOptions)
     .then(function(response) {
       if (response.status != 200) {
-        throw 'Failed to load data from ' + response.url;
+        throw new Error('Failed to load data from ' + response.url);
       }
       return response.json();
     })
@@ -320,10 +319,8 @@ function prepareFilesForUpload(files, options) {
       if (_.isObject(response.filedata)) {
         return _.chain(response.filedata)
           .map(function(item, key) {
-            // jscs:disable
             var uploadUrl = item.upload_url;
             var uploadParams = item.upload_query;
-            // jscs:enable
             return [
               key,
               {
@@ -435,9 +432,7 @@ function publish(descriptor, options) {
     descriptor.status = ProcessingStatus.PUBLISHING;
     descriptor.progress = 0.0;
 
-    // jscs:disable
     var permissionToken = options.permission_token;
-    // jscs:enable
 
     var publishUrl = options.publishUrl +
       '?datapackage=' + encodeURIComponent(descriptor.uploadUrl) +
@@ -449,13 +444,13 @@ function publish(descriptor, options) {
       fetch(pollUrl)
         .then(function(response) {
           if (response.status != 200) {
-            throw 'Failed to load data from ' + response.url;
+            throw new Error('Failed to load data from ' + response.url);
           }
           return response.json();
         })
         .then(function(response) {
           if (!_.isObject(response)) {
-            throw 'Response should be an object';
+            throw new Error('Response should be an object');
           }
           var responseStatus = ('' + response.status).toLowerCase();
           switch (responseStatus) {

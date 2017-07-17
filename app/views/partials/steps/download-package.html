@@ -55,7 +55,7 @@
     <input type="hidden" name="data" value="{{ fiscalDataPackage | json }}">
     <div ng-if="!state.packagePublicUrl">
       <button ng-if="login.isLoggedIn"
-          ng-click="publishDataPackage()"
+          ng-click="publishAndRunWebHooks()"
           ng-disabled="state.isUploading || !login.permissions['datapackage-upload']"
           type="button"
           class="btn btn-primary btn-lg" id="step4-button-publish">
@@ -93,6 +93,16 @@
       <strong>File successfully published!</strong> You can now visualize it and explore it with <strong>OpenSpending Viewer</strong>!
     </div>
 
+    <div ng-if="packageOBEUStatus == 'processing'" class="alert alert-warning">
+      <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+      <strong>Your dataset is being submitted to OpenBudgets.</strong> Please wait, we will notify you right here when it is ready.
+    </div>
+
+    <div ng-if="packageOBEUStatus == 'ready'" class="alert alert-success">
+      <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+      <strong>Your dataset is ready in the OpenBudgets Platform! You can go there now!</strong>
+    </div>
+
     <a class="btn btn-primary" ng-href="{{ state.packagePublicUrl }}" target="_blank">
       <i class="fa fa-2x fa-bar-chart vertical-align-middle margin-right-4"></i>
       Explore and visualize your data now!
@@ -102,12 +112,6 @@
       ng-href="{{ state.packageManageUrl }}" target="_blank">
       <i class="fa fa-2x fa-gears vertical-align-middle margin-right-4"></i>
       Manage your datasets
-    </a>
-
-    <a class="btn btn-success margin-left-16"
-       ng-click="runWebHooks(fiscalDataPackage.name)" target="_blank">
-      <i class="fa fa-2x fa-gears vertical-align-middle margin-right-4"></i>
-      Send to OpenBudgets
     </a>
   </div>
 </section>

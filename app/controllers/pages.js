@@ -25,7 +25,7 @@ function render(request, response, view, locals) {
   var defaultLocals = {
     frontendOptions: config.get('frontend'),
     basePath: getBasePath(config),
-    theme: themes.get(theme)
+    theme: themes.getTheme(theme)
   };
 
   return response.render(view, Object.assign(

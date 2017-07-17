@@ -5,15 +5,17 @@
 <nav class="navbar navbar-inverse x-page-header" ng-controller="HeaderController">
   <div class="navbar-header navbar-header-full-width">
     <ul class="nav navbar-nav pull-right">
-      {% endraw %}
-      {% for link in theme.header.links %}
       <li>
-        <a href="{{ link.href }}">
-          {{ link.title }}
+        <a href="https://fiscal.dataprotocols.org/spec" rel="external">
+          Fiscal Data Package Spec
         </a>
       </li>
-      {% endfor %}
-      {% raw %}
+
+      <li>
+        <a href="/explorer">
+          Explore Datasets
+        </a>
+      </li>
 
       <li ng-if="!login.isLoggedIn && applicationLoaded" ng-cloak class="user">
         <a href="javascript:void(0)" ng-click="login.login()">

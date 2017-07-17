@@ -5,8 +5,17 @@
 <nav class="navbar navbar-inverse x-page-header" ng-controller="HeaderController">
   <div class="navbar-header navbar-header-full-width">
     <ul class="nav navbar-nav pull-right">
-      <li><a href="http://fiscal.dataprotocols.org/spec/">Fiscal Data Package Spec</a></li>
-      <li><a href="/explorer/">Explore Datasets</a></li>
+      <li>
+        <a href="https://fiscal.dataprotocols.org/spec" rel="external">
+          Fiscal Data Package Spec
+        </a>
+      </li>
+
+      <li>
+        <a href="/explorer">
+          Explore Datasets
+        </a>
+      </li>
 
       <li ng-if="!login.isLoggedIn && applicationLoaded" ng-cloak class="user">
         <a href="javascript:void(0)" ng-click="login.login()">
@@ -32,7 +41,12 @@
         </div>
       </li>
     </ul>
-    <a class="navbar-brand navbar-brand-success" href="{{ basePath }}/" title="OS Viewer" target="_self"><img src="assets/os.svg" class="os-logo-part"><img src="assets/packager.svg" class="os-logo-part"></a>
+    {% endraw %}
+    <a class="navbar-brand navbar-brand-success" href="{{ basePath }}/" title="OS Viewer" target="_self">
+      <img src="{{ theme.header.logo.icon }}" class="os-logo-part">
+      <img src="{{ theme.header.logo.image }}" class="os-logo-part">
+    </a>
+    {% raw %}
   </div>
 </nav>
 {% endraw %}

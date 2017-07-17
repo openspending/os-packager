@@ -346,7 +346,7 @@ function runWebHooks(permissionToken, dataPackage) {
     if (!result.success) {
       throw new Error(result.error);
     }
-    return dataPackage;
+    return result;
   });
 }
 

@@ -4,9 +4,9 @@ var osAdminService = require('../services/admin');
 angular.module('Application')
   .controller('DownloadPackageController', [
     '$scope', 'PackageService', 'DownloadPackageService',
-    'Configuration', 'ApplicationLoader', 'LoginService',
+    'Configuration', 'ApplicationLoader', 'LoginService', '$interval', '$http',
     function($scope, PackageService, DownloadPackageService,
-      Configuration, ApplicationLoader, LoginService) {
+      Configuration, ApplicationLoader, LoginService, $interval, $http) {
       ApplicationLoader.then(function() {
         $scope.fileName = Configuration.defaultPackageFileName;
         $scope.attributes = PackageService.getAttributes();
@@ -17,10 +17,18 @@ angular.module('Application')
         $scope.login = LoginService;
         $scope.publishDataPackage = DownloadPackageService.publishDataPackage;
         $scope.state = DownloadPackageService.getState(true);
-        LoginService.check();
+        $scope.packageOBEUStatus = null;
       });
 
-      $scope.runWebHooks = function(packageId) {
+      $scope.publishAndRunWebHooks = function () {
+        $scope.publishDataPackage().finally(function (res) {
+          runWebHooks($scope.fiscalDataPackage.name);
+        });
+      };
+
+
+      function runWebHooks(packageId) {
+        $scope.packageOBEUStatus = 'processing';
         // query data packages to extract the user's "owner id"
         osAdminService.getDataPackages(LoginService.authToken, LoginService.userId).then(function (packages) {
           console.log(packages);
@@ -31,15 +39,16 @@ angular.module('Application')
           osAdminService.togglePackagePublicationStatus(LoginService.permissionToken, {id: dataPackageId}).then(
             function (res) {
               // run web hooks for the package
-              console.log(res);
               var dataPackage = _.find(packages, {id: dataPackageId});
-              console.log(dataPackage);
 
               if (dataPackage) {
-                dataPackage.isRunningWebhooks = true;
                 var token = LoginService.permissionToken;
-                osAdminService.runWebHooks(token, dataPackage).then(function() {
-                  dataPackage.isRunningWebhooks = false;
+                osAdminService.runWebHooks(token, dataPackage).then(function(res) {
+                  var iri = JSON.parse(res.response).iri;
+                  var executionId = iri.substr(1 + iri.lastIndexOf('/'), iri.length);
+                  var executionOverviewUrl =
+                    'http://apps.openbudgets.eu/linkedpipes/test/resources/executions/' + executionId + '/overview';
+                  pollPipelineUntilReady(executionOverviewUrl);
                 });
               }
             }
@@ -49,5 +58,22 @@ angular.module('Application')
           console.log(err);
         });
       };
+
+      function pollPipelineUntilReady(executionOverviewUrl) {
+        stop = $interval(function () {
+          $http.get('https://crossorigin.me/' + executionOverviewUrl, {withCredentials: false}).then(
+            function (res) {
+              console.log(res);
+              if (res.data.status['@id'].includes('finished')) {
+                $interval.cancel(stop);
+                $scope.packageOBEUStatus = 'ready';
+              }
+            },
+            function (err) {
+              console.log(err);
+            }
+          );
+        }, 3000);
+      }
     }
   ]);

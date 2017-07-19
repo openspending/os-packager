@@ -4,9 +4,10 @@ var osAdminService = require('../services/admin');
 angular.module('Application')
   .controller('DownloadPackageController', [
     '$scope', 'PackageService', 'DownloadPackageService',
-    'Configuration', 'ApplicationLoader', 'LoginService', '$interval', '$http',
+    'Configuration', 'ApplicationLoader', 'LoginService', '$interval', '$http', '$window',
     function($scope, PackageService, DownloadPackageService,
-      Configuration, ApplicationLoader, LoginService, $interval, $http) {
+      Configuration, ApplicationLoader, LoginService, $interval, $http, $window) {
+
       ApplicationLoader.then(function() {
         $scope.fileName = Configuration.defaultPackageFileName;
         $scope.attributes = PackageService.getAttributes();
@@ -18,12 +19,34 @@ angular.module('Application')
         $scope.publishDataPackage = DownloadPackageService.publishDataPackage;
         $scope.state = DownloadPackageService.getState(true);
         $scope.packageOBEUStatus = null;
+        $scope.obeuUrl = 'http://apps.openbudgets.eu'
       });
+
 
       $scope.publishAndRunWebHooks = function () {
         $scope.publishDataPackage().finally(function (res) {
           runWebHooks($scope.fiscalDataPackage.name);
         });
+      };
+
+
+      $scope.redirectToViewer = function() {
+        console.log('querying');
+        var url = $scope.obeuUrl + '/search/package?q=' + encodeURIComponent($scope.fiscalDataPackage.name) + '&size=1';
+        $http.get(url, {withCredentials: false}).then(
+          function (res) {
+            console.log('good');
+            var packageId = '';
+            if (res.length > 0) {
+              packageId = res[0].name;
+            }
+            $window.open($scope.obeuUrl + '/' + packageId, '_blank');
+        },
+          function (err) {
+            console.log(err);
+            $window.open($scope.obeuUrl, '_blank');
+          }
+        )
       };
 
 

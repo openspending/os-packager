@@ -81,11 +81,12 @@ angular.module('Application')
       };
 
       result.publishDataPackage = function() {
-        state.packagePublicUrl = null;
-        state.isUploading = true;
-        PackageService.publish().then(function(files) {
-          state.uploads = files;
-          files.$promise
+        return $q(function (resolve, reject) {
+          state.packagePublicUrl = null;
+          state.isUploading = true;
+          PackageService.publish().then(function(files) {
+            state.uploads = files;
+            files.$promise
             .then(function() {
               var packageName = PackageService.getAttributes().name;
               var owner = LoginService.userId;
@@ -98,9 +99,11 @@ angular.module('Application')
             })
             .finally(function() {
               state.isUploading = false;
+              resolve(true);
             });
+            return state;
+          });
         });
-        return state;
       };
 
       return result;

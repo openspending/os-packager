@@ -57,7 +57,7 @@
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",
     "os-bootstrap": "openspending/os-bootstrap.git",
-    "os-styles": "0.0.1",
+    "os-styles": "^0.0.2",
     "os-types": "^1.14.0",
     "papaparse": "kravets-levko/PapaParse.git",
     "request": "^2.65.0",

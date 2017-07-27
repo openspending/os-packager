@@ -6208,8 +6208,8 @@
       "resolved": "git://github.com/openspending/os-bootstrap.git#a0436a4cc0117a0c85b0ec10ed099d4f71e12a9f"
     },
     "os-styles": {
-      "version": "0.0.1",
-      "from": "os-styles@*",
+      "version": "0.0.2",
+      "from": "os-styles@0.0.2",
       "dependencies": {
         "bootstrap-sass": {
           "version": "3.3.7",

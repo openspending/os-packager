@@ -9,7 +9,7 @@ var url = require('url');
 require('isomorphic-fetch');
 
 var defaultOptions = {
-  adapterUrl: 'https://next.openspending.org/fdp-adapter/convert'
+  adapterUrl: 'https://openspending.org/fdp-adapter/convert'
 };
 module.exports.defaultOptions = defaultOptions;
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var services = require('../services');
+var themes = require('../config/themes');
 var _ = require('lodash');
 
 function getBasePath(config) {
@@ -18,13 +19,24 @@ function getBasePath(config) {
   return result;
 }
 
-module.exports.main = function(req, res) {
-  var config = req.app.get('config');
-  var basePath = getBasePath(config);
-
-  res.render('pages/main.html', {
+function render(request, response, view, locals) {
+  var config = request.app.get('config');
+  var theme = request.query.theme;
+  var defaultLocals = {
     frontendOptions: config.get('frontend'),
-    basePath: basePath,
+    basePath: getBasePath(config),
+    theme: themes.getTheme(theme)
+  };
+
+  return response.render(view, Object.assign(
+    {},
+    defaultLocals,
+    locals || {}
+  ));
+}
+
+module.exports.main = function(req, res) {
+  render(req, res, 'pages/main.html', {
     title: 'Create a Fiscal Data Package'
   });
 };
@@ -55,21 +67,14 @@ module.exports.landing = function(req, res) {
   var basePath = getBasePath(config);
   var firstStep = _.first(services.data.steps);
 
-  res.render('pages/landing.html', {
-    frontendOptions: config.get('frontend'),
-    basePath: basePath,
+  render(req, res, 'pages/landing.html', {
     title: 'OS Packager',
     getStartedUrl: basePath + firstStep.route
   });
 };
 
 module.exports.loggedIn = function(req, res) {
-  var config = req.app.get('config');
-  var basePath = getBasePath(config);
-
-  res.render('pages/logged-in.html', {
-    frontendOptions: config.get('frontend'),
-    basePath: basePath,
+  render(req, res, 'pages/logged-in.html', {
     title: 'OS Packager'
   });
 };

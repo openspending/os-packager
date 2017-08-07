@@ -57,9 +57,7 @@ angular.module('Application')
           that.isLoggedIn = true;
           that.name = response.profile.name;
           that.email = response.profile.email;
-          // jscs:disable
           that.avatar = response.profile.avatar_url;
-          // jscs:enable
           that.userId = response.profile.idhash;
 
           authorize.check(token, 'os.datastore')

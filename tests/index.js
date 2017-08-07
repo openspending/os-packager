@@ -16,5 +16,4 @@ describe('Core', function() {
       done();
     });
   });
-
 });

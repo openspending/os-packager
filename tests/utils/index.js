@@ -6,7 +6,7 @@ var _ = require('lodash');
 // xmlhttprequest lib has no onload/onerror properties, but papaparse relies on
 // them. This code should fix it
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-GLOBAL.XMLHttpRequest = function(options) {
+global.XMLHttpRequest = function(options) {
   var eventOnLoad = undefined;
   var eventOnError = undefined;
   var result = new XMLHttpRequest(options);

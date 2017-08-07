@@ -7,7 +7,7 @@ var dataPackage = require('../app/services/package');
 var dataStore = require('../app/services/os-datastore');
 
 // Make PapaParse working (do not remove this line!)
-var testUtils = require('./utils');
+require('./utils');
 
 var exampleResourceUrl = 'https://raw.githubusercontent.com/openspending/' +
   'os-packager/master/tests/data/example-resource.csv';
@@ -16,7 +16,6 @@ describe('Application services', function() {
   this.timeout(20000);
 
   describe('Utils', function() {
-
     it('Should create name from path', function(done) {
       var tests = [
         ['example.csv', 'example'],
@@ -55,19 +54,6 @@ describe('Application services', function() {
       });
       done();
     });
-
-    //it('Should create title from name', function(done) {
-    //  var tests = [
-    //    ['simple', 'Simple'],
-    //    ['few words', 'Few Words'],
-    //   ['with. some-punctuation: example', 'With. Some Punctuation: Example'],
-    //    ['кирилиця', 'кирилиця']
-    //  ];
-    //  _.each(tests, function(test) {
-    //    assert.equal(utils.convertToTitle(test[0]), test[1]);
-    //  });
-    //  done();
-    //});
 
     it('Should convert string to slug', function(done) {
       var tests = [
@@ -123,11 +109,9 @@ describe('Application services', function() {
 
       done();
     });
-
   });
 
   describe('Package', function() {
-
     it('Should create resource from URL', function(done) {
       dataPackage.createResourceFromSource(exampleResourceUrl)
         .then(function(resource) {
@@ -175,26 +159,6 @@ describe('Application services', function() {
         .catch(done);
     });
 
-    //TODO: [Adam] Removed until functionality is restored
-    //it('Should prepare data for preview', function(done) {
-    //  dataPackage.createResourceFromSource(exampleResourceUrl)
-    //    .then(function(resource) {
-    //      resource.fields[0].concept = 'measures.amount';
-    //      resource.fields[1].concept = 'dimensions.classification';
-    //
-    //      var data = utils.getDataForPreview([resource], 5);
-    //
-    //      assert.isAbove(data.length, 0);
-    //      assert.isBelow(data.length, 6);
-    //
-    //      assert.equal(data[0].value, resource.data.rows[0][0]);
-    //      assert.equal(data[0].name, resource.data.rows[0][1]);
-    //
-    //      done();
-    //    })
-    //    .catch(done);
-    //});
-
     it('Should validate Fiscal Data Package', function(done) {
       var resources = [];
       var attributes = {
@@ -222,7 +186,6 @@ describe('Application services', function() {
         })
         .catch(done);
     });
-
   });
 
   describe.skip('OS DataStore', function() {
@@ -252,9 +215,7 @@ describe('Application services', function() {
       var options = {
         name: 'test.csv',
         owner: '__tests',
-        // jscs:disable
         permission_token: 'testing-token'
-        // jscs:enable
       };
       dataStore.prepareForUpload(file, options)
         .then(function() {
@@ -269,7 +230,5 @@ describe('Application services', function() {
         })
         .catch(done);
     });
-
   });
-
 });

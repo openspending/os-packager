@@ -35,7 +35,7 @@ angular.module('Application')
               status.sampleSize += 1;
             }
 
-            if (!status.errors) {
+            if (status.report.valid) {
               PackageService.removeAllResources();
               if (resource) {
                 PackageService.addResource(resource);

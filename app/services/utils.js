@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var GoodTables = require('goodtables');
 var Promise = require('bluebird');
 var csv = require('papaparse');
 var jts = require('jsontableschema');
@@ -103,33 +102,6 @@ function getCsvSchema(urlOrFile, encoding) {
   });
 }
 
-function validateData(data, dataUrl, schema, userEndpointURL) {
-  var goodTables = new GoodTables({
-    method: 'post',
-    report_type: 'grouped'
-  }, userEndpointURL);
-
-  return goodTables.run(
-    data, !!schema ? JSON.stringify(schema) : undefined, dataUrl)
-    .then(function(results) {
-      if (!results) {
-        return false;
-      }
-      var grouped = results.getGroupedByRows();
-      var headers = results.getHeaders();
-      var encoding = results.getEncoding();
-      return {
-        headers: headers,
-        encoding: encoding,
-        errors: _.map(grouped, function(item) {
-          return _.extend(_.values(item)[0], {
-            headers: headers
-          });
-        })
-      };
-    });
-}
-
 function getDefaultCurrency() {
   var currencies = module.exports.availableCurrencies;
   var defaultCurrencies = _.intersection(
@@ -213,7 +185,7 @@ function blobToFileDescriptor(blob) {
         type: blob.type,
         size: blob.size,
         data: reader.result,
-        blob: blob
+        blob: blob,
       });
     });
     reader.addEventListener('error', function() {
@@ -283,7 +255,6 @@ module.exports.isUrl = isUrl;
 module.exports.decorateProxyUrl = decorateProxyUrl;
 module.exports.convertToSlug = convertToSlug;
 module.exports.getCsvSchema = getCsvSchema;
-module.exports.validateData = validateData;
 module.exports.getDefaultCurrency = getDefaultCurrency;
 module.exports.setAvailableCurrencies = setAvailableCurrencies;
 module.exports.createNameFromPath = createNameFromPath;

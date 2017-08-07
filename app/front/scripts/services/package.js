@@ -66,7 +66,8 @@ angular.module('Application')
         },
         createResource: function(fileOrUrl, state) {
           var fileDescriptor = null;
-          var encoding;
+          // TODO: current goodtables doesn't provide encoding
+          var encoding = 'utf-8';
           return $q(function(resolve, reject) {
             fiscalDataPackage.transformResourceUrl(fileOrUrl)
               .then(resolve)
@@ -81,13 +82,19 @@ angular.module('Application')
               });
             })
             .then(function(fileOrUrl) {
-              var status = ValidationService.validateResource(fileOrUrl);
-              state.status = status;
-
-              return status.$promise.then(function(results) {
-                encoding = results.encoding;
-                return fileOrUrl;
-              });
+              state.status = {
+                state: 'checking',
+              }
+              return ValidationService.validateResource(fileOrUrl)
+                .then(function(report) {
+                  state.status.state = 'completed';
+                  state.status.report = report;
+                  return fileOrUrl;
+                })
+                .catch(function(error) {
+                  state.status.state = null;
+                  Configuration.defaultErrorHandler(error);
+                });
             })
             .then(function(fileOrUrl) {
               fileDescriptor = fileOrUrl;

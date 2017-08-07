@@ -8,7 +8,7 @@ var downloader = require('./downloader');
 var Promise = require('bluebird');
 
 module.exports.defaultSettingsUrl = 'config.json';
-module.exports.conductorUrl = 'https://next.openspending.org';
+module.exports.conductorUrl = 'https://openspending.org';
 module.exports.publishUrl = module.exports.conductorUrl + '/package/publish';
 module.exports.searchUrl = module.exports.conductorUrl + '/search/package';
 module.exports.pollInterval = 1000;

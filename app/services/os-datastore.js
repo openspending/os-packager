@@ -8,7 +8,7 @@ var utils = require('./utils');
 require('isomorphic-fetch');
 
 var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
-  'https://next.openspending.org';
+  'https://openspending.org';
 var defaultOptions = {
   conductorUrl: OS_CONDUCTOR + '/datastore/',
   conductorInfoUrl: OS_CONDUCTOR + '/datastore/info',

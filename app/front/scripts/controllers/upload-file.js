@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var goodtablesUI = require('goodtables-ui')
+var goodtablesUI = require('goodtables-ui');
 
 angular.module('Application')
   .controller('UploadFileController', [

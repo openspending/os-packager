@@ -82,8 +82,8 @@ angular.module('Application')
             })
             .then(function(fileOrUrl) {
               state.status = {
-                state: 'checking',
-              }
+                state: 'checking'
+              };
               return ValidationService.validateResource(fileOrUrl)
                 .then(function(report) {
                   encoding = report.tables[0].encoding;

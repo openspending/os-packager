@@ -3,8 +3,8 @@
 var assert = require('chai').assert;
 var utils = require('./utils');
 
-var exampleResourceUrl = 'http://localhost:5000' +
-  '/example-resource.csv';
+var exampleResourceUrl = 'https://raw.githubusercontent.com/openspending/' +
+  'os-packager/master/tests/data/example-resource.csv';
 var dataPackageTitle = 'Test Перевірка';
 var dataPackageSlug = 'test-perevirka';
 var BASE_URL = 'http://localhost:5000';

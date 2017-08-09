@@ -185,7 +185,7 @@ function blobToFileDescriptor(blob) {
         type: blob.type,
         size: blob.size,
         data: reader.result,
-        blob: blob,
+        blob: blob
       });
     });
     reader.addEventListener('error', function() {

@@ -1,14 +1,13 @@
 'use strict';
 
 var _ = require('lodash');
-var goodtables = require('goodtables')
-var utils = require('../../../services/utils');
+var goodtables = require('goodtables');
 
 var goodtablesOptions = {
   apiUrl: 'https://goodtables.io/api',
   apiToken: 'D0123458B8E36326C60253FE4A7FF6662CAB0C48',
-  apiSourceId: '9b6b6391-5404-4e7f-bdb8-271c2cb42fbb',
-}
+  apiSourceId: '9b6b6391-5404-4e7f-bdb8-271c2cb42fbb'
+};
 
 angular.module('Application')
   .factory('ValidationService', [

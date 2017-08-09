@@ -191,6 +191,11 @@
         }
       }
     },
+    "classnames": {
+      "version": "2.2.5",
+      "from": "classnames@>=2.2.5 <3.0.0",
+      "resolved": "https://registry.npmjs.org/classnames/-/classnames-2.2.5.tgz"
+    },
     "core-js": {
       "version": "2.4.1",
       "from": "core-js@>=2.4.0 <3.0.0",
@@ -1583,6 +1588,11 @@
       "version": "1.0.0",
       "from": "goodtables@1.0.0",
       "resolved": "https://registry.npmjs.org/goodtables/-/goodtables-1.0.0.tgz"
+    },
+    "goodtables-ui": {
+      "version": "1.0.1",
+      "from": "goodtables-ui@latest",
+      "resolved": "https://registry.npmjs.org/goodtables-ui/-/goodtables-ui-1.0.1.tgz"
     },
     "gulp": {
       "version": "3.9.1",
@@ -6160,11 +6170,6 @@
       "version": "0.1.33",
       "from": "https://registry.npmjs.org/js-polyfills/-/js-polyfills-0.1.33.tgz",
       "resolved": "https://registry.npmjs.org/js-polyfills/-/js-polyfills-0.1.33.tgz"
-    },
-    "jschardet": {
-      "version": "1.5.1",
-      "from": "jschardet@latest",
-      "resolved": "https://registry.npmjs.org/jschardet/-/jschardet-1.5.1.tgz"
     },
     "json-loader": {
       "version": "0.5.4",

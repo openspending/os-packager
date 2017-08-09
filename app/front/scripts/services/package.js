@@ -66,8 +66,7 @@ angular.module('Application')
         },
         createResource: function(fileOrUrl, state) {
           var fileDescriptor = null;
-          // TODO: current goodtables doesn't provide encoding
-          var encoding = 'utf-8';
+          var encoding;
           return $q(function(resolve, reject) {
             fiscalDataPackage.transformResourceUrl(fileOrUrl)
               .then(resolve)
@@ -87,6 +86,7 @@ angular.module('Application')
               }
               return ValidationService.validateResource(fileOrUrl)
                 .then(function(report) {
+                  encoding = report.tables[0].encoding;
                   state.status.state = 'completed';
                   state.status.report = report;
                   return fileOrUrl;

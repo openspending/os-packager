@@ -3,6 +3,7 @@ FROM node:7-alpine
 WORKDIR /app
 ADD . .
 
+RUN apk add --update --no-cache git
 RUN npm install && npm build
 
 ENV OS_PACKAGER_BASE_PATH=packager

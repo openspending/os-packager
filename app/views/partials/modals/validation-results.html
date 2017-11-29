@@ -7,56 +7,7 @@
         <h4 data-id="title" class="modal-title">Data Validation Results</h4>
       </div>
       <div class="modal-body">
-        <div ng-if="errors.length == 0" class="alert alert-success" role="alert">
-          All resources are valid.
-        </div>
-
-        <div ng-if="errors.length > 0" ng-init="tabs.index = 0">
-          <ul data-id="tabs" class="nav nav-tabs">
-            <li ng-class="{active: $index == tabs.index}" ng-repeat="error in errors track by $index">
-              <a ng-click="tabs.index = $index" href="javascript:void(0)">
-                <i class="text-danger fa fa-times-circle margin-right-4"></i>
-                (Untitled)
-              </a>
-            </li>
-          </ul>
-          <div class="panel panel-default" ng-repeat="error in errors track by $index" ng-show="$index == tabs.index">
-          <div class="panel-body">
-            <div class="result panel panel-default">
-              <div class="panel-heading">
-                <ol>
-                  <li ng-repeat="result in error.results track by $index">
-                    <span class="text-uppercase label label-danger">{{ result.result_level }}</span>
-                    <span class="label label-info">{{ result.processor }}</span>
-                    <strong>{{ result.result_name }}</strong>:&nbsp;
-                    {{ result.result_message }}
-                  </li>
-                  </ol>
-              </div>
-
-              <div class="panel-body">
-                <strong ng-if="error.row_index == 0"><span class="text-uppercase">Headers</span></strong>
-
-                <div class="table-responsive">
-                  <table class="table table-bordered table-condensed">
-                    <tbody>
-                    <tr ng-if="error.row_index != 0" class="result-header-row">
-                      <th class="text-uppercase">Row</th>
-                      <th ng-repeat="header in error.headers track by $index">{{ header }}</th>
-                    </tr>
-
-                    <tr class="result-row">
-                      <td ng-if="error.row_index != 0" class="result-row-index">{{ error.row_index }}</td>
-                      <td ng-repeat="context in error.result_context track by $index" ng-class="{'bg-danger': !context}">{{ context }}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
+        <div id="validation-report"></div>
       </div>
     </div>
   </div>

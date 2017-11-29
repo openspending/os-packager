@@ -1,47 +1,22 @@
 'use strict';
 
 var _ = require('lodash');
-var utils = require('../../../services/utils');
+var goodtables = require('goodtables');
 
-var goodTablesUrl = '//goodtables.okfnlabs.org/api/run';
+var goodtablesOptions = {
+  apiUrl: 'https://goodtables.io/api',
+  apiToken: 'D0123458B8E36326C60253FE4A7FF6662CAB0C48',
+  apiSourceId: '9b6b6391-5404-4e7f-bdb8-271c2cb42fbb'
+};
 
 angular.module('Application')
   .factory('ValidationService', [
-    '$q', 'Configuration',
-    function($q, Configuration) {
+    '$q',
+    function($q) {
       return {
         validateResource: function(source) {
-          var validationResult = {
-            state: 'checking'
-          };
-          if (typeof(source) !== 'string') {
-            validationResult.$promise = $q(function(resolve, reject) {
-              utils.validateData(source.data, undefined, undefined,
-                goodTablesUrl)
-                .then(resolve)
-                .catch(reject);
-            });
-          } else {
-            validationResult.$promise = $q(function(resolve, reject) {
-              utils.validateData(undefined, source, undefined, goodTablesUrl)
-                .then(resolve)
-                .catch(reject);
-            });
-          }
-          validationResult.$promise
-            .then(function(results) {
-              validationResult.state = 'completed';
-              if (results && results.errors && results.errors.length) {
-                validationResult.errors = results.errors;
-              }
-              return results;
-            })
-            .catch(function(error) {
-              validationResult.state = null;
-              Configuration.defaultErrorHandler(error);
-            });
-
-          return validationResult;
+          if (source.blob) source = source.blob;
+          return goodtables.validate(source, goodtablesOptions);
         },
         validateRequiredConcepts: function(errors, resources) {
           var hasConcept = function(prefix) {

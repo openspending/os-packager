@@ -69,7 +69,8 @@ gulp.task('styles.vendor', function() {
     path.join(nodeModulesDir, '/os-bootstrap/dist/css/os-bootstrap.min.css'),
     path.join(nodeModulesDir, '/angular/angular-csp.css'),
     path.join(nodeModulesDir, '/c3/c3.min.css'),
-    path.join(nodeModulesDir, '/typeahead.js-bootstrap-css/typeaheadjs.css')
+    path.join(nodeModulesDir, '/typeahead.js-bootstrap-css/typeaheadjs.css'),
+    path.join(nodeModulesDir, '/goodtables-ui/dist/goodtables-ui.min.css')
   ];
   return gulp.src(files)
     .pipe(concat('vendor.css'))

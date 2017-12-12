@@ -15,8 +15,35 @@ angular.module('Application')
     function($q) {
       return {
         validateResource: function(source) {
-          if (source.blob) source = source.blob;
-          return goodtables.validate(source, goodtablesOptions);
+          var data;
+          if (source.data) {
+            data = source.data;
+            var byteView = new Uint8Array(data);
+            var byteLimit = 64 * 1024;
+            if (byteView.length > byteLimit) {
+              var bl = 64 * 1024;
+              var cutoff = -1;
+              if (byteView.indexOf) {
+                cutoff = byteView.indexOf(10, bl - 1024);
+              } else {
+                for (var i = bl - 1024; i < bl; i++) {
+                  if (byteView[i] === 10) {
+                    cutoff = i;
+                  }
+                }
+              }
+              if (cutoff === -1 || cutoff > bl) {
+                byteView = byteView.subarray(0, bl);
+              } else {
+                byteView = byteView.subarray(0, cutoff);
+              }
+            }
+            data = new File([byteView], source.blob.name, {type: source.blob.type});
+          } else {
+            data = source;
+          }
+
+          return goodtables.validate(data, goodtablesOptions);
         },
         validateRequiredConcepts: function(errors, resources) {
           var hasConcept = function(prefix) {

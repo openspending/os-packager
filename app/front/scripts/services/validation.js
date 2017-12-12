@@ -38,7 +38,9 @@ angular.module('Application')
                 byteView = byteView.subarray(0, cutoff);
               }
             }
-            data = new File([byteView], source.blob.name, {type: source.blob.type});
+            data = new File([byteView],
+                            source.blob.name,
+                            {type: source.blob.type});
           } else {
             data = source;
           }

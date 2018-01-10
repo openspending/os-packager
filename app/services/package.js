@@ -92,7 +92,7 @@ function getFiscalDataPackageSchema(useProxy) {
 function validateDataPackage(descriptor, schema) {
   return datapackage.validate(descriptor, schema, true)
     .then(function(validation) {
-      return validation == true;
+      return validation;
     });
 }
 

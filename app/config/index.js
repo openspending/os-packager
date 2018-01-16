@@ -3,8 +3,8 @@
 var path = require('path');
 var nconf = require('nconf');
 
-var DEFAULT_HOST = 'https://openspending.org';
-var DEFAULT_BASE_PATH = '';
+const DEFAULT_HOST = 'https://openspending.org';
+const DEFAULT_BASE_PATH = '';
 
 nconf.file({
   file: path.join(__dirname, '/../../settings.json')

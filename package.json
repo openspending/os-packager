@@ -1,11 +1,11 @@
 {
-  "name": "fiscal-data-packager",
+  "name": "os-packager",
   "version": "0.0.1",
   "description": "A Fiscal Data Packager application",
   "keywords": [],
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "lookenv --dotenv -- node index.js",
     "test": "NODE_ENV=test mocha tests/*.js",
     "posttest": "npm run review",
     "review": "eslint app tests index.js gulpfile.js webpack.config.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openspending/fiscal-data-packager.git"
+    "url": "git+https://github.com/openspending/os-packager.git"
   },
   "author": {
     "name": "Open Knowledge",
@@ -34,12 +34,13 @@
     }
   ],
   "license": "MIT",
-  "bugs": "https://github.com/openspending/fiscal-data-packager/issues",
-  "homepage": "https://github.com/openspending/fiscal-data-packager#readme",
+  "bugs": "https://github.com/openspending/os-packager/issues",
+  "homepage": "https://github.com/openspending/os-packager#readme",
   "dependencies": {
     "angular": "^1.5.5",
     "angular-animate": "^1.5.5",
     "angular-route": "^1.5.5",
+    "babel-polyfill": "^6.26.0",
     "bluebird": "^3.0.5",
     "body-parser": "^1.14.1",
     "crypto-js": "^3.1.6",
@@ -53,6 +54,7 @@
     "js-polyfills": "^0.1.12",
     "jsontableschema": "0.1.0",
     "lodash": "^4.11.1",
+    "lookenv": "^0.6.3",
     "marked": "^0.3.5",
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",

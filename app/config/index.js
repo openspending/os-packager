@@ -3,14 +3,14 @@
 var path = require('path');
 var nconf = require('nconf');
 
-var DEFAULT_HOST = 'https://openspending.org';
-var DEFAULT_BASE_PATH = '';
+var DEFAULT_HOST = process.env.OS_BASE_URL;
+var DEFAULT_BASE_PATH = '/';
 
 nconf.file({
   file: path.join(__dirname, '/../../settings.json')
 });
 
-var conductorHost = process.env.OS_PACKAGER_CONDUCTOR_HOST || DEFAULT_HOST;
+var conductorHost = process.env.OS_CONDUCTOR_URL || DEFAULT_HOST;
 
 // Options for frontend
 var frontendOptions = {

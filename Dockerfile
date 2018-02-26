@@ -1,15 +1,16 @@
 FROM node:8-alpine
 
-WORKDIR /app
-ADD . .
-
 RUN apk add --update --no-cache git
-RUN npm install && npm run build
 
-ENV OS_PACKAGER_BASE_PATH=packager
+WORKDIR /app
+ADD package.json .
+RUN npm install
+
+ADD . .
+RUN npm run build
 
 ADD docker/settings.json /app/settings.json
 
 EXPOSE 8000
 
-ENTRYPOINT ["npm", "start"]
+CMD npm start

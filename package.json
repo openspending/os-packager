@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "lookenv --dotenv -- node index.js",
-    "test": "NODE_ENV=test mocha tests/*.js",
+    "test": "NODE_ENV=test OS_BASE_URL=https://openspending.org mocha tests/*.js",
     "posttest": "npm run review",
     "review": "eslint app tests index.js gulpfile.js webpack.config.js",
     "develop": "npm run build && npm start",

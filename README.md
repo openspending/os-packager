@@ -9,26 +9,49 @@ An app to make Fiscal Data Packages from a CSV of Fiscal Data, and publish those
 
 ## Quick start
 
+- get the code
+`git clone https://github.com/openspending/os-packager.git`
+
+- install dependencies
+`npm install`
+
+- build the frontend assets
+`npm run build`
+
+- configure .env
+
+For local development, add an `.env` file with the following settings:
+```ini
+# Required settings
+# e.g. https://openspending.org or http://localhost
+OS_BASE_URL=
+
+# Optional settings
+OS_SNIPPETS_GA=
+OS_SNIPPETS_RAVEN=
+SENTRY_DSN=
+OS_PACKAGER_BASE_PATH=
+POLL_INTERVAL=
+
+# Each service will use OS_BASE_URL unless overridden by these:
+OS_CONDUCTOR_URL=
+OS_VIEWER_URL=
+OS_ADMIN_URL=
+FDP_ADAPTER_URL=
+
+# Defaults to 'https://cosmopolitan.openspending.org/?format=json'
+OS_COSMOPOLITAN_URL=
 ```
-# get the code
-git clone https://github.com/openspending/os-packager.git
 
-# install dependencies
-npm install
+- run the tests
+`npm test`
 
-# build the frontend assets
-npm run build
+- run the server
+`npm start`
 
-# run the tests
-npm test
+- load the app in your default browser
+`open http://127.0.0.1:5000`
 
-# run the server
-npm start
-
-# load the app in your default browser
-open http://127.0.0.1:5000
-
-```
 
 See the [docs](http://docs.openspending.org/en/latest/developers/packager/) for more information.
 

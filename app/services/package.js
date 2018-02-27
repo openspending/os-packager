@@ -8,8 +8,10 @@ var utils = require('./utils');
 var url = require('url');
 require('isomorphic-fetch');
 
+// This will be extended by the frontend app config in
+// front/scripts/config/config.js.
 var defaultOptions = {
-  adapterUrl: 'https://openspending.org/fdp-adapter/convert'
+  adapterUrl: null
 };
 module.exports.defaultOptions = defaultOptions;
 

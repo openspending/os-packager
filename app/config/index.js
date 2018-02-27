@@ -3,14 +3,14 @@
 var path = require('path');
 var nconf = require('nconf');
 
-var DEFAULT_HOST = 'https://openspending.org';
-var DEFAULT_BASE_PATH = '';
+var DEFAULT_HOST = process.env.OS_BASE_URL;
+var DEFAULT_BASE_PATH = '/';
 
 nconf.file({
   file: path.join(__dirname, '/../../settings.json')
 });
 
-var conductorHost = process.env.OS_PACKAGER_CONDUCTOR_HOST || DEFAULT_HOST;
+var conductorHost = process.env.OS_CONDUCTOR_URL || DEFAULT_HOST;
 
 // Options for frontend
 var frontendOptions = {
@@ -28,7 +28,8 @@ var frontendOptions = {
 
   proxyUrl: 'proxy?url=',
   osViewerUrl: process.env.OS_VIEWER_URL || DEFAULT_HOST + '/viewer/',
-  osAdminUrl: process.env.OS_ADMIN_URL || DEFAULT_HOST + '/admin/'
+  osAdminUrl: process.env.OS_ADMIN_URL || DEFAULT_HOST + '/admin/',
+  cosmoplitanUrl: process.env.OS_COSMOPOLITAN_URL
 };
 
 // this is the object that you want to override in your own local config
@@ -41,7 +42,8 @@ nconf.defaults({
   frontend: frontendOptions,
   basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH,
   snippets: {
-    ga: process.env.OS_SNIPPETS_GA || null
+    ga: process.env.OS_SNIPPETS_GA || null,
+    raven: process.env.OS_SNIPPETS_RAVEN || null
   },
   sentryDSN: process.env.SENTRY_DSN || null
 });

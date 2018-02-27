@@ -4,4 +4,4 @@ node_modules
 .projectile
 settings.json
 !docker/settings.json
-
+.env

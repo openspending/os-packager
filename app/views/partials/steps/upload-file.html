@@ -47,12 +47,12 @@
     </span>
   </div>
 
-  <div ng-if="(state.status.state == 'completed') && !state.status.errors" class="alert alert-success">
+  <div ng-if="(state.status.state == 'completed') && state.status.report.valid" class="alert alert-success">
     <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
     Resource is valid. Now you can continue.
   </div>
 
-  <div ng-if="(state.status.state == 'completed') && state.status.errors" class="alert alert-danger">
+  <div ng-if="(state.status.state == 'completed') && !state.status.report.valid" class="alert alert-danger">
     <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
     There are some errors.
     <a href="javascript:void(0)" ng-click="onShowValidationResults()" class="alert-link">Click here</a>
@@ -60,7 +60,7 @@
   </div>
 
   <div class="row form-group"
-    ng-if="(state.status.state == 'completed') && !state.status.errors">
+    ng-if="(state.status.state == 'completed') && state.status.report.valid">
     <div class="col-xs-12">
       <button id="step1-button-next" ng-click="goToNextStep()" type="button" class="btn btn-inverse btn-lg">
         Continue&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>
@@ -68,8 +68,7 @@
     </div>
   </div>
 
-  <div ng-if="(state.status.state == 'completed') && state.status.errors"
-    ng-init="errors = state.status.errors">
+  <div ng-if="(state.status.state == 'completed') && !state.status.report.valid">
   {% endraw %}
     {% include "partials/modals/validation-results.html" %}
   {% raw %}

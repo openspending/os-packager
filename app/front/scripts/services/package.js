@@ -81,13 +81,24 @@ angular.module('Application')
               });
             })
             .then(function(fileOrUrl) {
-              var status = ValidationService.validateResource(fileOrUrl);
-              state.status = status;
-
-              return status.$promise.then(function(results) {
-                encoding = results.encoding;
-                return fileOrUrl;
-              });
+              state.status = {
+                state: 'checking'
+              };
+              return ValidationService.validateResource(fileOrUrl)
+                .then(function(report) {
+                  encoding = report.tables[0].encoding;
+                  state.status = {
+                    state: 'completed',
+                    report: report
+                  };
+                  return fileOrUrl;
+                })
+                .catch(function(error) {
+                  state.status = {
+                    state: null
+                  };
+                  Configuration.defaultErrorHandler(error);
+                });
             })
             .then(function(fileOrUrl) {
               fileDescriptor = fileOrUrl;

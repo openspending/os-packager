@@ -92,7 +92,6 @@
           <i class="fa fa-2x fa-times-circle-o vertical-align-middle margin-right-4"></i>
           <b>Validation error: </b> {{ error.message }}
           <span ng-if="error.dataPath"><b>at</b> {{ error.dataPath }}</span>
-          <pre>{{ error | json }}</pre>
         </div>
 
         <div ng-if="!state.status.errors" class="alert alert-success">

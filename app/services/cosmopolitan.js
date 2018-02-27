@@ -4,7 +4,13 @@ var _ = require('lodash');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
-var cosmopolitanApiUrl = 'https://cosmopolitan.openspending.org/?format=json';
+
+// This will be extended by the frontend config in
+// front/scripts/config/config.js
+var defaultOptions = {
+  cosmopolitanApiUrl: 'https://cosmopolitan.openspending.org/?format=json'
+};
+module.exports.defaultOptions = defaultOptions;
 
 function upper(v) {
   return (v + '').toUpperCase();
@@ -20,7 +26,7 @@ function processFetchResponse(response) {
 function getItemsFromSource(source, useProxy) {
   useProxy = !!useProxy;
 
-  var url = cosmopolitanApiUrl;
+  var url = defaultOptions.cosmopolitanApiUrl;
   if (useProxy) {
     url = utils.decorateProxyUrl(url);
   }

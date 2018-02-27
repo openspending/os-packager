@@ -4,12 +4,15 @@ var _ = require('lodash');
 var osDataStore = require('../../../services/os-datastore');
 var fiscalDataPackage = require('../../../services/package');
 var utils = require('../../../services/utils');
+var cosmopolitan = require('../../../services/cosmopolitan');
 
 // See also `app/views/layouts/base.html`
 var externalConfig = (window || this).ExternalConfig;
 
 _.extend(osDataStore.defaultOptions, externalConfig.conductor);
 fiscalDataPackage.defaultOptions.adapterUrl = externalConfig.adapterUrl;
+cosmopolitan.defaultOptions.cosmopolitanApiUrl = externalConfig.cosmoplitanUrl
+  || cosmopolitan.defaultOptions.cosmopolitanApiUrl;
 utils.defaultOptions.proxyUrl = externalConfig.proxyUrl;
 
 angular.module('Application')

@@ -28,7 +28,8 @@ var frontendOptions = {
 
   proxyUrl: 'proxy?url=',
   osViewerUrl: process.env.OS_VIEWER_URL || DEFAULT_HOST + '/viewer/',
-  osAdminUrl: process.env.OS_ADMIN_URL || DEFAULT_HOST + '/admin/'
+  osAdminUrl: process.env.OS_ADMIN_URL || DEFAULT_HOST + '/admin/',
+  cosmoplitanUrl: process.env.OS_COSMOPOLITAN_URL
 };
 
 // this is the object that you want to override in your own local config

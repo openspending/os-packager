@@ -7,7 +7,7 @@ module.exports = {
   OS_SNIPPETS_RAVEN: {required: false},
   SENTRY_DSN: {required: false},
   OS_PACKAGER_BASE_PATH: {
-    default: 'fudge'
+    default: '/'
   },
   POLL_INTERVAL: {required: false},
 
@@ -15,5 +15,8 @@ module.exports = {
   OS_CONDUCTOR_URL: {required: false},
   OS_VIEWER_URL: {required: false},
   OS_ADMIN_URL: {required: false},
+  OS_COSMOPOLITAN_URL: {
+    default: 'https://cosmopolitan.openspending.org/?format=json'
+  },
   FDP_ADAPTER_URL: {required: false}
 };

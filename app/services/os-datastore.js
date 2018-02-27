@@ -6,13 +6,13 @@ var Promise = require('bluebird');
 var utils = require('./utils');
 require('isomorphic-fetch');
 
-var OS_CONDUCTOR = process.env.OS_PACKAGER_CONDUCTOR_HOST ||
-  'https://openspending.org';
+// This will be extended by the frontend config in
+// front/scripts/config/config.js
 var defaultOptions = {
-  conductorUrl: OS_CONDUCTOR + '/datastore/',
-  conductorInfoUrl: OS_CONDUCTOR + '/datastore/info',
-  publishUrl: OS_CONDUCTOR + '/package/upload',
-  statusUrl: OS_CONDUCTOR + '/package/status',
+  conductorUrl: '/datastore/',
+  conductorInfoUrl: '/datastore/info',
+  publishUrl: '/package/upload',
+  statusUrl: '/package/status',
   pollInterval: 1000
 };
 module.exports.defaultOptions = defaultOptions;

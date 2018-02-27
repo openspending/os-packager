@@ -7,7 +7,7 @@ module.exports = {
   OS_SNIPPETS_RAVEN: {required: false},
   SENTRY_DSN: {required: false},
   OS_PACKAGER_BASE_PATH: {
-    default: '/'
+    default: 'packager'
   },
   POLL_INTERVAL: {required: false},
 

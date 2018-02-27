@@ -42,7 +42,8 @@ nconf.defaults({
   frontend: frontendOptions,
   basePath: process.env.OS_PACKAGER_BASE_PATH || DEFAULT_BASE_PATH,
   snippets: {
-    ga: process.env.OS_SNIPPETS_GA || null
+    ga: process.env.OS_SNIPPETS_GA || null,
+    raven: process.env.OS_SNIPPETS_RAVEN || null
   },
   sentryDSN: process.env.SENTRY_DSN || null
 });

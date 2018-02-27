@@ -63,6 +63,7 @@
     "os-types": "^1.14.0",
     "papaparse": "kravets-levko/PapaParse.git",
     "raven": "^2.2.1",
+    "raven-js": "^3.22.3",
     "request": "^2.65.0",
     "typeahead.js": "^0.11.1",
     "typeahead.js-bootstrap-css": "bassjobsen/typeahead.js-bootstrap-css",

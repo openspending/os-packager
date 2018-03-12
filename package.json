@@ -57,7 +57,7 @@
     "less": "^2.7.3",
     "lodash": "^4.11.1",
     "lookenv": "^0.6.3",
-    "marked": "^0.3.5",
+    "marked": "~0.3.9",
     "nconf": "^0.8.2",
     "nunjucks": "^2.1.0",
     "os-bootstrap": "openspending/os-bootstrap.git",

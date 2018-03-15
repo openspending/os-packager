@@ -13,7 +13,7 @@ env:
 install:
   - make ci-build
   # Run docker image with additional args
-  - make ci-run RUN_ARGS="-e OS_BASE_URL=http://localhost"
+  - make ci-run RUN_ARGS="-e OS_BASE_URL=http://localhost:8000 -e OS_PACKAGER_BASE_PATH='/' -e OS_CONDUCTOR_URL=https://openspending.org"
 
 script:
   - make ci-test

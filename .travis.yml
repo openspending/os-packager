@@ -1,11 +1,29 @@
-language: node_js
-node_js:
-  - '8.7.0'
+language: generic
+
+services:
+  - docker
+
+env:
+  global:
+    # DOCKER_USERNAME
+    - secure: VOWerXUxIYOVn0X7GKBsrvWGgWL67H50+5Eqqn/htwhTFkg9lf0zXBse7o5shIhYz/MtQKpJHD57dqBG4CSAMT6byxuNc9FdM/LAYeeJm3xUCCnWY7eXephN6mCpYbLUbszS30mzt8LtFHwRas6T6cfVlEEtGg9UhNGMfx4zJ6mAEsmiEENFJ/9BESNmUVdpr6g/+ATBzFEGw+H7rJ7MTZ+qYcVn+tvbYtC5usXu/WNMOJba6PTmxcrfo4TebCtj0cnrj6DfVQtj4FiznN5qsQcqR7bKia+i7Eh246BrFSDAFo85Gk5La+Inkt5rJGDmCamkE6zud64LaEgbVrwfQ4Do2UDwNOQ7kQawsxKtepoNRhqVxl0pio2Lctuqn/sVwtl/v+j3Kdxn/ernQ04ogqeaWTX5w9NZdk0iwf8mUL2DL2YQolln3LpGZB9E/uf8NWBtgaHbe+XzihIj+/1bMY5RPp2y00NWzbviIssBb7cj+QVvtqiIwM0/+WcWypBGTSlo/0eAsH1eal6yWT96g+YIomTWpVqOZq4M5An4DBZaPpAIFyk79aaBnZC1INmKLazYeSJKqc31tN5R3S6SxUkzq1v+OwmK+wfpXPlADSPbAa8y2pFGwG7tDsEOJvU6qLsccrXq54xTj6FmAmtN3JvHFA1fI4tUHYPqseHggxQ=
+    # DOCKER_PASSWORD
+    - secure: 5I0cdYog6D85StTD5D2PQo/hr4Aqa+yJJQ/IiFWCK1ityXPMLBbSTy8EsUzN2QynrdjTCcSKGeIkGRa1xcrg0HwHeTd1DrZkqFui6PzqsNBaas1KKhcb3p6ND3od3yXn1zn3dQaz7nrIVusE/TsIiO+bE6nPiHmdnbSdXmSdh0SoIdYFGEchTw5tS8ahhlW+NlnZ3QJRS+g2Y5a4zofiLSkvvqOS3C0B01UuG5TZDJZppYOz86xwOsXevcUf/9iHy42DOrDBflnYHUxBTZAnPVKntIN64HZfn2pjwWXCbiM9drG/oXKWpoVQZR8S0hyqQTP5C9nUwgh2Dr5ScfE9eqZDTrp3o3bvAXoNUfanM0YaNcbD0NRE0zgc7Z3aoGeqKiBYlb1uAWSvrXtrO6XU/OvwfQaNdNuCT6mc/XRBAbsAGOgKJJy0qdth0fJmEUBexIt4rud0R9FZhiC931LjJDX+D6Xb7peKmoSbT2H/RJZ+c1Hmscr52nf0eSdyWNTckLzt4ubfaSdgXBEdFHOuolMu5/chA4oNSU6LA4HosuDCCtxMwwP6rqd0n7T2cOlqvOKBbQ9z+FiY5GzRM3Beaf4JVjrADpU42Dub5vJABG3wHxlnUzHUVrm8W752kLHI3ulWMV2VsqTGK4+T48uwsnTgG+/G9IZtw66O3UuWFdc=
+
+install:
+  - make ci-build
+  # Run docker image with additional args
+  - make ci-run RUN_ARGS="-e OS_BASE_URL=http://localhost:8000 -e OS_PACKAGER_BASE_PATH='/' -e OS_CONDUCTOR_URL=https://openspending.org"
 
 script:
-  - npm run build
-  - npm test
+  - make ci-test
 
-notifications:
-  slack:
-    secure: S2aYgu/+1FB20jIhMn89bVeHDmi+ybFomF1erHjU+ZlNoljDt92w5QEgpgdHK/nqnJNFYa/E9CMLr/usw6lC+cF0iODgsngZhWs1+9WySo+gCB0SdZDEpoJLLi3Q/aLr85DlO7rtiezujZcyCrb6AZRJNVbyzzLR4BCAaBHBIHzzCOjPqDIe45VH/vxh1Y6f5GMohVQOU5JumPWaqg6CMUb1o8F6B8G0QbomkSCOES8tRE4cZSDzMInFnOnehHlV/GHdJwdmvAAuMo7M5+RcuujCZyZWZLSo7Ogfv85bzGEOl4Zr6K5vGmhFjoYiPnQyh8hcS/kmuQ7HF00aLxfo9tCtr5dhwaOEjlbB/Poy01As4PbAwQ2mGPJ53f12LGn+YP3IVjihFkWhgYzLUqew1dYLBB8/qGxK1w+eii7CRp/WyMfDLlu89mZjKZc2B/E/WOuDYnKIHkeNxY5i0rZWw9vWx0lanPKlqBeIOcWh9DPxtnseoCiKqSLHdumweyG/Yjhe9DZB0f3ESododU9FBCV6NysxS1v6zi3o5puihO406ysAXzUQCAx71bXmooXuAvRLoEsa0ryDH7uQyrjpWqT1itI14P8CUsntCkDb0C6nxZUOu216XMjBYdQTBOd5L4y5Kj34A+p182srJdeLf6hQ0vsdqHs9VagPa5ODs6w=
+after_success:
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then make ci-push-tag TAG="${TRAVIS_PULL_REQUEST_BRANCH////_}"; fi'
+
+deploy:
+  # deploy master to latest tag
+  - provider: script
+    script: make ci-push
+    on:
+      branch: master

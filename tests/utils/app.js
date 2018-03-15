@@ -42,7 +42,7 @@ exports.start = function(done) {
   this.timeout(20000);
   if (!exports.app) {
     // Run the server
-    start().then(function(app) {
+    start(5000).then(function(app) {
       exports.app = app;
       exports.browser = new Browser({
         maxWait: 5000

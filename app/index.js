@@ -11,14 +11,18 @@ var config = require('./config');
 var routes = require('./routes');
 var Raven = require('raven');
 
-module.exports.start = function() {
+module.exports.start = function(port) {
   return new Promise(function(resolve, reject) {
     var app = express();
 
     app.set('trust proxy', true);
 
     app.set('config', config);
-    app.set('port', config.get('app:port'));
+    var usePort = config.get('app:port');
+    if (port) {
+      usePort = port;
+    }
+    app.set('port', usePort);
     app.set('views', path.join(__dirname, '/views'));
 
     // Sentry monitoring

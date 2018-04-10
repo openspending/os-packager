@@ -330,7 +330,8 @@ function runWebHooks(permissionToken, dataPackage) {
 
   var data = _.chain({
     jwt: permissionToken,
-    id: dataPackage.id
+    id: dataPackage.id,
+    pipeline: 'http://eis-openbudgets.iais.fraunhofer.de/linkedpipes/execute/fdp2rdf'
   })
   .map(function(value, key) {
     return encodeURIComponent(key) + '=' + encodeURIComponent(value);

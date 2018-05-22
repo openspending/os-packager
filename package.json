@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "lookenv --dotenv -- node index.js",
+    "start:dev": "nodemon npm run develop",
     "test": "lookenv --dotenv=.env.test -- mocha tests/*.js",
     "posttest": "npm run review",
     "review": "eslint app tests index.js gulpfile.js webpack.config.js",
@@ -85,6 +86,7 @@
     "gulp-watch": "^4.3.5",
     "json-loader": "^0.5.4",
     "mocha": "^2.3.3",
+    "nodemon": "^1.17.2",
     "null-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
     "webpack": "^1.14.0",

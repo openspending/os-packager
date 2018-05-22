@@ -12,7 +12,16 @@
   <link rel="stylesheet" href="styles/app.css?{{ sessionSalt }}">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" >
 
-  {% include "../partials/snippets.html" %}
+  <script type="text/javascript" >
+    var globalConfig = {{ globalConfig | stringify }};
+    if (globalConfig.snippets && globalConfig.snippets.ga) {
+      var okiConsent = {
+        analyticsTrackingID: globalConfig.snippets.ga
+      };
+    }
+  </script>
+  <script type='text/javascript' src='https://a.okfn.org/html/oki/consent/assets/js/consent.js'></script>
+
   <style>
     {% include "../partials/theme.css" %}
   </style>

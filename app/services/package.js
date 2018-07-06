@@ -23,6 +23,8 @@ function transformResourceUrl(url) {
     encodeURIComponent(url);
   return fetch(adapterUrl)
     .then(function(response) {
+      // It's okay if 404 is returned, that usually means no transformation was
+      // done by os-fdp-adapters, so we just return the original url.
       if (response.status != 200) {
         return url;
       }

@@ -16,7 +16,7 @@ angular.module('Application')
       ];
 
       var dataPackageUrl = $location.search().package;
-      if (utils.isUrl) {
+      if (utils.isUrl(dataPackageUrl)) {
         promises.push(
           PackageService.loadExternalDataPackage(dataPackageUrl)
             .then(function() {

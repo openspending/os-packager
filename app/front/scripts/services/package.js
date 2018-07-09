@@ -195,8 +195,7 @@ angular.module('Application')
                 var dataPackage = fiscalDataPackage.createFiscalDataPackage(
                   attributes, modifiedResources);
                 dataPackage.owner = LoginService.userId;
-                dataPackage.author = LoginService.name +
-                  ' <' + LoginService.email + '>';
+                dataPackage.author = LoginService.name;
 
                 var triggerDigest = function(immediateCall) {
                   if (_.isFunction(triggerDigest)) {

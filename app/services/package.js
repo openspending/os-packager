@@ -253,10 +253,9 @@ function loadFiscalDataPackage(dataPackageUrl, userId) {
           result.attributes[key] = value;
         }
       });
-      var promises = _.map(dataPackage.resources, function(resource) {
-        return convertResource(resource, dataPackage, dataPackageUrl);
-      });
-      return Promise.all(promises);
+      // Only convert the first resource.
+      return Promise.all([convertResource(dataPackage.resources[0],
+                                          dataPackage, dataPackageUrl)]);
     })
     .then(function(resources) {
       result.resources = resources;

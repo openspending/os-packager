@@ -11,6 +11,9 @@ module.exports.proxy = function(req, res) {
     return false;
   }
 
+  url = url.replace('https://datastore.openspending.org/',
+                    'https://s3.amazonaws.com/datastore.openspending.org/');
+
   try {
     req.on('error', function(error) {
       console.trace(error);

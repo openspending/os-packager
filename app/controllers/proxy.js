@@ -19,6 +19,9 @@ module.exports.proxy = function(req, res) {
       console.trace(error);
       res.sendStatus(404);
     });
+    // Remove authorization header if present, as incompatible with AWS S3
+    // request.
+    delete req.headers.authorization;
     var proxy = request(url);
     proxy.on('error', function(error) {
       console.trace(error);

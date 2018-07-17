@@ -176,7 +176,7 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
           field.name = originalField.name;
           field.title = originalField.title;
           field.slug = originalField.slug;
-          field.type = originalField.osType;
+          field.type = originalField.columnType;
 
           var allowedOptionFields = _.map(
             new OSTypes().getDataTypeExtraOptions(field.type),

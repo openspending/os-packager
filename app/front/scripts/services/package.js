@@ -60,6 +60,7 @@ angular.module('Application')
               })
               .catch(function(error) {
                 isExternalDataPackage = true;
+                console.error(error);
                 reject(error);
               });
           });

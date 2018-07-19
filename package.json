@@ -63,7 +63,7 @@
     "nunjucks": "^2.1.0",
     "os-bootstrap": "openspending/os-bootstrap.git",
     "os-styles": "^0.0.2",
-    "os-types": "v1.15.1-alpha.1",
+    "os-types": "v1.15.1-alpha.2",
     "papaparse": "kravets-levko/PapaParse.git",
     "raven": "^2.2.1",
     "raven-js": "^3.22.3",

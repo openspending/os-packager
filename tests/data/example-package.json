@@ -43,7 +43,7 @@
             "slug": "date",
             "type": "date",
             "format": "fmt:%Y-%m-%d",
-            "osType": "date:generic",
+            "columnType": "date:generic",
             "conceptType": "date",
             "resource": "example-resource"
           },
@@ -53,7 +53,7 @@
             "slug": "money",
             "type": "number",
             "format": "default",
-            "osType": "value",
+            "columnType": "value",
             "conceptType": "value",
             "resource": "example-resource",
             "decimalChar": ".",

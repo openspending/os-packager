@@ -1,3 +1,5 @@
 .env
 .git
 node_modules
+repos/
+app/public/

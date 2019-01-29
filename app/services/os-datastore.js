@@ -466,7 +466,8 @@ function publish(descriptor, options) {
               descriptor.status = RemoteProcessingStatus[responseStatus] ||
                 responseStatus;
               var progress = parseFloat(response.progress);
-              // if (isFinite(progress) && (descriptor.countOfLines >= progress)) {
+              // if (isFinite(progress) &&
+                     // (descriptor.countOfLines >= progress)) {
               //   descriptor.progress = progress / descriptor.countOfLines;
               // }
               if (isFinite(progress)) {

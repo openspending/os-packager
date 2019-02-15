@@ -91,6 +91,6 @@
     "raw-loader": "^0.5.1",
     "webpack": "^1.14.0",
     "xmlhttprequest": "^1.8.0",
-    "zombie": "^4.2.1"
+    "zombie": "^5.0.6"
   }
 }

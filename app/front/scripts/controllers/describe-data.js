@@ -13,10 +13,6 @@ angular.module('Application')
             $scope.state = state;
             $scope.$apply();
           });
-        $scope.selectedMeasures = DescribeDataService
-          .getSelectedConcepts('measure');
-        $scope.selectedDimensions = DescribeDataService
-          .getSelectedConcepts('dimension');
 
         $scope.onConceptChanged = function(field) {
           DescribeDataService.updateField(field)
@@ -24,10 +20,6 @@ angular.module('Application')
               $scope.state = state;
               $scope.$apply();
             });
-          $scope.selectedMeasures = DescribeDataService
-            .getSelectedConcepts('measure');
-          $scope.selectedDimensions = DescribeDataService
-            .getSelectedConcepts('dimension');
         };
       });
     }

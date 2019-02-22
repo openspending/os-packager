@@ -72,8 +72,10 @@ angular.module('Application')
           })
           .catch(function(err) {
             console.log(err);
-            state.errors.push(
-              {msg: 'Problem loading the schema file. Must be a valid datapackage, dataresource, or tableschema.'});
+            state.errors.push({
+              msg: 'Problem loading the schema file. ' +
+                   'Must be a valid datapackage, dataresource, ' +
+                   'or tableschema.'});
           });
       };
 

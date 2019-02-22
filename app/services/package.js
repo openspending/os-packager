@@ -154,6 +154,70 @@ function createFiscalDataPackage(attributes, resources) {
   return fdp;
 }
 
+function convertFields(osFields, fdpFields, dataPackageModel) {
+  /*
+  Convert the fdpResource fields to osResource fields. Merge together.
+  */
+
+  _.each(osFields, function(field) {
+    var fdpField = _.find(fdpFields, {
+      name: field.name
+    });
+    if (fdpField) {
+      field.name = fdpField.name;
+      field.title = fdpField.title;
+      field.slug = fdpField.slug;
+      field.type = fdpField.columnType;
+
+      var allowedOptionFields = _.map(
+        new OSTypes().getDataTypeExtraOptions(field.type),
+        function(option) {
+          return option.name;
+        }
+      );
+
+      // Populate additional properties
+      field.options = _.pick(fdpField, allowedOptionFields);
+
+      if (dataPackageModel) {
+        var measure = _.find(dataPackageModel.measures, function(item) {
+          return item.source == field.name;
+        });
+        if (measure) {
+          var excludeFields = ['resource', 'source', 'title'];
+          _.extend(field.options, _.chain(measure)
+          .map(function(value, key) {
+            if (excludeFields.indexOf(key) == -1) {
+              return [key, value];
+            }
+          })
+          .filter()
+          .fromPairs()
+          .value());
+        }
+
+        _.each(dataPackageModel.dimensions, function(dimension) {
+          var attr = _.find(dimension.attributes, function(item) {
+            return item.source == field.name;
+          });
+          if (attr) {
+            _.extend(field.options, _.pick(attr, allowedOptionFields));
+            // Field can belong only to one dimension, so once we found it -
+            // break the loop
+            return false;
+          }
+        });
+      }
+
+      if (_.isString(field.options.format)) {
+        field.options.format = field.options.format.replace(/^fmt:/g, '');
+      }
+    }
+  });
+
+  return osFields;
+};
+
 function convertResource(resource, dataPackage, dataPackageUrl) {
   var resourceUrl = resource.url || url.resolve(dataPackageUrl, resource.path);
   return createResourceFromSource(resourceUrl)
@@ -168,59 +232,9 @@ function convertResource(resource, dataPackage, dataPackageUrl) {
       result.source.mimeType = resource.mediatype;
       result.source.size = resource.bytes;
       result.source.originUrl = resourceUrl;
-      _.each(result.fields, function(field) {
-        var originalField = _.find(resource.schema.fields, {
-          name: field.name
-        });
-        if (originalField) {
-          field.name = originalField.name;
-          field.title = originalField.title;
-          field.slug = originalField.slug;
-          field.type = originalField.columnType;
 
-          var allowedOptionFields = _.map(
-            new OSTypes().getDataTypeExtraOptions(field.type),
-            function(option) {
-              return option.name;
-            }
-          );
+      convertFields(result.fields, resource.schema.fields, dataPackage.model);
 
-          // Populate additional properties
-          field.options = _.pick(originalField, allowedOptionFields);
-
-          var measure = _.find(dataPackage.model.measures, function(item) {
-            return item.source == field.name;
-          });
-          if (measure) {
-            var excludeFields = ['resource', 'source', 'title'];
-            _.extend(field.options, _.chain(measure)
-            .map(function(value, key) {
-              if (excludeFields.indexOf(key) == -1) {
-                return [key, value];
-              }
-            })
-            .filter()
-            .fromPairs()
-            .value());
-          }
-
-          _.each(dataPackage.model.dimensions, function(dimension) {
-            var attr = _.find(dimension.attributes, function(item) {
-              return item.source == field.name;
-            });
-            if (attr) {
-              _.extend(field.options, _.pick(attr, allowedOptionFields));
-              // Field can belong only to one dimension, so once we found it -
-              // break the loop
-              return false;
-            }
-          });
-
-          if (_.isString(field.options.format)) {
-            field.options.format = field.options.format.replace(/^fmt:/g, '');
-          }
-        }
-      });
       return result;
     });
 }
@@ -266,6 +280,7 @@ function loadFiscalDataPackage(dataPackageUrl, userId) {
 }
 
 module.exports.createResourceFromSource = createResourceFromSource;
+module.exports.convertFields = convertFields;
 module.exports.getFiscalDataPackageSchema = getFiscalDataPackageSchema;
 module.exports.validateDataPackage = validateDataPackage;
 module.exports.createFiscalDataPackage = createFiscalDataPackage;

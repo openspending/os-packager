@@ -1,5 +1,23 @@
 {% raw %}
 <section id="step2-wrapper">
+<!--  <div class="row form-group col-sm-12">
+    <button ng-click="onGetResourceButtonClick()" type="button" class="btn btn-primary">Click me for resources</button>
+  </div>-->
+<div class="row form-group">
+  <div ng-class="{'col-sm-5': !isFileSelected, 'col-xs-12': isFileSelected}">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <label class="btn btn-inverse" for="step2-upload-file">Upload a schema file</label>
+      </span>
+      <input id="step2-input-file" ng-value="schema.file" type="text" class="form-control" placeholder="No file selected" readonly="on">
+      <span class="input-group-btn" ng-if="isFileSelected">
+        <button ng-click="onClearSelectedResource()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+      </span>
+    </div>
+    <input ng-file-selected-read="onFileSelected($fileContent)" type="file" id="step2-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
+  </div>
+</div>
+
 <div class="row" ng-repeat="resource in resources track by $index">
   <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
     <a href="{{ 'http://datapipes.okfnlabs.org/csv/html?url=' + resource.source.url }}" target="_blank">

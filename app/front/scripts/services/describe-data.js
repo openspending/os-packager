@@ -2,6 +2,9 @@
 
 var OSTypes = require('os-types');
 var _ = require('lodash');
+var datapackage = require('datapackage');
+var tableschema = require('tableschema');
+var Promise = require('bluebird');
 
 angular.module('Application')
   .factory('DescribeDataService', [
@@ -17,6 +20,61 @@ angular.module('Application')
 
       result.getState = function() {
         return state;
+      };
+
+      result.loadSchema = function(schema) {
+        /*
+          Return an FDP fields object from either a datapackage, dataresource,
+          or tablschema.
+        */
+
+        // Is it JSON?
+        try {
+          var parsedSchema = JSON.parse(schema);
+        } catch(e) {
+          Promise.reject(new Error('Schema file could no be parsed as JSON.'));
+        }
+
+        // Is it a datapackage?
+        var dpPromise = datapackage.Package.load(parsedSchema, {strict: true})
+          .then(function(dp) {
+            return dp.resources[0].descriptor.schema.fields;
+          });
+
+        // Is it a resource?
+        var resPromise = datapackage.Resource.load(parsedSchema, {strict: true})
+          .then(function(res) {
+            return res.descriptor.schema.fields;
+          });
+
+        // Is it a tableschema?
+        var schemaPromise =
+          tableschema.Schema.load(parsedSchema, {strict: true})
+          .then(function(sch) {
+            return sch.descriptor.fields;
+          });
+
+        // Return the first that resolves!
+        return Promise.some([dpPromise, resPromise, schemaPromise], 1)
+          .spread(function(fields) {
+            return fields;
+          });
+      };
+
+      result.schemaChanged = function(fileContent) {
+        state = {};
+        state.errors = [];
+
+        return this.loadSchema(fileContent)
+          .then(function(fields) {
+            PackageService.presetResourceFields(fields);
+            return result.updateField();
+          })
+          .catch(function(err) {
+            console.log(err);
+            state.errors.push(
+              {msg: 'Problem loading the schema file. Must be a valid datapackage, dataresource, or tableschema.'});
+          });
       };
 
       result.getSelectedConcepts = function(conceptType) {

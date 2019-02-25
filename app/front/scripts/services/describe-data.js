@@ -32,7 +32,7 @@ angular.module('Application')
         try {
           var parsedSchema = JSON.parse(schema);
         } catch(e) {
-          Promise.reject(new Error('Schema file could no be parsed as JSON.'));
+          Promise.reject(new Error('Schema file could not be parsed as JSON.'));
         }
 
         // Is it a datapackage?

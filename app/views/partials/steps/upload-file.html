@@ -12,7 +12,7 @@
           <button ng-click="onClearSelectedResource()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
         </span>
       </div>
-      <input ng-file-selected="onFileSelected($fileContent)" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
+      <input ng-file-selected="onFileSelected()" type="file" id="step1-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
     </div>
     <div ng-hide="isFileSelected || isUrlSelected" class="col-sm-1 text-center">
       <p class="form-control-static">or</p>

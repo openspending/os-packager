@@ -62,20 +62,39 @@ angular.module('Application')
       };
 
       result.schemaChanged = function(fileContent) {
-        state = {};
-        state.errors = [];
+        state = {
+          schema: {
+            errors: [],
+            warn: []
+          }
+        };
 
         return this.loadSchema(fileContent)
           .then(function(fields) {
+            var customSchemaNames = _.map(fields, 'name');
             PackageService.presetResourceFields(fields);
-            return result.updateField();
+            var res = result.updateField();
+            var resourceNames =
+              _.map(PackageService.getResources()[0].fields, 'name');
+
+            var intersectNames =
+              _.intersection(customSchemaNames, resourceNames);
+
+            if (intersectNames.length == 0) {
+              state.schema.warn.push('No matching fields in the schema.');
+            } else if (intersectNames.length != resourceNames.length) {
+              state.schema.warn.push('Updated matching fields: '
+                                     + _.join(intersectNames, ', '));
+            }
+
+            return res;
           })
           .catch(function(err) {
             console.log(err);
-            state.errors.push({
-              msg: 'Problem loading the schema file. ' +
-                   'Must be a valid datapackage, dataresource, ' +
-                   'or tableschema.'});
+            state.schema.errors.push(
+              'Problem loading the schema file. ' +
+              'Must be a valid datapackage, dataresource, ' +
+              'or tableschema.');
           });
       };
 

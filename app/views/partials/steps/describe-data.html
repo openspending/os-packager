@@ -18,6 +18,23 @@
   </div>
 </div>
 
+<div>
+  <div ng-if="state.schema.errors" ng-repeat="error in state.schema.errors" class="alert alert-danger">
+    <i class="fa fa-2x fa-warning vertical-align-middle margin-right-4"></i>
+    <strong>{{error}}</strong>
+  </div>
+
+  <div ng-if="state.schema.warn" ng-repeat="warn in state.schema.warn" class="alert alert-warning">
+    <i class="fa fa-2x fa-warning vertical-align-middle margin-right-4"></i>
+    <strong>{{warn}}</strong>
+  </div>
+
+  <div ng-if="(state.schema.warn.length == 0) && (state.schema.errors.length == 0)" class="alert alert-success">
+    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+    <strong>Updated all fields.</strong>
+  </div>
+</div>
+
 <div class="row" ng-repeat="resource in resources track by $index">
   <div ng-if="!!resource.source.url" class="col-xs-12 margin-bottom-8">
     <a href="{{ 'http://datapipes.okfnlabs.org/csv/html?url=' + resource.source.url }}" target="_blank">

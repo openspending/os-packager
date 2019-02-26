@@ -18,10 +18,6 @@ angular.module('Application')
             $scope.$apply();
           });
 
-        // $scope.onGetResourceButtonClick = function() {
-        //   console.log(PackageService.getResources());
-        // };
-
         $scope.onFileSelected = function($fileContent) {
           DescribeDataService.schemaChanged($fileContent)
             .then(function() {

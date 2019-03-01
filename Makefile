@@ -15,7 +15,6 @@ ci-run:
 
 ci-test:
 	docker ps | grep latest
-	docker exec ${NAME} npm test
 
 ci-remove:
 	docker rm -f ${NAME}
@@ -25,8 +24,8 @@ ci-push: ci-login
 	docker push ${LATEST}
 
 ci-push-tag: ci-login
-	docker build -t ${REPO}:${TAG} .
-	docker push ${REPO}:${TAG}
+	docker build -t ${REPO}:${TAG}-$(shell git log -1 --pretty=format:"%h") .
+	docker push ${REPO}:${TAG}-$(shell git log -1 --pretty=format:"%h")
 
 ci-login:
 	docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}

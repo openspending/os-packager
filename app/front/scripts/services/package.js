@@ -41,6 +41,16 @@ angular.module('Application')
         getResources: function() {
           return resources;
         },
+
+        presetResourceFields: function(fields) {
+          /*
+            Convert the passed FDP fields to os-packager fields and set on the
+            first resource.
+          */
+          var newFields =
+            fiscalDataPackage.convertFields(resources[0].fields, fields);
+          resources[0].fields = newFields;
+        },
         recreatePackage: function() {
           createNewDataPackage();
         },

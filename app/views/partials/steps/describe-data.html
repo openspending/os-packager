@@ -56,8 +56,44 @@
   </div>
 </div>
 
-<div>
+<hr>
 
+<div class="row form-group">
+  <div ng-class="{'col-sm-5': !isFileSelected, 'col-xs-12': isFileSelected}">
+    <h5>If you have a schema file, you can upload it here (optional)</h5>
+    <div class="input-group">
+      <span class="input-group-btn">
+        <label class="btn btn-inverse" for="step2-upload-file">Upload a schema file</label>
+      </span>
+      <input id="step2-input-file" ng-value="schema.file" type="text" class="form-control" placeholder="No file selected" readonly="on">
+      <span class="input-group-btn" ng-if="isFileSelected">
+        <button ng-click="onClearSelectedResource()" type="button" class="btn btn-default"><i class="fa fa-times"></i></button>
+      </span>
+    </div>
+    <input ng-file-selected-read="onFileSelected($fileContent)" type="file" id="step2-upload-file" style="position: absolute; left: -100000px; top: -100000px;">
+  </div>
+</div>
+
+<div>
+  <div ng-if="state.schema.errors" ng-repeat="error in state.schema.errors" class="alert alert-danger">
+    <i class="fa fa-2x fa-warning vertical-align-middle margin-right-4"></i>
+    <strong>{{error}}</strong>
+  </div>
+
+  <div ng-if="state.schema.warn" ng-repeat="warn in state.schema.warn" class="alert alert-warning">
+    <i class="fa fa-2x fa-warning vertical-align-middle margin-right-4"></i>
+    <strong>{{warn}}</strong>
+  </div>
+
+  <div ng-if="(state.schema.warn.length == 0) && (state.schema.errors.length == 0)" class="alert alert-success">
+    <i class="fa fa-2x fa-check-circle-o vertical-align-middle margin-right-4"></i>
+    <strong>Updated all fields.</strong>
+  </div>
+</div>
+
+<hr>
+
+<div>
   <div ng-if="state.errors" ng-repeat="error in state.errors" class="alert alert-danger">
     <i class="fa fa-2x fa-warning vertical-align-middle margin-right-4"></i>
     <strong>{{error.field}}</strong>:&nbsp;{{ error.msg }}

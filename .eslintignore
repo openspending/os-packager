@@ -1,2 +1,3 @@
 app/views/snippets/*
 app/public/*
+tests/**/karma.*

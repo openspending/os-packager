@@ -107,6 +107,20 @@ angular.module('Application')
             selectSugg(sugg, false);
             $(input).typeahead('val', sugg.text);
           }
+          $scope.$watch('field.type', function(newVal, oldVal) {
+            if (newVal != oldVal) {
+              if (newVal == null) {
+                $(input).attr('data-code', '');
+                $(input).typeahead('val', '');
+                ctrl.setSugg('');
+                ctrl.setVal(null, true);
+              } else {
+                var completion = ot.autoComplete(newVal)[0];
+                var sugg = convertCompletionToSuggestion(completion);
+                $(input).typeahead('val', sugg.text);
+              }
+            }
+          });
           $(input).bind('typeahead:select', function(ev, sugg) {
             selectSugg(sugg, true);
           });

@@ -15,7 +15,6 @@ ci-run:
 
 ci-test:
 	docker ps | grep latest
-	docker exec ${NAME} npm test
 
 ci-remove:
 	docker rm -f ${NAME}

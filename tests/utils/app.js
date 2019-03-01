@@ -45,7 +45,8 @@ exports.start = function(done) {
     start(5000).then(function(app) {
       exports.app = app;
       exports.browser = new Browser({
-        maxWait: 5000
+        maxWait: 5000,
+        debug: false
       });
       // exports.browser.debug();
       exports.browser.waitForDigest = waitForDigest;

@@ -7,6 +7,9 @@
 
 An app to make Fiscal Data Packages from a CSV of Fiscal Data, and publish those packages to OpenSpending.
 
+- [AngularJS](https://angularjs.org/)
+- [ExpressJS](https://expressjs.com/)
+
 ## Quick start
 
 - get the code

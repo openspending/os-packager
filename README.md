@@ -2,13 +2,17 @@
 
 [![Gitter](https://img.shields.io/gitter/room/openspending/chat.svg)](https://gitter.im/openspending/chat)
 [![Issues](https://img.shields.io/badge/issue-tracker-orange.svg)](https://github.com/openspending/openspending/issues)
-[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](http://docs.openspending.org/en/latest/developers/packager/)
 [![Docker Build Status](https://img.shields.io/docker/build/openspending/os-packager.svg)](https://hub.docker.com/r/openspending/os-packager/)
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](http://docs.openspending.org/)
 
-An app to make Fiscal Data Packages from a CSV of Fiscal Data, and publish those packages to OpenSpending.
+The OpenSpending Packager is a Javascript application to validate source data, model it into a Fiscal Data Package, and publish data to the OpenSpending Datastore.
 
-- [AngularJS](https://angularjs.org/)
-- [ExpressJS](https://expressjs.com/)
+- Validate tabular data sources for good structure and a consistent schema
+- Model the data into a Fiscal Data Package
+- Provide additional meta data that gives the data context
+- Publish the whole ficsal datapackage directly to OpenSpending
+
+os-packager is written using the [AngularJS](https://angularjs.org/) framework.
 
 ## Quick start
 
@@ -54,7 +58,3 @@ OS_COSMOPOLITAN_URL=
 
 - load the app in your default browser
 `open http://127.0.0.1:5000`
-
-
-See the [docs](http://docs.openspending.org/en/latest/developers/packager/) for more information.
-
